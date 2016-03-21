@@ -14,7 +14,7 @@ class Contentor {
 public:
 	enum Cor {azul,amarelo,verde,vermelho,preto};
 private:
-	double capacidade;
+	double cutil,cocupada;
 	Cor cor;
 public:
 	Contentor();

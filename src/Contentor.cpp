@@ -15,7 +15,8 @@ Contentor::Contentor() {
 }
 
 Contentor::Contentor(double capacidade,Cor cor){
-	this->capacidade = capacidade;
+	this->cutil = capacidade;
+	this->cocupada = 0;
 	this->cor = cor;
 }
 
