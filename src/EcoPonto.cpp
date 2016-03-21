@@ -14,7 +14,7 @@ EcoPonto::EcoPonto() {
 
 }
 
-EcoPonto::EcoPonto(double longitude,double latitude,vector<Contentor> contentores){
+EcoPonto::EcoPonto(string longitude,string latitude,vector<Contentor> contentores){
 	this->longitude = longitude;
 	this->latitude = latitude;
 	this->contentores = contentores;

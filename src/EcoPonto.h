@@ -9,17 +9,18 @@
 #define SRC_ECOPONTO_H_
 
 #include <vector>
+#include <string>
 #include "Contentor.h"
 
 namespace std {
 
 class EcoPonto {
 private:
-	double longitude, latitude;
+	string longitude, latitude;
 	vector<Contentor> contentores;
 public:
 	EcoPonto();
-	EcoPonto(double longitude,double latitude,vector<Contentor> contentores);
+	EcoPonto(string longitude,string latitude,vector<Contentor> contentores);
 	virtual ~EcoPonto();
 };
 
