@@ -1,8 +1,6 @@
 /*
  * Camiao.h
  *
- *  Created on: 21/03/2016
- *      Author: Diogo
  */
 
 #ifndef SRC_CAMIAO_H_
