@@ -7,13 +7,18 @@
 #define SRC_GRAPH_H_
 
 #include <queue>
+#include <climits>
 #include "Vertex.h"
 
 namespace std {
 
+const int INT_INFINITY = INT_MAX;
+
 template<class T>
 class Graph {
 	vector<Vertex<T> *> vertexSet;
+	int ** W;   //weight
+	int ** P;   //path
 	void dfs(Vertex<T> *v, vector<T> &res) const;
 public:
 	bool addVertex(const T &in);
@@ -25,6 +30,11 @@ public:
 	int maxNewChildren(Vertex<T> *v, T &inf) const;
 	vector<Vertex<T> *> getVertexSet() const;
 	int getNumVertex() const;
+
+	void floydWarshallShortestPath();
+	int edgeCost(int vOrigIndex, int vDestIndex);
+	vector<T> getfloydWarshallPath(const T &origin, const T &dest);
+	void getfloydWarshallPathAux(int index1, int index2, vector<T> & res);
 };
 
 } /* namespace std */

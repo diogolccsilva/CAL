@@ -7,37 +7,38 @@
 
 namespace std {
 
-template <class T>
+template<class T>
 int Graph<T>::getNumVertex() const {
 	return vertexSet.size();
 }
-template <class T>
-vector<Vertex<T> * > Graph<T>::getVertexSet() const {
+template<class T>
+vector<Vertex<T> *> Graph<T>::getVertexSet() const {
 	return vertexSet;
 }
 
-template <class T>
+template<class T>
 bool Graph<T>::addVertex(const T &in) {
-	typename vector<Vertex<T>*>::iterator it= vertexSet.begin();
-	typename vector<Vertex<T>*>::iterator ite= vertexSet.end();
-	for (; it!=ite; it++)
-		if ((*it)->info == in) return false;
+	typename vector<Vertex<T>*>::iterator it = vertexSet.begin();
+	typename vector<Vertex<T>*>::iterator ite = vertexSet.end();
+	for (; it != ite; it++)
+		if ((*it)->info == in)
+			return false;
 	Vertex<T> *v1 = new Vertex<T>(in);
 	vertexSet.push_back(v1);
 	return true;
 }
 
-template <class T>
+template<class T>
 bool Graph<T>::removeVertex(const T &in) {
-	typename vector<Vertex<T>*>::iterator it= vertexSet.begin();
-	typename vector<Vertex<T>*>::iterator ite= vertexSet.end();
-	for (; it!=ite; it++) {
+	typename vector<Vertex<T>*>::iterator it = vertexSet.begin();
+	typename vector<Vertex<T>*>::iterator ite = vertexSet.end();
+	for (; it != ite; it++) {
 		if ((*it)->info == in) {
-			Vertex<T> * v= *it;
+			Vertex<T> * v = *it;
 			vertexSet.erase(it);
-			typename vector<Vertex<T>*>::iterator it1= vertexSet.begin();
-			typename vector<Vertex<T>*>::iterator it1e= vertexSet.end();
-			for (; it1!=it1e; it1++) {
+			typename vector<Vertex<T>*>::iterator it1 = vertexSet.begin();
+			typename vector<Vertex<T>*>::iterator it1e = vertexSet.end();
+			for (; it1 != it1e; it1++) {
 				(*it1)->removeEdgeTo(v);
 			}
 			delete v;
@@ -47,70 +48,77 @@ bool Graph<T>::removeVertex(const T &in) {
 	return false;
 }
 
-template <class T>
+template<class T>
 bool Graph<T>::addEdge(const T &sourc, const T &dest, double w) {
-	typename vector<Vertex<T>*>::iterator it= vertexSet.begin();
-	typename vector<Vertex<T>*>::iterator ite= vertexSet.end();
-	int found=0;
+	typename vector<Vertex<T>*>::iterator it = vertexSet.begin();
+	typename vector<Vertex<T>*>::iterator ite = vertexSet.end();
+	int found = 0;
 	Vertex<T> *vS, *vD;
-	while (found!=2 && it!=ite ) {
-		if ( (*it)->info == sourc )
-			{ vS=*it; found++;}
-		if ( (*it)->info == dest )
-			{ vD=*it; found++;}
-		it ++;
+	while (found != 2 && it != ite) {
+		if ((*it)->info == sourc) {
+			vS = *it;
+			found++;
+		}
+		if ((*it)->info == dest) {
+			vD = *it;
+			found++;
+		}
+		it++;
 	}
-	if (found!=2) return false;
-	vS->addEdge(vD,w);
+	if (found != 2)
+		return false;
+	vS->addEdge(vD, w);
 	return true;
 }
 
-template <class T>
+template<class T>
 bool Graph<T>::removeEdge(const T &sourc, const T &dest) {
-	typename vector<Vertex<T>*>::iterator it= vertexSet.begin();
-	typename vector<Vertex<T>*>::iterator ite= vertexSet.end();
-	int found=0;
+	typename vector<Vertex<T>*>::iterator it = vertexSet.begin();
+	typename vector<Vertex<T>*>::iterator ite = vertexSet.end();
+	int found = 0;
 	Vertex<T> *vS, *vD;
-	while (found!=2 && it!=ite ) {
-		if ( (*it)->info == sourc )
-			{ vS=*it; found++;}
-		if ( (*it)->info == dest )
-			{ vD=*it; found++;}
-		it ++;
+	while (found != 2 && it != ite) {
+		if ((*it)->info == sourc) {
+			vS = *it;
+			found++;
+		}
+		if ((*it)->info == dest) {
+			vD = *it;
+			found++;
+		}
+		it++;
 	}
-	if (found!=2) return false;
+	if (found != 2)
+		return false;
 	return vS->removeEdgeTo(vD);
 }
 
-
-
-
-template <class T>
+template<class T>
 vector<T> Graph<T>::dfs() const {
-	typename vector<Vertex<T>*>::const_iterator it= vertexSet.begin();
-	typename vector<Vertex<T>*>::const_iterator ite= vertexSet.end();
-	for (; it !=ite; it++)
-		(*it)->visited=false;
+	typename vector<Vertex<T>*>::const_iterator it = vertexSet.begin();
+	typename vector<Vertex<T>*>::const_iterator ite = vertexSet.end();
+	for (; it != ite; it++)
+		(*it)->visited = false;
 	vector<T> res;
-	it=vertexSet.begin();
-	for (; it !=ite; it++)
-	    if ( (*it)->visited==false )
-	    	dfs(*it,res);
+	it = vertexSet.begin();
+	for (; it != ite; it++)
+		if ((*it)->visited == false)
+			dfs(*it, res);
 	return res;
 }
 
-template <class T>
-void Graph<T>::dfs(Vertex<T> *v,vector<T> &res) const {
+template<class T>
+void Graph<T>::dfs(Vertex<T> *v, vector<T> &res) const {
 	v->visited = true;
 	res.push_back(v->info);
-	typename vector<Edge<T> >::iterator it= (v->adj).begin();
-	typename vector<Edge<T> >::iterator ite= (v->adj).end();
-	for (; it !=ite; it++)
-	    if ( it->dest->visited == false )
-	    	dfs(it->dest, res);
+	typename vector<Edge<T> >::iterator it = (v->adj).begin();
+	typename vector<Edge<T> >::iterator ite = (v->adj).end();
+	for (; it != ite; it++)
+		if (it->dest->visited == false)
+			dfs(it->dest, res);
 }
 
-template <class T>
+template<class T>
 vector<T> Graph<T>::bfs(Vertex<T> *v) const {
 	vector<T> res;
 	queue<Vertex<T> *> q;
@@ -120,12 +128,12 @@ vector<T> Graph<T>::bfs(Vertex<T> *v) const {
 		Vertex<T> *v1 = q.front();
 		q.pop();
 		res.push_back(v1->info);
-		typename vector<Edge<T> >::iterator it=v1->adj.begin();
-		typename vector<Edge<T> >::iterator ite=v1->adj.end();
-		for (; it!=ite; it++) {
+		typename vector<Edge<T> >::iterator it = v1->adj.begin();
+		typename vector<Edge<T> >::iterator ite = v1->adj.end();
+		for (; it != ite; it++) {
 			Vertex<T> *d = it->dest;
-			if (d->visited==false) {
-				d->visited=true;
+			if (d->visited == false) {
+				d->visited = true;
 				q.push(d);
 			}
 		}
@@ -133,13 +141,13 @@ vector<T> Graph<T>::bfs(Vertex<T> *v) const {
 	return res;
 }
 
-template <class T>
+template<class T>
 int Graph<T>::maxNewChildren(Vertex<T> *v, T &inf) const {
 	vector<T> res;
 	queue<Vertex<T> *> q;
 	queue<int> level;
-	int maxChildren=0;
-	inf =v->info;
+	int maxChildren = 0;
+	inf = v->info;
 	q.push(v);
 	level.push(0);
 	v->visited = true;
@@ -147,26 +155,121 @@ int Graph<T>::maxNewChildren(Vertex<T> *v, T &inf) const {
 		Vertex<T> *v1 = q.front();
 		q.pop();
 		res.push_back(v1->info);
-		int l=level.front();
-		level.pop(); l++;
-		int nChildren=0;
-		typename vector<Edge<T> >::iterator it=v1->adj.begin();
-		typename vector<Edge<T> >::iterator ite=v1->adj.end();
-		for (; it!=ite; it++) {
+		int l = level.front();
+		level.pop();
+		l++;
+		int nChildren = 0;
+		typename vector<Edge<T> >::iterator it = v1->adj.begin();
+		typename vector<Edge<T> >::iterator ite = v1->adj.end();
+		for (; it != ite; it++) {
 			Vertex<T> *d = it->dest;
-			if (d->visited==false) {
-				d->visited=true;
+			if (d->visited == false) {
+				d->visited = true;
 				q.push(d);
 				level.push(l);
 				nChildren++;
 			}
 		}
-		if (nChildren>maxChildren) {
-			maxChildren=nChildren;
+		if (nChildren > maxChildren) {
+			maxChildren = nChildren;
 			inf = v1->info;
 		}
 	}
 	return maxChildren;
+}
+
+template<class T>
+int Graph<T>::edgeCost(int vOrigIndex, int vDestIndex) {
+	if (vertexSet[vOrigIndex] == vertexSet[vDestIndex])
+		return 0;
+
+	for (unsigned int i = 0; i < vertexSet[vOrigIndex]->adj.size(); i++) {
+		if (vertexSet[vOrigIndex]->adj[i].dest == vertexSet[vDestIndex])
+			return vertexSet[vOrigIndex]->adj[i].weight;
+	}
+
+	return INT_INFINITY;
+}
+
+template<class T>
+vector<T> Graph<T>::getfloydWarshallPath(const T &origin, const T &dest) {
+
+	int originIndex = -1, destinationIndex = -1;
+
+	for (unsigned int i = 0; i < vertexSet.size(); i++) {
+		if (vertexSet[i]->info == origin)
+			originIndex = i;
+		if (vertexSet[i]->info == dest)
+			destinationIndex = i;
+
+		if (originIndex != -1 && destinationIndex != -1)
+			break;
+	}
+
+	vector<T> res;
+
+	//se nao foi encontrada solucao possivel, retorna lista vazia
+	if (W[originIndex][destinationIndex] == INT_INFINITY)
+		return res;
+
+	res.push_back(vertexSet[originIndex]->info);
+
+	//se houver pontos intermedios...
+	if (P[originIndex][destinationIndex] != -1) {
+		int intermedIndex = P[originIndex][destinationIndex];
+
+		getfloydWarshallPathAux(originIndex, intermedIndex, res);
+
+		res.push_back(vertexSet[intermedIndex]->info);
+
+		getfloydWarshallPathAux(intermedIndex, destinationIndex, res);
+	}
+
+	res.push_back(vertexSet[destinationIndex]->info);
+
+	return res;
+}
+
+template<class T>
+void Graph<T>::getfloydWarshallPathAux(int index1, int index2,
+		vector<T> & res) {
+	if (P[index1][index2] != -1) {
+		getfloydWarshallPathAux(index1, P[index1][index2], res);
+
+		res.push_back(vertexSet[P[index1][index2]]->info);
+
+		getfloydWarshallPathAux(P[index1][index2], index2, res);
+	}
+}
+
+template<class T>
+void Graph<T>::floydWarshallShortestPath() {
+
+	W = new int *[vertexSet.size()];
+	P = new int *[vertexSet.size()];
+	for (unsigned int i = 0; i < vertexSet.size(); i++) {
+		W[i] = new int[vertexSet.size()];
+		P[i] = new int[vertexSet.size()];
+		for (unsigned int j = 0; j < vertexSet.size(); j++) {
+			W[i][j] = edgeCost(i, j);
+			P[i][j] = -1;
+		}
+	}
+
+	for (unsigned int k = 0; k < vertexSet.size(); k++)
+		for (unsigned int i = 0; i < vertexSet.size(); i++)
+			for (unsigned int j = 0; j < vertexSet.size(); j++) {
+				//se somarmos qualquer coisa ao valor INT_INFINITY, ocorre overflow, o que resulta num valor negativo, logo nem convém considerar essa soma
+				if (W[i][k] == INT_INFINITY || W[k][j] == INT_INFINITY)
+					continue;
+
+				int val = min(W[i][j], W[i][k] + W[k][j]);
+				if (val != W[i][j]) {
+					W[i][j] = val;
+					P[i][j] = k;
+				}
+			}
+
 }
 
 } /* namespace std */
