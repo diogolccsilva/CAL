@@ -14,10 +14,9 @@ class Contentor {
 public:
 	enum Cor {azul,amarelo,verde,vermelho,preto};
 private:
-	double cutil,cocupada;
+	double cUtil,cOcupada;
 	Cor cor;
 public:
-	Contentor();
 	Contentor(double capacidade,Cor cor);
 	virtual ~Contentor();
 };
