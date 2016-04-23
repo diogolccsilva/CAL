@@ -4,6 +4,7 @@
  */
 
 #include "Graph.h"
+#include "Info.h"
 
 namespace std {
 
@@ -48,7 +49,7 @@ bool Graph<T>::removeVertex(const T &in) {
 }
 
 template <class T>
-bool Graph<T>::addEdge(const T &sourc, const T &dest, double w) {
+bool Graph<T>::addEdge(const T &sourc, const T &dest, double w, string n) {
 	typename vector<Vertex<T>*>::iterator it= vertexSet.begin();
 	typename vector<Vertex<T>*>::iterator ite= vertexSet.end();
 	int found=0;
@@ -61,7 +62,7 @@ bool Graph<T>::addEdge(const T &sourc, const T &dest, double w) {
 		it ++;
 	}
 	if (found!=2) return false;
-	vS->addEdge(vD,w);
+	vS->addEdge(vD,w,n);
 	return true;
 }
 
@@ -168,5 +169,15 @@ int Graph<T>::maxNewChildren(Vertex<T> *v, T &inf) const {
 	}
 	return maxChildren;
 }
+
+template <class T>
+void Graph<T>::display() const{
+	for(unsigned int i=0; i<vertexSet.size();i++){
+		vertexSet.at(i)->display();
+	}
+}
+
+
+template class Graph<Info>;
 
 } /* namespace std */

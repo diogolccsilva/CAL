@@ -17,7 +17,7 @@ class Graph {
 	void dfs(Vertex<T> *v, vector<T> &res) const;
 public:
 	bool addVertex(const T &in);
-	bool addEdge(const T &sourc, const T &dest, double w);
+	bool addEdge(const T &sourc, const T &dest, double w, string n);
 	bool removeVertex(const T &in);
 	bool removeEdge(const T &sourc, const T &dest);
 	vector<T> dfs() const;
@@ -25,6 +25,8 @@ public:
 	int maxNewChildren(Vertex<T> *v, T &inf) const;
 	vector<Vertex<T> *> getVertexSet() const;
 	int getNumVertex() const;
+	void display() const;
+
 };
 
 } /* namespace std */

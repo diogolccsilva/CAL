@@ -1,0 +1,41 @@
+216967045;Avenida da República;False
+216967047;;False
+216967048;;False
+209633056;;False
+27426496;Rua Germano Paiva;True
+27426640;Rua Heróis de França;False
+27426634;Rua Roberto Ivens;False
+27426641;Avenida de Serpa Pinto;False
+12542496;Avenida da República;False
+27426477;Avenida da República;False
+327003194;Rua do Godinho;False
+27426684;Rua França Júnior;False
+27426645;Rua Roberto Ivens;False
+27426627;Rua de Brito e Cunha;True
+107826347;Avenida de Serpa Pinto;False
+27426673;Rua de Carlos Carvalho;True
+160503646;Rua de Brito e Cunha;False
+27426476;Avenida da República;False
+27426592;Rua Mouzinho de Albuquerque;False
+12316593;Avenida General Norton de Matos;False
+12542497;Avenida da República;False
+27426663;Rua Álvaro de Castelões;False
+12303323;Brito Capelo;False
+27426581;Rua do Doutor Afonso Cordeiro;False
+27426633;Rua Roberto Ivens;False
+27426528;Rua 1ª de Dezembro;True
+172956384;Avenida Menéres;True
+172956451;Rua de Ló Ferreira;False
+172956441;;False
+172956453;;False
+172956492;;False
+27426474;Rua de Tomáz Ribeiro;True
+223279432;Rua de Tomáz Ribeiro;True
+223292705;;True
+209633044;;True
+287418688;Avenida da República;False
+287418687;Rua do Doutor Afonso Cordeiro;False
+287418686;Avenida da República;False
+162102325;Rua de Dom João I;False
+370746969;Broadway Matosinhos;True
+172956463;Rua Mouzinho de Albuquerque;False

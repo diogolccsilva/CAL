@@ -7,6 +7,7 @@
 #define SRC_EDGE_H_
 
 #include <vector>
+#include <string>
 
 namespace std {
 
@@ -17,8 +18,9 @@ template<class T>
 class Edge {
 	Vertex<T> * dest;
 	double weight;
+	string name;
 public:
-	Edge(Vertex<T> *d, double w);
+	Edge(Vertex<T> *d, double w, string name);
 	friend class Graph<T> ;
 	friend class Vertex<T> ;
 };
