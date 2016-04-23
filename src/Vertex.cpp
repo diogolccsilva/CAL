@@ -4,11 +4,17 @@
  */
 
 #include "Vertex.h"
+#include "Info.h"
 
 namespace std {
 
 template<class T>
 Vertex<T>::Vertex(T in):info(in),visited(false){
+
+}
+
+template<class T>
+Vertex<T>::Vertex():visited(false){
 
 }
 
@@ -27,9 +33,20 @@ bool Vertex<T>::removeEdgeTo(Vertex<T> *d) {
 }
 
 template <class T>
-void Vertex<T>::addEdge(Vertex<T> *dest, double w) {
-	Edge<T> edgeD(dest,w);
+void Vertex<T>::addEdge(Vertex<T> *dest, double w, string name) {
+	Edge<T> edgeD(dest, w, name);
 	adj.push_back(edgeD);
 }
+
+template <class T>
+void Vertex<T>::display() const{
+	cout<<info.getId()<<":"<<endl;
+	for(unsigned int i=0; i<adj.size();i++){
+		cout<<"Aresta "<< i << " nome: "<< adj.at(i).name << " dest: "<< adj.at(i).dest->info.getId()<<endl;
+	}
+}
+
+template class Vertex<Info>;
+
 
 } /* namespace std */

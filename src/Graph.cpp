@@ -4,6 +4,7 @@
  */
 
 #include "Graph.h"
+#include "Info.h"
 
 namespace std {
 
@@ -48,11 +49,11 @@ bool Graph<T>::removeVertex(const T &in) {
 	return false;
 }
 
-template<class T>
-bool Graph<T>::addEdge(const T &sourc, const T &dest, double w) {
-	typename vector<Vertex<T>*>::iterator it = vertexSet.begin();
-	typename vector<Vertex<T>*>::iterator ite = vertexSet.end();
-	int found = 0;
+template <class T>
+bool Graph<T>::addEdge(const T &sourc, const T &dest, double w, string n) {
+	typename vector<Vertex<T>*>::iterator it= vertexSet.begin();
+	typename vector<Vertex<T>*>::iterator ite= vertexSet.end();
+	int found=0;
 	Vertex<T> *vS, *vD;
 	while (found != 2 && it != ite) {
 		if ((*it)->info == sourc) {
@@ -65,9 +66,8 @@ bool Graph<T>::addEdge(const T &sourc, const T &dest, double w) {
 		}
 		it++;
 	}
-	if (found != 2)
-		return false;
-	vS->addEdge(vD, w);
+	if (found!=2) return false;
+	vS->addEdge(vD,w,n);
 	return true;
 }
 
@@ -271,5 +271,15 @@ void Graph<T>::floydWarshallShortestPath() {
 			}
 
 }
+
+template <class T>
+void Graph<T>::display() const{
+	for(unsigned int i=0; i<vertexSet.size();i++){
+		vertexSet.at(i)->display();
+	}
+}
+
+
+template class Graph<Info>;
 
 } /* namespace std */

@@ -4,12 +4,15 @@
  */
 
 #include "Edge.h"
+#include "Info.h"
 
 namespace std {
 
 template<class T>
-Edge<T>::Edge(Vertex<T> *d, double w):dest(d),weight(w){
+Edge<T>::Edge(Vertex<T> *d, double w, string name):dest(d),weight(w), name(name){
 
 }
+
+template class Edge<Info>;
 
 } /* namespace std */

@@ -12,6 +12,10 @@ Info::Info() {
 
 }
 
+bool Info::operator == (const Info &i2) const {
+	return (id==i2.id);
+}
+
 Info::~Info() {
 	// TODO Auto-generated destructor stub
 }
