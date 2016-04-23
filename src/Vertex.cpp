@@ -42,7 +42,7 @@ template <class T>
 void Vertex<T>::display() const{
 	cout<<info.getId()<<":"<<endl;
 	for(unsigned int i=0; i<adj.size();i++){
-		cout<<"Aresta "<< i << " nome: "<< adj.at(i).name << " dest: "<< adj.at(i).dest->info.getId()<<endl;
+		cout<<"Aresta "<< i << " nome: "<< adj.at(i).name << " dest: "<< adj.at(i).dest->info.getId()<<" dist: "<< adj.at(i).weight<<endl;
 	}
 }
 

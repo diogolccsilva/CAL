@@ -29,6 +29,18 @@ using namespace std;
  cute::makeRunner(lis,argc,argv)(s, "AllTests");
  }*/
 
+
+double nodeDistance(Vertex<Info> *v1, Vertex<Info> *v2) {
+	double lat1r, lon1r, lat2r, lon2r, u, v, earth_rad = 6371000;
+	lat1r = v1->getInfo().getRlat();
+	lon1r = v1->getInfo().getRlong();
+	lat2r = v2->getInfo().getRlat();
+	lon2r = v2->getInfo().getRlong();
+	u = sin((lat2r - lat1r)/2);
+	v = sin((lon2r - lon1r)/2);
+	return 2.0 * earth_rad * asin(sqrt(u * u + cos(lat1r) * cos(lat2r) * v * v));
+}
+
 Graph<Info> readGraph() {
 	string temp;
 	vector<Rua> ruas;
@@ -102,8 +114,8 @@ Graph<Info> readGraph() {
 						}
 						if (ruas.at(i).isBi())
 							grafo.addEdge(tempDest->getInfo(),
-									tempNo->getInfo(), 1, ruas.at(i).getNome());
-						grafo.addEdge(tempNo->getInfo(), tempDest->getInfo(), 1,
+									tempNo->getInfo(), nodeDistance(tempNo,tempDest), ruas.at(i).getNome());
+						grafo.addEdge(tempNo->getInfo(), tempDest->getInfo(), nodeDistance(tempNo,tempDest),
 								ruas.at(i).getNome());
 					}
 
@@ -148,6 +160,7 @@ int menu() {
 	}
 	return 1;
 }
+
 
 int main() {
 	//   runAllTests(argc,argv);
