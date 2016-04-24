@@ -33,9 +33,13 @@ using namespace std;
 double nodeDistance(Vertex<Info> *v1, Vertex<Info> *v2) {
 	double lat1r, lon1r, lat2r, lon2r, u, v, earth_rad = 6371000;
 	lat1r = v1->getInfo().getRlat();
+	cout << "lat1r: " << lat1r << endl;
 	lon1r = v1->getInfo().getRlong();
+	cout << "lon1r: " << lon1r << endl;
 	lat2r = v2->getInfo().getRlat();
+	cout << "lat2r: " << lat2r << endl;
 	lon2r = v2->getInfo().getRlong();
+	cout << "lon2r: " << lon2r << endl;
 	u = sin((lat2r - lat1r)/2);
 	v = sin((lon2r - lon1r)/2);
 	return 2.0 * earth_rad * asin(sqrt(u * u + cos(lat1r) * cos(lat2r) * v * v));
@@ -58,13 +62,14 @@ Graph<Info> readGraph() {
 			if (temp != "") {
 				tempInfo.setId(atol(temp.c_str()));
 				getline(map1, temp, ';');
-				tempInfo.setGlat(atol(temp.c_str()));
+				tempInfo.setGlat(atof(temp.c_str()));
+				cout << "cenas: " << tempInfo.getGlat() << endl;
 				getline(map1, temp, ';');
-				tempInfo.setGlong(atol(temp.c_str()));
+				tempInfo.setGlong(atof(temp.c_str()));
 				getline(map1, temp, ';');
-				tempInfo.setRlat(atol(temp.c_str()));
+				tempInfo.setRlat(atof(temp.c_str()));
 				getline(map1, temp);
-				tempInfo.setRlong(atol(temp.c_str()));
+				tempInfo.setRlong(atof(temp.c_str()));
 
 				grafo.addVertex(tempInfo);
 			}
@@ -112,6 +117,7 @@ Graph<Info> readGraph() {
 								tempDest = vertexSet.at(j);
 
 						}
+						cout << nodeDistance(tempNo,tempDest) << endl;
 						if (ruas.at(i).isBi())
 							grafo.addEdge(tempDest->getInfo(),
 									tempNo->getInfo(), nodeDistance(tempNo,tempDest), ruas.at(i).getNome());
