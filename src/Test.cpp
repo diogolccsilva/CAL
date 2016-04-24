@@ -7,12 +7,14 @@
 #include <fstream>
 #include <cstdlib>
 #include <climits>
+#include <cstdio>
 #include <conio.h>
 #include "Info.h"
 #include "Vertex.h"
 #include "Rua.h"
 #include "Edge.h"
 #include "Graph.h"
+#include <sstream>
 
 using namespace std;
 
@@ -111,7 +113,7 @@ Graph<Info> readGraph() {
 								tempDest = vertexSet.at(j);
 
 						}
-						cout << nodeDistance(tempNo, tempDest) << endl;
+						//cout << nodeDistance(tempNo, tempDest) << endl;
 						if (ruas.at(i).isBi())
 							grafo.addEdge(tempDest->getInfo(),
 									tempNo->getInfo(),
@@ -132,7 +134,7 @@ Graph<Info> readGraph() {
 	map3.close();
 
 	grafo.display();
-	cout << "Tamanho: " << grafo.getVertexSet().size() << endl;
+	//cout << "Tamanho: " << grafo.getVertexSet().size() << endl;
 	grafo.floydWarshallShortestPath();
 
 	return grafo;
@@ -140,8 +142,16 @@ Graph<Info> readGraph() {
 
 void shortestPath(std::Graph<Info>& grafo) {
 
-	grafo.getfloydWarshallPath(grafo.getVertexSet().at(0)->getInfo(),
-			grafo.getVertexSet().at(grafo.getVertexSet().size() - 1)->getInfo());
+	auto v = grafo.getfloydWarshallPath(grafo.getVertexSet().at(185)->getInfo(),
+			grafo.getVertexSet().at(127)->getInfo());
+	if (v.size() == 0){
+		cout << "Pontos sem ligacao!" << endl;
+		return;
+	}
+	auto it = v.begin();
+	for (;it!=v.end();it++){
+		cout << it->getId() << endl;
+	}
 
 }
 

@@ -9,6 +9,7 @@
 #include <queue>
 #include <climits>
 #include "Vertex.h"
+#include "graphviewer.h"
 
 namespace std {
 

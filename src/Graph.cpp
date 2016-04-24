@@ -50,11 +50,11 @@ bool Graph<T>::removeVertex(const T &in) {
 	return false;
 }
 
-template <class T>
+template<class T>
 bool Graph<T>::addEdge(const T &sourc, const T &dest, double w, string n) {
-	typename vector<Vertex<T>*>::iterator it= vertexSet.begin();
-	typename vector<Vertex<T>*>::iterator ite= vertexSet.end();
-	int found=0;
+	typename vector<Vertex<T>*>::iterator it = vertexSet.begin();
+	typename vector<Vertex<T>*>::iterator ite = vertexSet.end();
+	int found = 0;
 	Vertex<T> *vS, *vD;
 	while (found != 2 && it != ite) {
 		if ((*it)->info == sourc) {
@@ -67,8 +67,9 @@ bool Graph<T>::addEdge(const T &sourc, const T &dest, double w, string n) {
 		}
 		it++;
 	}
-	if (found!=2) return false;
-	vS->addEdge(vD,w,n);
+	if (found != 2)
+		return false;
+	vS->addEdge(vD, w, n);
 	return true;
 }
 
@@ -273,14 +274,53 @@ void Graph<T>::floydWarshallShortestPath() {
 
 }
 
-template <class T>
-void Graph<T>::display() const{
-	for(unsigned int i=0; i<vertexSet.size();i++){
-		vertexSet.at(i)->display();
+template<class T>
+void Graph<T>::display() const {
+//	for (unsigned int i = 0; i < vertexSet.size(); i++) {
+//		vertexSet.at(i)->display();
+//	}
+
+	GraphViewer *gv = new GraphViewer(5000, 5000, true);
+
+	gv->createWindow(5000, 5000);
+
+	gv->defineEdgeColor("blue");
+	gv->defineVertexColor("yellow");
+
+	string line;
+
+	unsigned long idNo = 0;
+
+	//Read nodes
+	auto itv = vertexSet.begin(); //typename vector<Vertex<T> *>::const_iterator
+	for (; itv != vertexSet.end(); itv++) {
+		idNo = (*itv)->info.getId();
+		gv->addNode(idNo);
 	}
+
+	int idAresta = 0;
+	unsigned long idNoOrigem = 0;
+	unsigned long idNoDestino = 0;
+
+	//Read Edges
+	itv = vertexSet.begin();
+	int cnt = 1;
+	for (; itv != vertexSet.end(); itv++) {
+		auto adj = (*itv)->adj;
+		auto ite = adj.begin();
+		for (; ite != adj.end(); ite++) {
+			cnt++;
+			idNoOrigem = (*itv)->getInfo().getId();
+			idNoDestino = ite->dest->getInfo().getId();
+			//cout << "S: " << idNoOrigem << " D: " << idNoDestino << " E: " << cnt << endl;
+			if (!gv->addEdge(cnt, idNoOrigem, idNoDestino, EdgeType::UNDIRECTED))
+				cout << "fodeu" << endl;
+		}
+	}
+
+	gv->rearrange();
 }
 
-
-template class Graph<Info>;
+template class Graph<Info> ;
 
 } /* namespace std */
