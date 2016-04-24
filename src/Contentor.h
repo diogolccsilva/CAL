@@ -8,6 +8,8 @@
 #ifndef SRC_CONTENTOR_H_
 #define SRC_CONTENTOR_H_
 
+#include <time.h>
+#include <stdlib.h>
 namespace std {
 
 class Contentor {

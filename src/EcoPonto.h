@@ -16,11 +16,10 @@ namespace std {
 
 class EcoPonto {
 private:
-	string longitude, latitude;
 	vector<Contentor> contentores;
 public:
 	EcoPonto();
-	EcoPonto(string longitude,string latitude,vector<Contentor> contentores);
+	EcoPonto(vector<Contentor> contentores);
 	virtual ~EcoPonto();
 };
 

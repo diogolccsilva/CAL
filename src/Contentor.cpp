@@ -5,11 +5,15 @@
 
 #include "Contentor.h"
 
+
 namespace std {
 
 Contentor::Contentor(double capacidade,Cor cor){
+	srand(time(NULL));
+	double n=rand()%100;
+
 	this->cUtil = capacidade;
-	this->cOcupada = 0;
+	this->cOcupada = capacidade*(n/100.0);
 	this->cor = cor;
 }
 

@@ -25,6 +25,7 @@ bool Graph<T>::addVertex(const T &in) {
 		if ((*it)->info == in)
 			return false;
 	Vertex<T> *v1 = new Vertex<T>(in);
+	v1->applyEco();
 	vertexSet.push_back(v1);
 	return true;
 }

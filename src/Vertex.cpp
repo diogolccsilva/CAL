@@ -46,6 +46,22 @@ void Vertex<T>::display() const{
 	}
 }
 
+template <class T>
+bool Vertex<T>::applyEco(){
+	srand(time(NULL));
+	int n=rand()%10;
+	if(n<3){
+		vector<Contentor> tempContent;
+		tempContent.push_back(Contentor(2500,Contentor::amarelo));
+		tempContent.push_back(Contentor(2500,Contentor::azul));
+		tempContent.push_back(Contentor(2500,Contentor::preto));
+		tempContent.push_back(Contentor(2500,Contentor::verde));
+		tempContent.push_back(Contentor(2500,Contentor::vermelho));
+		ecoponto=EcoPonto(tempContent);
+	}
+}
+
+
 template class Vertex<Info>;
 
 

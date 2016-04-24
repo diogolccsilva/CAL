@@ -29,19 +29,14 @@ using namespace std;
  cute::makeRunner(lis,argc,argv)(s, "AllTests");
  }*/
 
-
 double nodeDistance(Vertex<Info> *v1, Vertex<Info> *v2) {
 	double lat1r, lon1r, lat2r, lon2r, u, v, earth_rad = 6371000;
 	lat1r = v1->getInfo().getRlat();
-	cout << "lat1r: " << lat1r << endl;
 	lon1r = v1->getInfo().getRlong();
-	cout << "lon1r: " << lon1r << endl;
 	lat2r = v2->getInfo().getRlat();
-	cout << "lat2r: " << lat2r << endl;
 	lon2r = v2->getInfo().getRlong();
-	cout << "lon2r: " << lon2r << endl;
-	u = sin((lat2r - lat1r)/2);
-	v = sin((lon2r - lon1r)/2);
+	u = sin((lat2r - lat1r) / 2);
+	v = sin((lon2r - lon1r) / 2);
 	return 2.0 * earth_rad * asin(sqrt(u * u + cos(lat1r) * cos(lat2r) * v * v));
 }
 
@@ -53,7 +48,6 @@ Graph<Info> readGraph() {
 	map1.open("map1.txt");
 	map2.open("map2.txt");
 	map3.open("map3.txt");
-	cout << "Hello 2." << endl;
 
 	if (map1.is_open()) {
 		while (!map1.eof()) {
@@ -63,7 +57,6 @@ Graph<Info> readGraph() {
 				tempInfo.setId(atol(temp.c_str()));
 				getline(map1, temp, ';');
 				tempInfo.setGlat(atof(temp.c_str()));
-				cout << "cenas: " << tempInfo.getGlat() << endl;
 				getline(map1, temp, ';');
 				tempInfo.setGlong(atof(temp.c_str()));
 				getline(map1, temp, ';');
@@ -72,6 +65,7 @@ Graph<Info> readGraph() {
 				tempInfo.setRlong(atof(temp.c_str()));
 
 				grafo.addVertex(tempInfo);
+
 			}
 		}
 	}
@@ -117,11 +111,14 @@ Graph<Info> readGraph() {
 								tempDest = vertexSet.at(j);
 
 						}
-						cout << nodeDistance(tempNo,tempDest) << endl;
+						cout << nodeDistance(tempNo, tempDest) << endl;
 						if (ruas.at(i).isBi())
 							grafo.addEdge(tempDest->getInfo(),
-									tempNo->getInfo(), nodeDistance(tempNo,tempDest), ruas.at(i).getNome());
-						grafo.addEdge(tempNo->getInfo(), tempDest->getInfo(), nodeDistance(tempNo,tempDest),
+									tempNo->getInfo(),
+									nodeDistance(tempNo, tempDest),
+									ruas.at(i).getNome());
+						grafo.addEdge(tempNo->getInfo(), tempDest->getInfo(),
+								nodeDistance(tempNo, tempDest),
 								ruas.at(i).getNome());
 					}
 
@@ -135,11 +132,16 @@ Graph<Info> readGraph() {
 	map3.close();
 
 	grafo.display();
+	cout << "Tamanho: " << grafo.getVertexSet().size() << endl;
+	grafo.floydWarshallShortestPath();
 
 	return grafo;
 }
 
 void shortestPath(std::Graph<Info>& grafo) {
+
+	grafo.getfloydWarshallPath(grafo.getVertexSet().at(0)->getInfo(),
+			grafo.getVertexSet().at(grafo.getVertexSet().size() - 1)->getInfo());
 
 }
 
@@ -166,7 +168,6 @@ int menu() {
 	}
 	return 1;
 }
-
 
 int main() {
 	//   runAllTests(argc,argv);

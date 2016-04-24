@@ -10,13 +10,11 @@
 namespace std {
 
 EcoPonto::EcoPonto() {
-	// TODO Auto-generated constructor stub
 
 }
 
-EcoPonto::EcoPonto(string longitude,string latitude,vector<Contentor> contentores){
-	this->longitude = longitude;
-	this->latitude = latitude;
+EcoPonto::EcoPonto(vector<Contentor> contentores){
+
 	this->contentores = contentores;
 }
 
