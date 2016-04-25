@@ -6,10 +6,11 @@
 #ifndef SRC_GRAPH_H_
 #define SRC_GRAPH_H_
 
-#include <queue>
 #include <climits>
+#include <string>
+#include <vector>
+
 #include "Vertex.h"
-#include "graphviewer.h"
 
 namespace std {
 
@@ -23,6 +24,7 @@ class Graph {
 	void dfs(Vertex<T> *v, vector<T> &res) const;
 	double p;
 public:
+	static double minLat, minLong;
 	bool addVertex(const T &in);
 	bool addEdge(const T &sourc, const T &dest, double w, string n);
 	bool removeVertex(const T &in);

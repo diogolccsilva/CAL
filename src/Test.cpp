@@ -1,20 +1,16 @@
-#include "cute.h"
-#include "ide_listener.h"
-#include "xml_listener.h"
-#include "cute_runner.h"
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <cstdlib>
-#include <climits>
-#include <cstdio>
 #include <conio.h>
-#include "Info.h"
-#include "Vertex.h"
-#include "Rua.h"
-#include "Edge.h"
+#include <cmath>
+#include <cstdlib>
+#include <fstream>
+#include <iostream>
+#include <iterator>
+#include <string>
+#include <vector>
+
 #include "Graph.h"
-#include <sstream>
+#include "Info.h"
+#include "Rua.h"
+#include "Vertex.h"
 
 using namespace std;
 
@@ -50,11 +46,6 @@ Graph<Info> readGraph() {
 	map1.open("map1.txt");
 	map2.open("map2.txt");
 	map3.open("map3.txt");
-//	double latmin, latmax, longmin, longmax;
-//	latmin = 90;
-//	longmin = 90;
-//	latmax = 0;
-//	longmax = 0;
 	if (map1.is_open()) {
 		while (!map1.eof()) {
 			Info tempInfo = Info();
@@ -73,21 +64,23 @@ Graph<Info> readGraph() {
 //				if (tempInfo.getGlat() > latmax) {
 //					latmax = tempInfo.getGlat();
 //				}
-//				if (tempInfo.getGlat() < latmin) {
-//					latmin = tempInfo.getGlat();
-//				}
+				if (tempInfo.getRlat() < Graph<Info>::minLat) {
+					Graph<Info>::minLat = tempInfo.getRlat();
+				}
 //				if (tempInfo.getGlong() > longmax) {
 //					longmax = tempInfo.getGlong();
 //				}
-//				if (tempInfo.getGlong() < longmin) {
-//					longmin = tempInfo.getGlong();
-//				}
+				if (tempInfo.getRlong() < Graph<Info>::minLong) {
+					Graph<Info>::minLong = tempInfo.getRlong();
+				}
 
 				grafo.addVertex(tempInfo);
 
 			}
 		}
 	}
+
+	cout << Graph<Info>::minLong << "  " << Graph<Info>::minLat << endl;
 
 	//grafo.setP();
 

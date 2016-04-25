@@ -5,9 +5,17 @@
 
 #include "Graph.h"
 #include "Info.h"
+
+#define _USE_MATH_DEFINES
+
 #include <cmath>
 
 namespace std {
+
+template<class T>
+double Graph<T>::minLat = M_PI/2;
+template<class T>
+double Graph<T>::minLong = M_PI;
 
 template<class T>
 int Graph<T>::getNumVertex() const {
@@ -291,15 +299,17 @@ void Graph<T>::display() const {
 	string line;
 
 	unsigned long idNo = 0;
-	double r  = 6000000;
+	int r  = 10000000;
 	//Read nodes
 	auto itv = vertexSet.begin(); //typename vector<Vertex<T> *>::const_iterator
 	for (; itv != vertexSet.end(); itv++) {
 		idNo = (*itv)->info.getRelativeId();
-		double x = cos((*itv)->info.getRlong())*r;
-		double y = sin((*itv)->info.getRlat())*r;
+		int x = (int)(((sin((*itv)->info.getRlong())-sin(minLong))*r))%r;
+		int y = (int)(((sin((*itv)->info.getRlat())-sin(minLat))*r))%r;
 		gv->addNode(idNo,x,y);
 	}
+
+	cout << minLong*M_PI/180.0 << "  " <<minLat*M_PI/180.0 << endl;
 
 	int idAresta = 0;
 	unsigned long idNoOrigem = 0;

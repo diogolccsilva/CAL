@@ -9,7 +9,7 @@
 #define SRC_ECOPONTO_H_
 
 #include <vector>
-#include <string>
+
 #include "Contentor.h"
 
 namespace std {
