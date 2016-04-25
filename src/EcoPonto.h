@@ -21,6 +21,9 @@ public:
 	EcoPonto();
 	EcoPonto(vector<Contentor> contentores);
 	virtual ~EcoPonto();
+	vector<Contentor> getContentores() const;
+	vector<Contentor*> check();
+
 };
 
 } /* namespace std */

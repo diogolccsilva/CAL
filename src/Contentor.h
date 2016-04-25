@@ -21,6 +21,7 @@ private:
 public:
 	Contentor(double capacidade,Cor cor);
 	virtual ~Contentor();
+	friend class EcoPonto;
 };
 
 } /* namespace std */

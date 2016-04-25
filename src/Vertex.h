@@ -20,6 +20,7 @@ class Vertex {
 	bool visited;
 	void addEdge(Vertex<T> *dest, double w, string name);
 	bool removeEdgeTo(Vertex<T> *d);
+	vector<Contentor*> check();
 public:
 	Vertex(T in);
 	Vertex();

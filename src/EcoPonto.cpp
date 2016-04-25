@@ -22,4 +22,18 @@ EcoPonto::~EcoPonto() {
 	// TODO Auto-generated destructor stub
 }
 
+vector<Contentor> EcoPonto::getContentores() const{
+	return contentores;
+}
+
+vector<Contentor*> EcoPonto::check() {
+	vector<Contentor*> temp;
+	for(unsigned int i=0; i<contentores.size();i++){
+		if(contentores.at(i).cOcupada/(contentores.at(i).cUtil*1.0) >= 0.7)
+			temp.push_back(&contentores.at(i));
+	}
+	return temp;
+}
+
+
 } /* namespace std */

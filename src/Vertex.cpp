@@ -18,6 +18,11 @@ Vertex<T>::Vertex():visited(false){
 
 }
 
+template<class T>
+vector<Contentor*> Vertex<T>::check(){
+	return ecoponto.check();
+}
+
 template <class T>
 bool Vertex<T>::removeEdgeTo(Vertex<T> *d) {
 	typename vector<Edge<T> >::iterator it= adj.begin();
