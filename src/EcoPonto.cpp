@@ -37,3 +37,15 @@ vector<Contentor*> EcoPonto::check() {
 
 
 } /* namespace std */
+
+void EcoPonto::setContentores(const vector<Contentor>& contentores) {
+	this->contentores = contentores;
+}
+
+const Vertex<Info> *EcoPonto::getVertex() const {
+	return vertex;
+}
+
+void EcoPonto::setVertex(Vertex<Info>* vertex) {
+	this->vertex = vertex;
+}

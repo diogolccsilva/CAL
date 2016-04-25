@@ -9,12 +9,16 @@
 #define SRC_EMPRESA_H_
 
 #include <vector>
+#include <cmath>
+#include <fstream>
 
 #include "Camiao.h"
 #include "EcoCentro.h"
 #include "EcoPonto.h"
 #include "Graph.h"
 #include "Info.h"
+#include "Vertex.h"
+#include "Rua.h"
 
 namespace std {
 
@@ -23,9 +27,12 @@ class Empresa {
 	vector<EcoPonto> ecopontos;
 	vector<Camiao> camioes;
 	vector<EcoCentro> ecocentros;
+	Graph<Info> readMapa();
+	bool createRandomEcoPonto(Vertex<Info> *vertex);
 public:
 	Empresa();
 	virtual ~Empresa();
+	//void addNo(const Info )
 	const vector<Camiao>& getCamioes() const;
 	void setCamioes(const vector<Camiao>& camioes);
 	void addCamiao(const Camiao camiao);
@@ -35,8 +42,9 @@ public:
 	const vector<EcoPonto>& getEcopontos() const;
 	void setEcopontos(const vector<EcoPonto>& ecopontos);
 	void addEcoponto(const EcoPonto ecoponto);
-	const Graph<Info>& getMapa() const;
+	const Graph<Info> getMapa() const;
 	void setMapa(const Graph<Info>& mapa);
+	void createRandomEcoPontos();
 };
 
 } /* namespace std */

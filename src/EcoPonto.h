@@ -11,11 +11,14 @@
 #include <vector>
 
 #include "Contentor.h"
+#include "Info.h"
+#include "Vertex.h"
 
 namespace std {
 
 class EcoPonto {
 private:
+	Vertex<Info> *vertex;
 	vector<Contentor> contentores;
 public:
 	EcoPonto();
@@ -23,7 +26,9 @@ public:
 	virtual ~EcoPonto();
 	vector<Contentor> getContentores() const;
 	vector<Contentor*> check();
-
+	void setContentores(const vector<Contentor>& contentores);
+	const Vertex<Info>* getVertex() const;
+	void setVertex(Vertex<Info>* vertex);
 };
 
 } /* namespace std */

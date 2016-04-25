@@ -7,25 +7,23 @@
 #define SRC_VERTEX_H_
 
 #include "Edge.h"
-#include "EcoPonto.h"
-
 
 namespace std {
 
 template<class T>
 class Vertex {
 	T info;
-	EcoPonto ecoponto;
+	//EcoPonto ecoponto;
 	vector<Edge<T> > adj;
 	bool visited;
 	void addEdge(Vertex<T> *dest, double w, string name);
 	bool removeEdgeTo(Vertex<T> *d);
-	vector<Contentor*> check();
+	//vector<Contentor*> check();
 public:
 	Vertex(T in);
 	Vertex();
 	void display() const;
-	bool applyEco();
+//	bool applyEco();
 
 	const vector<Edge<T> >& getAdj() const {
 		return adj;

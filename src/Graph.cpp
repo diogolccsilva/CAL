@@ -4,11 +4,19 @@
  */
 
 #include "Graph.h"
+
+#include <iostream>
+#include <queue>
+
+#include "edgetype.h"
+#include "Edge.h"
+#include "graphviewer.h"
 #include "Info.h"
 
 #define _USE_MATH_DEFINES
 
 #include <cmath>
+#include <algorithm>
 
 namespace std {
 
@@ -27,14 +35,14 @@ vector<Vertex<T> *> Graph<T>::getVertexSet() const {
 }
 
 template<class T>
-bool Graph<T>::addVertex(const T &in) {
+bool Graph<T>::addVertex(const T &in,Vertex<T> *v1) {
 	typename vector<Vertex<T>*>::iterator it = vertexSet.begin();
 	typename vector<Vertex<T>*>::iterator ite = vertexSet.end();
 	for (; it != ite; it++)
 		if ((*it)->info == in)
 			return false;
-	Vertex<T> *v1 = new Vertex<T>(in);
-	v1->applyEco();
+	v1 = new Vertex<T>(in);
+
 	vertexSet.push_back(v1);
 	return true;
 }
