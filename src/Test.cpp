@@ -50,7 +50,11 @@ Graph<Info> readGraph() {
 	map1.open("map1.txt");
 	map2.open("map2.txt");
 	map3.open("map3.txt");
-
+//	double latmin, latmax, longmin, longmax;
+//	latmin = 90;
+//	longmin = 90;
+//	latmax = 0;
+//	longmax = 0;
 	if (map1.is_open()) {
 		while (!map1.eof()) {
 			Info tempInfo = Info();
@@ -66,11 +70,26 @@ Graph<Info> readGraph() {
 				getline(map1, temp);
 				tempInfo.setRlong(atof(temp.c_str()));
 
+//				if (tempInfo.getGlat() > latmax) {
+//					latmax = tempInfo.getGlat();
+//				}
+//				if (tempInfo.getGlat() < latmin) {
+//					latmin = tempInfo.getGlat();
+//				}
+//				if (tempInfo.getGlong() > longmax) {
+//					longmax = tempInfo.getGlong();
+//				}
+//				if (tempInfo.getGlong() < longmin) {
+//					longmin = tempInfo.getGlong();
+//				}
+
 				grafo.addVertex(tempInfo);
 
 			}
 		}
 	}
+
+	//grafo.setP();
 
 	if (map2.is_open()) {
 		while (!map2.eof()) {
@@ -141,16 +160,17 @@ Graph<Info> readGraph() {
 }
 
 void shortestPath(std::Graph<Info>& grafo) {
-
-	auto v = grafo.getfloydWarshallPath(grafo.getVertexSet().at(185)->getInfo(),
-			grafo.getVertexSet().at(127)->getInfo());
-	if (v.size() == 0){
+	int ids,idd;
+	cin >> ids >> idd;
+	auto v = grafo.getfloydWarshallPath(grafo.getVertexSet().at(ids)->getInfo(),
+			grafo.getVertexSet().at(idd)->getInfo());
+	if (v.size() == 0) {
 		cout << "Pontos sem ligacao!" << endl;
 		return;
 	}
 	auto it = v.begin();
-	for (;it!=v.end();it++){
-		cout << it->getId() << endl;
+	for (; it != v.end(); it++) {
+		cout << it->getRelativeId() << endl;
 	}
 
 }

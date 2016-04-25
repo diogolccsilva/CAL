@@ -12,12 +12,17 @@ private:
 	unsigned long id;
 	double rlat, rlong, glat, glong;
 	string nome;
+	int relativeID;
+	static int cnt;
 
 public:
 
 	Info();
 	virtual ~Info();
 	bool operator == (const Info &p2) const;
+	int getRelativeId() const{
+		return relativeID;
+	}
 
 	double getGlat() const {
 		return glat;

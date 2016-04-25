@@ -21,6 +21,7 @@ class Graph {
 	int ** W;   //weight
 	int ** P;   //path
 	void dfs(Vertex<T> *v, vector<T> &res) const;
+	double p;
 public:
 	bool addVertex(const T &in);
 	bool addEdge(const T &sourc, const T &dest, double w, string n);
@@ -38,6 +39,10 @@ public:
 	void getfloydWarshallPathAux(int index1, int index2, vector<T> & res);
 
 	void display() const;
+
+	void setP(double a){
+		p = a;
+	}
 };
 
 } /* namespace std */

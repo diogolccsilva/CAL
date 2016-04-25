@@ -5,6 +5,7 @@
 
 #include "Graph.h"
 #include "Info.h"
+#include <cmath>
 
 namespace std {
 
@@ -280,9 +281,9 @@ void Graph<T>::display() const {
 //		vertexSet.at(i)->display();
 //	}
 
-	GraphViewer *gv = new GraphViewer(5000, 5000, true);
+	GraphViewer *gv = new GraphViewer(100000, 100000, false);
 
-	gv->createWindow(5000, 5000);
+	gv->createWindow(1366,768);
 
 	gv->defineEdgeColor("blue");
 	gv->defineVertexColor("yellow");
@@ -290,12 +291,14 @@ void Graph<T>::display() const {
 	string line;
 
 	unsigned long idNo = 0;
-
+	double r  = 6000000;
 	//Read nodes
 	auto itv = vertexSet.begin(); //typename vector<Vertex<T> *>::const_iterator
 	for (; itv != vertexSet.end(); itv++) {
-		idNo = (*itv)->info.getId();
-		gv->addNode(idNo);
+		idNo = (*itv)->info.getRelativeId();
+		double x = cos((*itv)->info.getRlong())*r;
+		double y = sin((*itv)->info.getRlat())*r;
+		gv->addNode(idNo,x,y);
 	}
 
 	int idAresta = 0;
@@ -310,11 +313,11 @@ void Graph<T>::display() const {
 		auto ite = adj.begin();
 		for (; ite != adj.end(); ite++) {
 			cnt++;
-			idNoOrigem = (*itv)->getInfo().getId();
-			idNoDestino = ite->dest->getInfo().getId();
+			idNoOrigem = (*itv)->getInfo().getRelativeId();
+			idNoDestino = ite->dest->getInfo().getRelativeId();
 			//cout << "S: " << idNoOrigem << " D: " << idNoDestino << " E: " << cnt << endl;
-			if (!gv->addEdge(cnt, idNoOrigem, idNoDestino, EdgeType::UNDIRECTED))
-				cout << "fodeu" << endl;
+			if (!gv->addEdge(cnt, idNoOrigem, idNoDestino, EdgeType::DIRECTED))
+				cout << "fodeu " << cnt << endl;
 		}
 	}
 

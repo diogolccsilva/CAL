@@ -7,9 +7,10 @@
 
 #include "Info.h"
 
-Info::Info() {
-	// TODO Auto-generated constructor stub
+int Info::cnt = 0;
 
+Info::Info():relativeID(cnt) {
+	cnt++;
 }
 
 bool Info::operator == (const Info &i2) const {
