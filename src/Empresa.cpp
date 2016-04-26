@@ -88,20 +88,20 @@ Graph<Info> Empresa::readMapa() {
 				getline(map1, temp);
 				tempInfo.setRlong(atof(temp.c_str()));
 
-//				if (tempInfo.getGlat() > latmax) {
-//					latmax = tempInfo.getGlat();
-//				}
+				//				if (tempInfo.getGlat() > latmax) {
+				//					latmax = tempInfo.getGlat();
+				//				}
 				if (tempInfo.getRlat() < Graph<Info>::minLat) {
 					Graph<Info>::minLat = tempInfo.getRlat();
 				}
-//				if (tempInfo.getGlong() > longmax) {
-//					longmax = tempInfo.getGlong();
-//				}
+				//				if (tempInfo.getGlong() > longmax) {
+				//					longmax = tempInfo.getGlong();
+				//				}
 				if (tempInfo.getRlong() < Graph<Info>::minLong) {
 					Graph<Info>::minLong = tempInfo.getRlong();
 				}
 				Vertex<Info> *vertex;
-				grafo.addVertex(tempInfo,vertex);
+				grafo.addVertex(tempInfo, vertex);
 				createRandomEcoPonto(vertex);
 			}
 		}
@@ -210,9 +210,57 @@ void Empresa::createRandomEcoPontos() {
 	ecopontos.clear();
 	vector<Vertex<Info> *> v = mapa.getVertexSet();
 	vector<Vertex<Info> *>::const_iterator it = v.begin();
-	for (;it!=v.end();it++){
+	for (; it != v.end(); it++) {
 		createRandomEcoPonto(*it);
 	}
+}
+
+vector<EcoPonto*> Empresa::getPontosInt() {
+	vector<EcoPonto*> temp;
+	for (unsigned int i = 0; i < ecopontos.size(); i++) {
+		if (ecopontos.at(i).check().size() != 0)
+			temp.push_back(&ecopontos.at(i));
+	}
+
+	return temp;
+}
+
+void Empresa::recolha() {
+	int ids, idd, a, b;
+	cin >> ids >> idd;
+	vector<EcoPonto*> pinteresses = getPontosInt();
+	double minW = INT_INFINITY;
+
+	while (pinteresses.size()>0) {
+		for (unsigned int i = 0; i < pinteresses.size(); i++) {
+			if(mapa.getWeight(ids,
+					pinteresses.at(i)->getVertex()->getInfo().getRelativeId())
+					==INT_MAX)
+				pinteresses.erase(pinteresses.begin()+i);
+			if (mapa.getWeight(ids,
+					pinteresses.at(i)->getVertex()->getInfo().getRelativeId())
+					< minW) {
+				b = pinteresses.at(i)->getVertex()->getInfo().getRelativeId();
+				pinteresses.erase(pinteresses.begin()+i);
+			}
+		}
+		auto v = mapa.getfloydWarshallPath(mapa.getVertexSet().at(a)->getInfo(),
+				mapa.getVertexSet().at(b)->getInfo());
+		a = b;
+	}
+
+	/*
+	 auto v = mapa.getfloydWarshallPath(mapa.getVertexSet().at(ids)->getInfo(),
+	 mapa.getVertexSet().at(idd)->getInfo());
+	 if (v.size() == 0) {
+	 cout << "Pontos sem ligacao!" << endl;
+	 return;
+	 }
+	 auto it = v.begin();
+	 for (; it != v.end(); it++) {
+	 cout << it->getRelativeId() << endl;
+	 }*/
+
 }
 
 } /* namespace std */

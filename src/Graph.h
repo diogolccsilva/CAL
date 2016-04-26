@@ -19,7 +19,7 @@ const int INT_INFINITY = INT_MAX;
 template<class T>
 class Graph {
 	vector<Vertex<T> *> vertexSet;
-	int ** W;   //weight
+	double ** W;   //weight
 	int ** P;   //path
 	void dfs(Vertex<T> *v, vector<T> &res) const;
 	double p;
@@ -36,9 +36,11 @@ public:
 	int getNumVertex() const;
 
 	void floydWarshallShortestPath();
-	int edgeCost(int vOrigIndex, int vDestIndex);
+	double edgeCost(int vOrigIndex, int vDestIndex);
 	vector<T> getfloydWarshallPath(const T &origin, const T &dest);
 	void getfloydWarshallPathAux(int index1, int index2, vector<T> & res);
+	vector<T> getfloydWarshallPath(int originIndex, int destinationIndex) ;
+	double getWeight(int originIndex, int destinationIndex);
 
 	void display() const;
 

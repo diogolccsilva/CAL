@@ -45,6 +45,8 @@ public:
 	const Graph<Info> getMapa() const;
 	void setMapa(const Graph<Info>& mapa);
 	void createRandomEcoPontos();
+	void recolha();
+	vector<EcoPonto*> getPontosInt();
 };
 
 } /* namespace std */

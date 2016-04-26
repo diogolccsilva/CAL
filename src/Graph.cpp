@@ -198,7 +198,7 @@ int Graph<T>::maxNewChildren(Vertex<T> *v, T &inf) const {
 }
 
 template<class T>
-int Graph<T>::edgeCost(int vOrigIndex, int vDestIndex) {
+double Graph<T>::edgeCost(int vOrigIndex, int vDestIndex) {
 	if (vertexSet[vOrigIndex] == vertexSet[vDestIndex])
 		return 0;
 
@@ -208,6 +208,38 @@ int Graph<T>::edgeCost(int vOrigIndex, int vDestIndex) {
 	}
 
 	return INT_INFINITY;
+}
+
+template<class T>
+double Graph<T>::getWeight(int originIndex, int destinationIndex) {
+	return W[originIndex][destinationIndex];
+}
+
+template<class T>
+vector<T> Graph<T>::getfloydWarshallPath(int originIndex, int destinationIndex) {
+
+	vector<T> res;
+
+	//se nao foi encontrada solucao possivel, retorna lista vazia
+	if (W[originIndex][destinationIndex] == INT_INFINITY)
+		return res;
+
+	res.push_back(vertexSet[originIndex]->info);
+
+	//se houver pontos intermedios...
+	if (P[originIndex][destinationIndex] != -1) {
+		int intermedIndex = P[originIndex][destinationIndex];
+
+		getfloydWarshallPathAux(originIndex, intermedIndex, res);
+
+		res.push_back(vertexSet[intermedIndex]->info);
+
+		getfloydWarshallPathAux(intermedIndex, destinationIndex, res);
+	}
+
+	res.push_back(vertexSet[destinationIndex]->info);
+
+	return res;
 }
 
 template<class T>
@@ -264,10 +296,10 @@ void Graph<T>::getfloydWarshallPathAux(int index1, int index2,
 template<class T>
 void Graph<T>::floydWarshallShortestPath() {
 
-	W = new int *[vertexSet.size()];
+	W = new double *[vertexSet.size()];
 	P = new int *[vertexSet.size()];
 	for (unsigned int i = 0; i < vertexSet.size(); i++) {
-		W[i] = new int[vertexSet.size()];
+		W[i] = new double[vertexSet.size()];
 		P[i] = new int[vertexSet.size()];
 		for (unsigned int j = 0; j < vertexSet.size(); j++) {
 			W[i][j] = edgeCost(i, j);
@@ -282,7 +314,7 @@ void Graph<T>::floydWarshallShortestPath() {
 				if (W[i][k] == INT_INFINITY || W[k][j] == INT_INFINITY)
 					continue;
 
-				int val = min(W[i][j], W[i][k] + W[k][j]);
+				double val = min(W[i][j], W[i][k] + W[k][j]);
 				if (val != W[i][j]) {
 					W[i][j] = val;
 					P[i][j] = k;
