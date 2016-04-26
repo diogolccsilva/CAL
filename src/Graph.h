@@ -12,6 +12,19 @@
 
 #include "Vertex.h"
 
+#include <iostream>
+#include <queue>
+
+#include "edgetype.h"
+#include "Edge.h"
+#include "graphviewer.h"
+#include "Info.h"
+
+#define _USE_MATH_DEFINES
+
+#include <cmath>
+#include <algorithm>
+
 namespace std {
 
 const int INT_INFINITY = INT_MAX;
@@ -43,7 +56,7 @@ public:
 	vector<T> getfloydWarshallPath(int originIndex, int destinationIndex) ;
 	double getWeight(int originIndex, int destinationIndex);
 
-	void display() const;
+	void display();
 
 	void setP(double a){
 		p = a;

@@ -9,7 +9,6 @@
 #define SRC_EMPRESA_H_
 
 #include <vector>
-#include <cmath>
 #include <fstream>
 #include <sstream>
 
@@ -21,15 +20,22 @@
 #include "Vertex.h"
 #include "Rua.h"
 
+#define _USE_MATH_DEFINES
+
+#include <cmath>
+#include <algorithm>
+
 namespace std {
 
 class Empresa {
 	Graph<Info> mapa;
+	GraphViewer *gv;
 	vector<EcoPonto> ecopontos;
 	vector<Camiao> camioes;
 	vector<EcoCentro> ecocentros;
-	Graph<Info> readMapa();
+	void readMapa();
 	bool createRandomEcoPonto(Vertex<Info> *vertex);
+	void createGraphViewer();
 public:
 	Empresa();
 	virtual ~Empresa();

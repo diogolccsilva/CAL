@@ -26,6 +26,8 @@ public:
 		return name;
 	}
 
+	const Vertex<T>* getDest();
+
 	friend class Graph<T> ;
 	friend class Vertex<T> ;
 };

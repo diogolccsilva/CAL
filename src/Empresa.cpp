@@ -21,8 +21,9 @@ double nodeDistance(Vertex<Info> *v1, Vertex<Info> *v2) {
 }
 
 Empresa::Empresa() {
-	mapa = readMapa();
-
+	readMapa();
+	createGraphViewer();
+	createRandomEcoPontos();
 }
 
 const vector<Camiao>& Empresa::getCamioes() const {
@@ -65,10 +66,10 @@ void Empresa::addEcoponto(const EcoPonto ecoponto) {
 	ecopontos.push_back(ecoponto);
 }
 
-Graph<Info> Empresa::readMapa() {
+void Empresa::readMapa() {
 	string temp;
 	vector<Rua> ruas;
-	Graph<Info> grafo = Graph<Info>();
+	mapa = Graph<Info>();
 	ifstream map1, map2, map3;
 	map1.open("map1.txt");
 	map2.open("map2.txt");
@@ -101,15 +102,15 @@ Graph<Info> Empresa::readMapa() {
 					Graph<Info>::minLong = tempInfo.getRlong();
 				}
 				Vertex<Info> *vertex;
-				grafo.addVertex(tempInfo, vertex);
-				createRandomEcoPonto(vertex);
+				mapa.addVertex(tempInfo, vertex);
+				//createRandomEcoPonto(vertex);
 			}
 		}
 	}
 
 	cout << Graph<Info>::minLong << "  " << Graph<Info>::minLat << endl;
 
-	//grafo.setP();
+	//mapa.setP();
 
 	if (map2.is_open()) {
 		while (!map2.eof()) {
@@ -140,7 +141,7 @@ Graph<Info> Empresa::readMapa() {
 				idNo = atol(temp.c_str());
 				getline(map3, temp);
 				idDest = atol(temp.c_str());
-				vector<Vertex<Info> *> vertexSet = grafo.getVertexSet();
+				vector<Vertex<Info> *> vertexSet = mapa.getVertexSet();
 
 				for (unsigned int i = 0; i < ruas.size(); i++) {
 					if (ruas.at(i).getId() == idRua) {
@@ -154,11 +155,10 @@ Graph<Info> Empresa::readMapa() {
 						}
 						//cout << nodeDistance(tempNo, tempDest) << endl;
 						if (ruas.at(i).isBi())
-							grafo.addEdge(tempDest->getInfo(),
-									tempNo->getInfo(),
+							mapa.addEdge(tempDest->getInfo(), tempNo->getInfo(),
 									nodeDistance(tempNo, tempDest),
 									ruas.at(i).getNome());
-						grafo.addEdge(tempNo->getInfo(), tempDest->getInfo(),
+						mapa.addEdge(tempNo->getInfo(), tempDest->getInfo(),
 								nodeDistance(tempNo, tempDest),
 								ruas.at(i).getNome());
 					}
@@ -172,18 +172,15 @@ Graph<Info> Empresa::readMapa() {
 	map2.close();
 	map3.close();
 
-	grafo.display();
-	//cout << "Tamanho: " << grafo.getVertexSet().size() << endl;
-	grafo.floydWarshallShortestPath();
-
-	return grafo;
+	mapa.display();
+	//cout << "Tamanho: " << mapa.getVertexSet().size() << endl;
+	mapa.floydWarshallShortestPath();
 
 }
 
 bool Empresa::createRandomEcoPonto(Vertex<Info>* vertex) {
-	srand(time(NULL));
 	int n = rand() % 100;
-	if (n < 20) {
+	if (n < 5) {
 		vector<Contentor> contentores;
 		contentores.push_back(Contentor(2500, Contentor::amarelo));
 		contentores.push_back(Contentor(2500, Contentor::azul));
@@ -193,6 +190,10 @@ bool Empresa::createRandomEcoPonto(Vertex<Info>* vertex) {
 		EcoPonto ecoponto = EcoPonto();
 		ecoponto.setContentores(contentores);
 		ecoponto.setVertex(vertex);
+		if (gv != NULL) {
+			gv->setVertexColor(vertex->getInfo().getRelativeId(), "green");
+			gv->rearrange();
+		}
 		return true;
 	}
 	return false;
@@ -207,6 +208,7 @@ Empresa::~Empresa() {
 }
 
 void Empresa::createRandomEcoPontos() {
+	srand(time(NULL));
 	ecopontos.clear();
 	vector<Vertex<Info> *> v = mapa.getVertexSet();
 	vector<Vertex<Info> *>::const_iterator it = v.begin();
@@ -260,6 +262,58 @@ void Empresa::recolha() {
 	 cout << it->getRelativeId() << endl;
 	 }*/
 
+}
+
+void Empresa::createGraphViewer() {
+	vector<Vertex<Info> *> vs = mapa.getVertexSet();
+
+	gv = new GraphViewer(100000, 100000, false);
+
+	gv->createWindow(1366, 768);
+
+	gv->defineEdgeColor("blue");
+	gv->defineVertexColor("yellow");
+
+	string line;
+
+	double minLong = Graph<Info>::minLong;
+	double minLat = Graph<Info>::minLat;
+
+	unsigned long idNo = 0;
+	int r = 10000000;
+	//Read nodes
+	vector<Vertex<Info> *>::const_iterator itv = vs.begin(); //typename vector<Vertex<T> *>::const_iterator
+	for (; itv != vs.end(); itv++) {
+		idNo = (*itv)->getInfo().getRelativeId();
+		int y = (int) (((sin((*itv)->getInfo().getRlong() + M_PI)
+				- sin(minLong + M_PI)) * r)) % r;
+		int x = (int) (((sin((*itv)->getInfo().getRlat()) - sin(minLat)) * r))
+				% r;
+		gv->addNode(idNo, x, y);
+	}
+
+	cout << minLong * M_PI / 180.0 << "  " << minLat * M_PI / 180.0 << endl;
+
+	unsigned long idNoOrigem = 0;
+	unsigned long idNoDestino = 0;
+
+	//Read Edges
+	itv = vs.begin();
+	int cnt = 1;
+	for (; itv != vs.end(); itv++) {
+		auto adj = (*itv)->getAdj();
+		auto ite = adj.begin();
+		for (; ite != adj.end(); ite++) {
+			cnt++;
+			idNoOrigem = (*itv)->getInfo().getRelativeId();
+			idNoDestino = ite->getDest()->getInfo().getRelativeId();
+			//cout << "S: " << idNoOrigem << " D: " << idNoDestino << " E: " << cnt << endl;
+			gv->addEdge(cnt, idNoOrigem, idNoDestino, EdgeType::DIRECTED);
+			gv->setEdgeLabel(cnt, ite->getName());
+		}
+	}
+
+	gv->rearrange();
 }
 
 string Empresa::shortestPath() {

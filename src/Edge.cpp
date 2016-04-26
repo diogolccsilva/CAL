@@ -9,6 +9,11 @@
 namespace std {
 
 template<class T>
+const Vertex<T>* Edge<T>::getDest() {
+	return dest;
+}
+
+template<class T>
 Edge<T>::Edge(Vertex<T> *d, double w, string name):dest(d),weight(w), name(name){
 
 }

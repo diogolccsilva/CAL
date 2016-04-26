@@ -5,19 +5,6 @@
 
 #include "Graph.h"
 
-#include <iostream>
-#include <queue>
-
-#include "edgetype.h"
-#include "Edge.h"
-#include "graphviewer.h"
-#include "Info.h"
-
-#define _USE_MATH_DEFINES
-
-#include <cmath>
-#include <algorithm>
-
 namespace std {
 
 template<class T>
@@ -339,53 +326,10 @@ Edge<T> Graph<T>::getEdge(const T& sourc, const T& dest) {
 }
 
 template<class T>
-void Graph<T>::display() const {
+void Graph<T>::display(){
 //	for (unsigned int i = 0; i < vertexSet.size(); i++) {
 //		vertexSet.at(i)->display();
 //	}
-
-	GraphViewer *gv = new GraphViewer(100000, 100000, false);
-
-	gv->createWindow(1366,768);
-
-	gv->defineEdgeColor("blue");
-	gv->defineVertexColor("yellow");
-
-	string line;
-
-	unsigned long idNo = 0;
-	int r  = 10000000;
-	//Read nodes
-	auto itv = vertexSet.begin(); //typename vector<Vertex<T> *>::const_iterator
-	for (; itv != vertexSet.end(); itv++) {
-		idNo = (*itv)->info.getRelativeId();
-		int y = (int)(((sin((*itv)->info.getRlong()+M_PI)-sin(minLong+M_PI))*r))%r;
-		int x = (int)(((sin((*itv)->info.getRlat())-sin(minLat))*r))%r;
-		gv->addNode(idNo,x,y);
-	}
-
-	cout << minLong*M_PI/180.0 << "  " <<minLat*M_PI/180.0 << endl;
-
-	unsigned long idNoOrigem = 0;
-	unsigned long idNoDestino = 0;
-
-	//Read Edges
-	itv = vertexSet.begin();
-	int cnt = 1;
-	for (; itv != vertexSet.end(); itv++) {
-		auto adj = (*itv)->adj;
-		auto ite = adj.begin();
-		for (; ite != adj.end(); ite++) {
-			cnt++;
-			idNoOrigem = (*itv)->getInfo().getRelativeId();
-			idNoDestino = ite->dest->getInfo().getRelativeId();
-			//cout << "S: " << idNoOrigem << " D: " << idNoDestino << " E: " << cnt << endl;
-			if (!gv->addEdge(cnt, idNoOrigem, idNoDestino, EdgeType::DIRECTED))
-				cout << "fodeu " << cnt << endl;
-		}
-	}
-
-	gv->rearrange();
 }
 
 template class Graph<Info> ;
