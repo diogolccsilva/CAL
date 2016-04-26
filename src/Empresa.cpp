@@ -246,7 +246,7 @@ string Empresa::recolha(int ids) {
 				i--;
 				cout << "nao chego la mano " << a << endl;
 			}
-			if (mapa.getWeight(a,
+			else if (mapa.getWeight(a,
 					pinteresses.at(i)->getVertex()->getInfo().getRelativeId())
 					< minW) {
 				b = pinteresses.at(i)->getVertex()->getInfo().getRelativeId();
