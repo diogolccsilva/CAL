@@ -52,9 +52,10 @@ public:
 	const Graph<Info> getMapa() const;
 	void setMapa(const Graph<Info>& mapa);
 	void createRandomEcoPontos();
-	void recolha();
+	string recolha(int ids);
 	vector<EcoPonto*> getPontosInt();
-	string shortestPath();
+	string shortestPath(int ids, int idd);
+	int geraLixo();
 };
 
 } /* namespace std */

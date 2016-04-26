@@ -49,3 +49,11 @@ const Vertex<Info> *EcoPonto::getVertex() const {
 void EcoPonto::setVertex(Vertex<Info>* vertex) {
 	this->vertex = vertex;
 }
+
+void EcoPonto::geraLixo(){
+	for(unsigned int i=0; i< contentores.size();i++){
+		int n=rand()%100;
+		contentores.at(i).setOcupada(contentores.at(i).getUtil()*n/100.0);
+	}
+}
+

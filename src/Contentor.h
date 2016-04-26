@@ -21,6 +21,13 @@ private:
 public:
 	Contentor(double capacidade,Cor cor);
 	virtual ~Contentor();
+	double getOcupada() const;
+	void setOcupada(double ocupada);
+	Cor getCor() const;
+	void setCor(Cor cor);
+	double getUtil() const;
+	void setUtil(double util);
+
 	friend class EcoPonto;
 };
 

@@ -29,6 +29,7 @@ public:
 	void setContentores(const vector<Contentor>& contentores);
 	const Vertex<Info>* getVertex() const;
 	void setVertex(Vertex<Info>* vertex);
+	void geraLixo();
 };
 
 } /* namespace std */
