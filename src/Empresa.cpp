@@ -220,7 +220,7 @@ void Empresa::createRandomEcoPontos() {
 }
 
 vector<EcoPonto*> Empresa::getPontosInt() {
-	cout<<"ecos size "<<ecopontos.size()<<endl;
+	cout << "ecos size " << ecopontos.size() << endl;
 	vector<EcoPonto*> temp;
 	for (unsigned int i = 0; i < ecopontos.size(); i++) {
 		if (ecopontos.at(i).check().size() != 0)
@@ -230,57 +230,67 @@ vector<EcoPonto*> Empresa::getPontosInt() {
 	return temp;
 }
 
-string Empresa::recolha(int ids) {
-	int idd, a=ids, b;
+string Empresa::recolha(int ids, int idd) {
+	int a = ids, b;
 	vector<EcoPonto*> pinteresses = getPontosInt();
 	double minW = INT_INFINITY;
 	stringstream s;
 
-	cout<<"pinteresse "<<pinteresses.size()<< endl;
+	cout << "pinteresse: " << pinteresses.size() << endl;
+
+	vector<EcoPonto*>::iterator it, temp;
 
 	while (pinteresses.size() > 0) {
-		for (unsigned int i = 0; i < pinteresses.size(); i++) {
-			if (mapa.getWeight(a,
-					pinteresses.at(i)->getVertex()->getInfo().getRelativeId()) ==INT_MAX){
-				pinteresses.erase(pinteresses.begin() + i);
-				i--;
-				cout << "nao chego la mano " << a << endl;
-			}
-			else if (mapa.getWeight(a,
-					pinteresses.at(i)->getVertex()->getInfo().getRelativeId())
-					< minW) {
-				b = pinteresses.at(i)->getVertex()->getInfo().getRelativeId();
-				pinteresses.erase(pinteresses.begin() + i);
-				s << shortestPath(a,b)<<"eco: "<<a<<endl;
-
-				a = b;
-				i--;
+		//cout << "ola561516" << endl;
+		bool found = false;
+		it = pinteresses.begin();
+		for (; it != pinteresses.end();) {
+			if (mapa.getWeight((*it)->getVertex()->getInfo().getRelativeId(),
+					idd) == INT_MAX) {
+				//cout << "nao chego " <<  (*it)->getVertex()->getInfo().getRelativeId() << endl;
+				it = pinteresses.erase(it);
+				//cout << "APAGAR" << pinteresses.size() << endl;
+			} else if (mapa.getWeight(a,
+					(*it)->getVertex()->getInfo().getRelativeId()) == INT_MAX) {
+				//cout << "nao chego " <<  (*it)->getVertex()->getInfo().getRelativeId() << endl;
+				it = pinteresses.erase(it);
+				//cout << "APAGAR" << pinteresses.size() << endl;
+			} else if (mapa.getWeight(a,
+					(*it)->getVertex()->getInfo().getRelativeId()) < minW) {
+				//cout << "NAO APAGAR" << pinteresses.size() << endl;
+				b = (*it)->getVertex()->getInfo().getRelativeId();
+				temp = it;
+				minW = mapa.getWeight(a,
+						(*it)->getVertex()->getInfo().getRelativeId());
+				it++;
+				found = true;
+			} else {
+				it++;
 			}
 		}
-
-
+		if (found)
+			pinteresses.erase(temp);
+		s << shortestPath(a, b) << endl;
+		//cout <<"sai:" << b << endl;
+		a = b;
+		minW = INT_INFINITY;
 	}
 
 	minW = INT_INFINITY;
 	/*
-	for (unsigned int i = 0; i < ecocentros.size(); i++) {
-		if (mapa.getWeight(a,
-				ecocentros.at(i)->getVertex()->getInfo().getRelativeId()) ==INT_MAX)
-			ecocentros.erase(ecocentros.begin() + i);
-		if (mapa.getWeight(a,
-				ecocentros.at(i)->getVertex()->getInfo().getRelativeId())
-				< minW) {
-			b = ecocentros.at(i)->getVertex()->getInfo().getRelativeId();
-			ecocentros.erase(ecocentros.begin() + i);
-		}
-	}
-*/
-
-
+	 for (unsigned int i = 0; i < ecocentros.size(); i++) {
+	 if (mapa.getWeight(a,
+	 ecocentros.at(i)->getVertex()->getInfo().getRelativeId()) ==INT_MAX)
+	 ecocentros.erase(ecocentros.begin() + i);
+	 if (mapa.getWeight(a,
+	 ecocentros.at(i)->getVertex()->getInfo().getRelativeId())
+	 < minW) {
+	 b = ecocentros.at(i)->getVertex()->getInfo().getRelativeId();
+	 ecocentros.erase(ecocentros.begin() + i);
+	 }
+	 }
+	 */
 	return s.str();
-
-
-
 }
 
 void Empresa::createGraphViewer() {
@@ -328,7 +338,7 @@ void Empresa::createGraphViewer() {
 			idNoDestino = ite->getDest()->getInfo().getRelativeId();
 			//cout << "S: " << idNoOrigem << " D: " << idNoDestino << " E: " << cnt << endl;
 			gv->addEdge(cnt, idNoOrigem, idNoDestino, EdgeType::DIRECTED);
-	//		gv->setEdgeLabel(cnt, ite->getName());
+			gv->setEdgeLabel(cnt, ite->getName());
 		}
 	}
 
@@ -346,13 +356,13 @@ string Empresa::shortestPath(int ids, int idd) {
 	stringstream s;
 	for (; (it + 1) != v.end(); it++) {
 		//cout << mapa.getEdge((*it), (*(it + 1))).getName() << endl;
-		s << (*it).getRelativeId() <<"   "<<mapa.getEdge((*it), (*(it + 1))).getName() << endl;
+		s << mapa.getEdge((*it), (*(it + 1))).getName() << endl;
 	}
 	return s.str();
 }
 
-int Empresa::geraLixo(){
-	for(unsigned int i=0; i< ecopontos.size();i++){
+int Empresa::geraLixo() {
+	for (unsigned int i = 0; i < ecopontos.size(); i++) {
 		ecopontos.at(i).geraLixo();
 
 	}

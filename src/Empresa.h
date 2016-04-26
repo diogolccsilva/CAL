@@ -52,7 +52,7 @@ public:
 	const Graph<Info> getMapa() const;
 	void setMapa(const Graph<Info>& mapa);
 	void createRandomEcoPontos();
-	string recolha(int ids);
+	string recolha(int ids, int idd);
 	vector<EcoPonto*> getPontosInt();
 	string shortestPath(int ids, int idd);
 	int geraLixo();

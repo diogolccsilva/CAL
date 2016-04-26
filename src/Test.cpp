@@ -26,15 +26,15 @@ using namespace std;
 
 int menu() {
 	Empresa emp = Empresa();
-	int x;
+	int x, y;
 	while (1) {
 		cout << "1. Caminho mais curto;" << endl;
 		cout << "9. Sair;" << endl;
 		switch (getch()) {
 		case '1':
 			cout<<"onde e a central?  ";
-			cin >> x;
-			cout << emp.recolha(x);
+			cin >> x>>y;
+			cout << emp.recolha(x,y);
 			break;
 		case '2':
 			break;
