@@ -27,6 +27,7 @@ public:
 	static double minLat, minLong;
 	bool addVertex(const T &in,Vertex<T> *v1);
 	bool addEdge(const T &sourc, const T &dest, double w, string n);
+	Edge<T> getEdge(const T &sourc, const T &dest);
 	bool removeVertex(const T &in);
 	bool removeEdge(const T &sourc, const T &dest);
 	vector<T> dfs() const;

@@ -11,6 +11,7 @@
 #include <vector>
 #include <cmath>
 #include <fstream>
+#include <sstream>
 
 #include "Camiao.h"
 #include "EcoCentro.h"
@@ -47,6 +48,7 @@ public:
 	void createRandomEcoPontos();
 	void recolha();
 	vector<EcoPonto*> getPontosInt();
+	string shortestPath();
 };
 
 } /* namespace std */

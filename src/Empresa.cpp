@@ -231,17 +231,16 @@ void Empresa::recolha() {
 	vector<EcoPonto*> pinteresses = getPontosInt();
 	double minW = INT_INFINITY;
 
-	while (pinteresses.size()>0) {
+	while (pinteresses.size() > 0) {
 		for (unsigned int i = 0; i < pinteresses.size(); i++) {
-			if(mapa.getWeight(ids,
-					pinteresses.at(i)->getVertex()->getInfo().getRelativeId())
-					==INT_MAX)
-				pinteresses.erase(pinteresses.begin()+i);
+			if (mapa.getWeight(ids,
+					pinteresses.at(i)->getVertex()->getInfo().getRelativeId()) ==INT_MAX)
+				pinteresses.erase(pinteresses.begin() + i);
 			if (mapa.getWeight(ids,
 					pinteresses.at(i)->getVertex()->getInfo().getRelativeId())
 					< minW) {
 				b = pinteresses.at(i)->getVertex()->getInfo().getRelativeId();
-				pinteresses.erase(pinteresses.begin()+i);
+				pinteresses.erase(pinteresses.begin() + i);
 			}
 		}
 		auto v = mapa.getfloydWarshallPath(mapa.getVertexSet().at(a)->getInfo(),
@@ -261,6 +260,24 @@ void Empresa::recolha() {
 	 cout << it->getRelativeId() << endl;
 	 }*/
 
+}
+
+string Empresa::shortestPath() {
+	int ids, idd;
+	cin >> ids >> idd;
+	auto v = mapa.getfloydWarshallPath(mapa.getVertexSet().at(ids)->getInfo(),
+			mapa.getVertexSet().at(idd)->getInfo());
+	if (v.size() == 0) {
+		cout << "Pontos sem ligacao!" << endl;
+		return "\0";
+	}
+	auto it = v.begin();
+	stringstream s;
+	for (; (it + 1) != v.end(); it++) {
+		//cout << mapa.getEdge((*it), (*(it + 1))).getName() << endl;
+		s << mapa.getEdge((*it), (*(it + 1))).getName() << endl;
+	}
+	return s.str();
 }
 
 } /* namespace std */

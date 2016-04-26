@@ -24,22 +24,6 @@ using namespace std;
  cute::makeRunner(lis,argc,argv)(s, "AllTests");
  }*/
 
-void shortestPath(Graph<Info> grafo) {
-	int ids,idd;
-	cin >> ids >> idd;
-	auto v = grafo.getfloydWarshallPath(grafo.getVertexSet().at(ids)->getInfo(),
-			grafo.getVertexSet().at(idd)->getInfo());
-	if (v.size() == 0) {
-		cout << "Pontos sem ligacao!" << endl;
-		return;
-	}
-	auto it = v.begin();
-	for (; it != v.end(); it++) {
-		cout << it->getRelativeId() << endl;
-	}
-
-}
-
 int menu() {
 	Empresa emp = Empresa();
 	while (1) {
@@ -47,7 +31,7 @@ int menu() {
 		cout << "9. Sair;" << endl;
 		switch (getch()) {
 		case '1':
-			shortestPath(emp.getMapa());
+			cout << emp.shortestPath();
 			break;
 		case '2':
 			break;

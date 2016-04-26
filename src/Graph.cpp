@@ -324,6 +324,21 @@ void Graph<T>::floydWarshallShortestPath() {
 }
 
 template<class T>
+Edge<T> Graph<T>::getEdge(const T& sourc, const T& dest) {
+	typename vector<Vertex<T> *>::const_iterator it = vertexSet.begin();
+	for (;it!=vertexSet.end();it++){
+		if ((*it)->info == sourc){
+			typename vector<Edge<T> >::const_iterator ite = (*it)->adj.begin();
+			for (;ite!=(*it)->adj.end();ite++){
+				if (ite->dest->info == dest)
+					return (*ite);
+			}
+		}
+	}
+	return Edge<T>(new Vertex<T>(dest),INT_INFINITY,"\0");
+}
+
+template<class T>
 void Graph<T>::display() const {
 //	for (unsigned int i = 0; i < vertexSet.size(); i++) {
 //		vertexSet.at(i)->display();
@@ -344,14 +359,13 @@ void Graph<T>::display() const {
 	auto itv = vertexSet.begin(); //typename vector<Vertex<T> *>::const_iterator
 	for (; itv != vertexSet.end(); itv++) {
 		idNo = (*itv)->info.getRelativeId();
-		int x = (int)(((sin((*itv)->info.getRlong())-sin(minLong))*r))%r;
-		int y = (int)(((sin((*itv)->info.getRlat())-sin(minLat))*r))%r;
+		int y = (int)(((sin((*itv)->info.getRlong()+M_PI)-sin(minLong+M_PI))*r))%r;
+		int x = (int)(((sin((*itv)->info.getRlat()+M_PI)-sin(minLat+M_PI))*r))%r;
 		gv->addNode(idNo,x,y);
 	}
 
 	cout << minLong*M_PI/180.0 << "  " <<minLat*M_PI/180.0 << endl;
 
-	int idAresta = 0;
 	unsigned long idNoOrigem = 0;
 	unsigned long idNoDestino = 0;
 

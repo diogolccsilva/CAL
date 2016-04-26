@@ -21,6 +21,11 @@ class Edge {
 	string name;
 public:
 	Edge(Vertex<T> *d, double w, string name);
+
+	const string& getName() const {
+		return name;
+	}
+
 	friend class Graph<T> ;
 	friend class Vertex<T> ;
 };
