@@ -24,6 +24,7 @@ Empresa::Empresa() {
 	readMapa();
 	createGraphViewer();
 	createRandomEcoPontos();
+	geraLixo();
 }
 
 const vector<Camiao>& Empresa::getCamioes() const {
@@ -194,6 +195,7 @@ bool Empresa::createRandomEcoPonto(Vertex<Info>* vertex) {
 			gv->setVertexColor(vertex->getInfo().getRelativeId(), "green");
 			gv->rearrange();
 		}
+		ecopontos.push_back(ecoponto);
 		return true;
 	}
 	return false;
@@ -218,6 +220,7 @@ void Empresa::createRandomEcoPontos() {
 }
 
 vector<EcoPonto*> Empresa::getPontosInt() {
+	cout<<"ecos size "<<ecopontos.size()<<endl;
 	vector<EcoPonto*> temp;
 	for (unsigned int i = 0; i < ecopontos.size(); i++) {
 		if (ecopontos.at(i).check().size() != 0)
@@ -233,24 +236,29 @@ string Empresa::recolha(int ids) {
 	double minW = INT_INFINITY;
 	stringstream s;
 
-
+	cout<<"pinteresse "<<pinteresses.size()<< endl;
 
 	while (pinteresses.size() > 0) {
 		for (unsigned int i = 0; i < pinteresses.size(); i++) {
 			if (mapa.getWeight(a,
-					pinteresses.at(i)->getVertex()->getInfo().getRelativeId()) ==INT_MAX)
+					pinteresses.at(i)->getVertex()->getInfo().getRelativeId()) ==INT_MAX){
 				pinteresses.erase(pinteresses.begin() + i);
+				i--;
+				cout << "nao chego la mano " << a << endl;
+			}
 			if (mapa.getWeight(a,
 					pinteresses.at(i)->getVertex()->getInfo().getRelativeId())
 					< minW) {
 				b = pinteresses.at(i)->getVertex()->getInfo().getRelativeId();
 				pinteresses.erase(pinteresses.begin() + i);
+				s << shortestPath(a,b)<<"eco: "<<a<<endl;
+
+				a = b;
+				i--;
 			}
 		}
 
-		s << shortestPath(a,b);
 
-		a = b;
 	}
 
 	minW = INT_INFINITY;
@@ -320,7 +328,7 @@ void Empresa::createGraphViewer() {
 			idNoDestino = ite->getDest()->getInfo().getRelativeId();
 			//cout << "S: " << idNoOrigem << " D: " << idNoDestino << " E: " << cnt << endl;
 			gv->addEdge(cnt, idNoOrigem, idNoDestino, EdgeType::DIRECTED);
-			gv->setEdgeLabel(cnt, ite->getName());
+	//		gv->setEdgeLabel(cnt, ite->getName());
 		}
 	}
 
@@ -338,7 +346,7 @@ string Empresa::shortestPath(int ids, int idd) {
 	stringstream s;
 	for (; (it + 1) != v.end(); it++) {
 		//cout << mapa.getEdge((*it), (*(it + 1))).getName() << endl;
-		s << mapa.getEdge((*it), (*(it + 1))).getName() << endl;
+		s << (*it).getRelativeId() <<"   "<<mapa.getEdge((*it), (*(it + 1))).getName() << endl;
 	}
 	return s.str();
 }
