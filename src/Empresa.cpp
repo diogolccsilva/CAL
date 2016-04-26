@@ -109,8 +109,6 @@ void Empresa::readMapa() {
 		}
 	}
 
-	cout << Graph<Info>::minLong << "  " << Graph<Info>::minLat << endl;
-
 	//mapa.setP();
 
 	if (map2.is_open()) {
@@ -154,7 +152,6 @@ void Empresa::readMapa() {
 								tempDest = vertexSet.at(j);
 
 						}
-						//cout << nodeDistance(tempNo, tempDest) << endl;
 						if (ruas.at(i).isBi())
 							mapa.addEdge(tempDest->getInfo(), tempNo->getInfo(),
 									nodeDistance(tempNo, tempDest),
@@ -174,7 +171,6 @@ void Empresa::readMapa() {
 	map3.close();
 
 	mapa.display();
-	//cout << "Tamanho: " << mapa.getVertexSet().size() << endl;
 	mapa.floydWarshallShortestPath();
 
 }
@@ -220,13 +216,16 @@ void Empresa::createRandomEcoPontos() {
 }
 
 vector<EcoPonto*> Empresa::getPontosInt() {
-	cout << "ecos size " << ecopontos.size() << endl;
 	vector<EcoPonto*> temp;
 	for (unsigned int i = 0; i < ecopontos.size(); i++) {
-		if (ecopontos.at(i).check().size() != 0)
+		if (ecopontos.at(i).check().size() != 0) {
+			gv->setVertexColor(
+					ecopontos.at(i).getVertex()->getInfo().getRelativeId(),
+					"blue");
 			temp.push_back(&ecopontos.at(i));
+		}
 	}
-
+	gv->rearrange();
 	return temp;
 }
 
@@ -236,28 +235,20 @@ string Empresa::recolha(int ids, int idd) {
 	double minW = INT_INFINITY;
 	stringstream s;
 
-	cout << "pinteresse: " << pinteresses.size() << endl;
-
 	vector<EcoPonto*>::iterator it, temp;
 
 	while (pinteresses.size() > 0) {
-		//cout << "ola561516" << endl;
 		bool found = false;
 		it = pinteresses.begin();
 		for (; it != pinteresses.end();) {
 			if (mapa.getWeight((*it)->getVertex()->getInfo().getRelativeId(),
 					idd) == INT_MAX) {
-				//cout << "nao chego " <<  (*it)->getVertex()->getInfo().getRelativeId() << endl;
 				it = pinteresses.erase(it);
-				//cout << "APAGAR" << pinteresses.size() << endl;
 			} else if (mapa.getWeight(a,
 					(*it)->getVertex()->getInfo().getRelativeId()) == INT_MAX) {
-				//cout << "nao chego " <<  (*it)->getVertex()->getInfo().getRelativeId() << endl;
 				it = pinteresses.erase(it);
-				//cout << "APAGAR" << pinteresses.size() << endl;
 			} else if (mapa.getWeight(a,
 					(*it)->getVertex()->getInfo().getRelativeId()) < minW) {
-				//cout << "NAO APAGAR" << pinteresses.size() << endl;
 				b = (*it)->getVertex()->getInfo().getRelativeId();
 				temp = it;
 				minW = mapa.getWeight(a,
@@ -268,15 +259,18 @@ string Empresa::recolha(int ids, int idd) {
 				it++;
 			}
 		}
-		if (found)
+		if (found) {
 			pinteresses.erase(temp);
-		s << shortestPath(a, b) << endl;
-		//cout <<"sai:" << b << endl;
+			s << shortestPath(a, b) << " : CHEGOU : " << b << endl;
+		}
 		a = b;
 		minW = INT_INFINITY;
 	}
 
 	minW = INT_INFINITY;
+
+	s << shortestPath(b, idd) << " : CHEGOU AO FIM : " << endl;
+
 	/*
 	 for (unsigned int i = 0; i < ecocentros.size(); i++) {
 	 if (mapa.getWeight(a,
@@ -321,8 +315,6 @@ void Empresa::createGraphViewer() {
 		gv->addNode(idNo, x, y);
 	}
 
-	cout << minLong * M_PI / 180.0 << "  " << minLat * M_PI / 180.0 << endl;
-
 	unsigned long idNoOrigem = 0;
 	unsigned long idNoDestino = 0;
 
@@ -336,9 +328,8 @@ void Empresa::createGraphViewer() {
 			cnt++;
 			idNoOrigem = (*itv)->getInfo().getRelativeId();
 			idNoDestino = ite->getDest()->getInfo().getRelativeId();
-			//cout << "S: " << idNoOrigem << " D: " << idNoDestino << " E: " << cnt << endl;
 			gv->addEdge(cnt, idNoOrigem, idNoDestino, EdgeType::DIRECTED);
-			gv->setEdgeLabel(cnt, ite->getName());
+			//	gv->setEdgeLabel(cnt, ite->getName());
 		}
 	}
 
@@ -355,8 +346,9 @@ string Empresa::shortestPath(int ids, int idd) {
 	auto it = v.begin();
 	stringstream s;
 	for (; (it + 1) != v.end(); it++) {
-		//cout << mapa.getEdge((*it), (*(it + 1))).getName() << endl;
-		s << mapa.getEdge((*it), (*(it + 1))).getName() << endl;
+		s <<mapa.getEdge((*it), (*(it + 1))).getDest()->getInfo().getRelativeId() << "   "
+				<<  mapa.getEdge((*it), (*(it + 1))).getName()
+				<< endl;
 	}
 	return s.str();
 }

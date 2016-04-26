@@ -28,9 +28,7 @@ vector<Contentor> EcoPonto::getContentores() const{
 
 vector<Contentor*> EcoPonto::check() {
 	vector<Contentor*> temp;
-	cout<<"Entra check \n";
 	for(unsigned int i=0; i<contentores.size();i++){
-		cout<<contentores.at(i).cOcupada/(contentores.at(i).cUtil*1.0)<<endl;
 		if(contentores.at(i).cOcupada/(contentores.at(i).cUtil*1.0) >= 0.7)
 			temp.push_back(&contentores.at(i));
 	}
