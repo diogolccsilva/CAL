@@ -360,7 +360,7 @@ void Graph<T>::display() const {
 	for (; itv != vertexSet.end(); itv++) {
 		idNo = (*itv)->info.getRelativeId();
 		int y = (int)(((sin((*itv)->info.getRlong()+M_PI)-sin(minLong+M_PI))*r))%r;
-		int x = (int)(((sin((*itv)->info.getRlat()+M_PI)-sin(minLat+M_PI))*r))%r;
+		int x = (int)(((sin((*itv)->info.getRlat())-sin(minLat))*r))%r;
 		gv->addNode(idNo,x,y);
 	}
 
