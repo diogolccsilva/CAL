@@ -225,46 +225,56 @@ vector<EcoPonto*> Empresa::getPontosInt() {
 	return temp;
 }
 
-void Empresa::recolha() {
-	int ids, idd, a, b;
-	cin >> ids >> idd;
+string Empresa::recolha(int ids) {
+	int idd, a=ids, b;
 	vector<EcoPonto*> pinteresses = getPontosInt();
 	double minW = INT_INFINITY;
+	stringstream s;
+
+
 
 	while (pinteresses.size() > 0) {
 		for (unsigned int i = 0; i < pinteresses.size(); i++) {
-			if (mapa.getWeight(ids,
+			if (mapa.getWeight(a,
 					pinteresses.at(i)->getVertex()->getInfo().getRelativeId()) ==INT_MAX)
 				pinteresses.erase(pinteresses.begin() + i);
-			if (mapa.getWeight(ids,
+			if (mapa.getWeight(a,
 					pinteresses.at(i)->getVertex()->getInfo().getRelativeId())
 					< minW) {
 				b = pinteresses.at(i)->getVertex()->getInfo().getRelativeId();
 				pinteresses.erase(pinteresses.begin() + i);
 			}
 		}
-		auto v = mapa.getfloydWarshallPath(mapa.getVertexSet().at(a)->getInfo(),
-				mapa.getVertexSet().at(b)->getInfo());
+
+		s << shortestPath(a,b);
+
 		a = b;
 	}
 
+	minW = INT_INFINITY;
 	/*
-	 auto v = mapa.getfloydWarshallPath(mapa.getVertexSet().at(ids)->getInfo(),
-	 mapa.getVertexSet().at(idd)->getInfo());
-	 if (v.size() == 0) {
-	 cout << "Pontos sem ligacao!" << endl;
-	 return;
-	 }
-	 auto it = v.begin();
-	 for (; it != v.end(); it++) {
-	 cout << it->getRelativeId() << endl;
-	 }*/
+	for (unsigned int i = 0; i < ecocentros.size(); i++) {
+		if (mapa.getWeight(a,
+				ecocentros.at(i)->getVertex()->getInfo().getRelativeId()) ==INT_MAX)
+			ecocentros.erase(ecocentros.begin() + i);
+		if (mapa.getWeight(a,
+				ecocentros.at(i)->getVertex()->getInfo().getRelativeId())
+				< minW) {
+			b = ecocentros.at(i)->getVertex()->getInfo().getRelativeId();
+			ecocentros.erase(ecocentros.begin() + i);
+		}
+	}
+*/
+
+
+	return s.str();
+
+
 
 }
 
-string Empresa::shortestPath() {
-	int ids, idd;
-	cin >> ids >> idd;
+string Empresa::shortestPath(int ids, int idd) {
+
 	auto v = mapa.getfloydWarshallPath(mapa.getVertexSet().at(ids)->getInfo(),
 			mapa.getVertexSet().at(idd)->getInfo());
 	if (v.size() == 0) {
@@ -278,6 +288,13 @@ string Empresa::shortestPath() {
 		s << mapa.getEdge((*it), (*(it + 1))).getName() << endl;
 	}
 	return s.str();
+}
+
+int Empresa::geraLixo(){
+	for(unsigned int i=0; i< ecopontos.size();i++){
+		ecopontos.at(i).geraLixo();
+
+	}
 }
 
 } /* namespace std */
