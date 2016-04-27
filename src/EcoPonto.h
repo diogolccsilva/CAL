@@ -8,6 +8,8 @@
 #ifndef SRC_ECOPONTO_H_
 #define SRC_ECOPONTO_H_
 
+#include <iostream>
+#include <iterator>
 #include <vector>
 
 #include "Contentor.h"

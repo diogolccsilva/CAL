@@ -7,6 +7,8 @@
 #define SRC_CAMIAO_H_
 
 #include <iostream>
+#include <string>
+
 #include "Cor.h"
 
 namespace std {

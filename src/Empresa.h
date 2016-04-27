@@ -8,12 +8,15 @@
 #ifndef SRC_EMPRESA_H_
 #define SRC_EMPRESA_H_
 
+#include <map>
+#include <queue>
+#include <string>
 #include <vector>
 #include <fstream>
 #include <sstream>
-#include <map>
 
 #include "Camiao.h"
+#include "Cor.h"
 #include "EcoCentro.h"
 #include "EcoPonto.h"
 #include "Graph.h"
@@ -29,24 +32,40 @@
 namespace std {
 
 class Empresa {
+	//Mapa
 	Graph<Info> mapa;
 	GraphViewer *gv;
-	vector<EcoPonto> ecopontos;
-	map<Cores::Cor, vector<Camiao*>> camioes;
-	vector<Camiao> vcamioes;
-	vector<EcoCentro> ecocentros;
 	void readMapa();
+	void createGraphViewer();
+
+	//EcoCentros
+	vector<EcoCentro> ecocentros;
+	void createEcoCentro(Vertex<Info>* vertex);
+
+	//EcoPontos
+	vector<EcoPonto> ecopontos;
 	bool createRandomEcoPonto(Vertex<Info> *vertex);
 	void createEcoPonto(Vertex<Info>* vertex);
-	void createGraphViewer();
+
+	//Camioes
+	vector<Camiao> vcamioes;
+	map<Cores::Cor, vector<Camiao*>> camioes;
+
+	//Utilidades
 	double recolhaAux(int ids, int idd, queue<EcoPonto*> &q,
 			vector<EcoPonto*> pinteresses);
 public:
 	Empresa();
 	virtual ~Empresa();
+	//Mapa
+	const Graph<Info> getMapa() const;
+
 	//EcoCentros
 	const vector<EcoCentro>& getEcocentros() const;
 	void addEcocentro(const EcoCentro ecocentro);
+	bool createEcoCentro(int idv);
+	string getSCentros() const;
+
 	//EcoPontos
 	const vector<EcoPonto>& getEcopontos() const;
 	void addEcoponto(const EcoPonto ecoponto);
@@ -54,20 +73,20 @@ public:
 	bool createEcoPonto(int idv);
 	int eraseEcoPontos();
 	bool removeEcoPonto(int id);
+	string getSPontos() const;
+	int geraLixo();
+	double getLixoTotal(Cores::Cor cor);
+
 	//Camioes
 	const map<Cores::Cor, vector<Camiao*>>& getCamioes() const;
 	void addCamiao(Camiao& camiao);
 	int createCamioes();
+	string getSCamioes() const;
+
 	//Utilidades
 	string recolha(int ids, int idd);
 	vector<EcoPonto*> getPontosInt();
 	string shortestPath(int ids, int idd);
-	string getSCamioes() const;
-	string getSCentros() const;
-	string getSPontos() const;
-	int geraLixo();
-	const Graph<Info> getMapa() const;
-	double getLixoTotal(Cores::Cor cor);
 	void dynamic();
 };
 

@@ -8,16 +8,24 @@
 #ifndef SRC_ECOCENTRO_H_
 #define SRC_ECOCENTRO_H_
 
-#include <string>
+#include <iostream>
+
+#include "Info.h"
+#include "Vertex.h"
 
 namespace std {
 
 class EcoCentro {
-	string latitude,longitude;
+	Vertex<Info>* vertex;
+	int id;
+	static int cnt;
 public:
-	EcoCentro(string latitude,string longitude);
-	EcoCentro();
+	EcoCentro(Vertex<Info>* vertex);
 	virtual ~EcoCentro();
+	friend ostream& operator<<(ostream& os,const EcoCentro& obj){
+		os << "ID: " << obj.id << " VertexID: " << obj.vertex->getInfo().getRelativeId() << endl;
+		return os;
+	}
 };
 
 } /* namespace std */

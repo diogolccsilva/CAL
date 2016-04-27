@@ -9,8 +9,10 @@
 #define SRC_CONTENTOR_H_
 
 #include <iostream>
-#include <time.h>
+#include <string>
 #include <cstdlib>
+#include <ctime>
+
 #include "Cor.h"
 
 namespace std {

@@ -7,6 +7,7 @@
 
 #ifndef SRC_RUA_H_
 #define SRC_RUA_H_
+
 #include <string>
 
 namespace std {

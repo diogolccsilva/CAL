@@ -1,12 +1,8 @@
 #include <conio.h>
-#include <cmath>
+#include <cstdlib>
 #include <iostream>
-#include <iterator>
-#include <vector>
+#include <string>
 
-#include "Graph.h"
-#include "Info.h"
-#include "Vertex.h"
 #include "Empresa.h"
 
 using namespace std;
@@ -49,10 +45,15 @@ void gestaoEcoPontos(Empresa& emp) {
 		}
 		case '3': {
 			system("cls");
-			int idv;
 			cout << "Id do vertex: ";
+			int idv;
 			cin >> idv;
-
+			if (emp.createEcoPonto(idv)) {
+				cout << "Ecoponto criado!" << endl;
+			} else {
+				cout << "Vertex inexistente! Ecoponto nao criado!" << endl;
+			}
+			getch();
 			break;
 		}
 		case '4': {
@@ -110,10 +111,12 @@ void gestaoCamioes(Empresa& emp) {
 			break;
 		case '3':
 			system("cls");
+
 			getch();
 			break;
 		case '4':
 			system("cls");
+
 			getch();
 			break;
 		case '9':
@@ -135,11 +138,26 @@ void gestaoEcoCentros(Empresa& emp) {
 		cout << "9. Sair;" << endl;
 		switch (getch()) {
 		case '1':
-
+			system("cls");
+			cout << emp.getSCentros() << endl;
+			getch();
 			break;
 		case '2':
+			system("cls");
+			cout << "Nao implementado!" << endl;
+			getch();
 			break;
 		case '3':
+			system("cls");
+			cout << "Vertex id: " << endl;
+			int idv;
+			cin >> idv;
+			if (emp.createEcoCentro(idv)) {
+				cout << "Ecocentro criado!" << endl;
+			} else {
+				cout << "Vertex inexistente! Ecocentro nao criado!" << endl;
+			}
+			getch();
 			break;
 		case '4':
 			break;

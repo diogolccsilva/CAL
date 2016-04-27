@@ -5,7 +5,6 @@
 
 #include "Contentor.h"
 
-
 namespace std {
 
 Contentor::Contentor(double capacidade,Cores::Cor cor){

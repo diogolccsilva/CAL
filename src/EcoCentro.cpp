@@ -9,9 +9,10 @@
 
 namespace std {
 
-EcoCentro::EcoCentro() {
-	// TODO Auto-generated constructor stub
+int EcoCentro::cnt = 0;
 
+EcoCentro::EcoCentro(Vertex<Info>* vertex):id(cnt), vertex(vertex){
+	cnt++;
 }
 
 EcoCentro::~EcoCentro() {

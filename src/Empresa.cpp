@@ -39,8 +39,8 @@ const vector<EcoPonto>& Empresa::getEcopontos() const {
 
 int Empresa::createCamioes() {
 	vector<int> capacities = { 3000, 2500, 2000, 1000 };
-	vector<Cores::Cor> cores = { Cores::azul, Cores::amarelo,
-			Cores::verde, Cores::vermelho, Cores::preto };
+	vector<Cores::Cor> cores = { Cores::azul, Cores::amarelo, Cores::verde,
+			Cores::vermelho, Cores::preto };
 	int cnt = 0;
 	for (int i = 0; i < 5; i++)
 		for (unsigned int j = 0; j < capacities.size(); j++)
@@ -396,8 +396,9 @@ void Empresa::createGraphViewer() {
 			cnt++;
 			idNoOrigem = (*itv)->getInfo().getRelativeId();
 			idNoDestino = ite->getDest()->getInfo().getRelativeId();
-			gv->addEdge(cnt, idNoOrigem, idNoDestino, EdgeType::DIRECTED);
-			//		gv->setEdgeLabel(cnt, ite->getName());
+			int id = ite->getID();
+			gv->addEdge(id, idNoOrigem, idNoDestino, EdgeType::DIRECTED);
+			//gv->setEdgeLabel(cnt, ite->getName());
 		}
 	}
 
@@ -431,7 +432,12 @@ string Empresa::getSCamioes() const {
 }
 
 string Empresa::getSCentros() const {
-
+	vector<EcoCentro>::const_iterator it = ecocentros.begin();
+	stringstream s;
+	for (; it != ecocentros.end(); it++) {
+		s << (*it) << endl;
+	}
+	return s.str();
 }
 
 string Empresa::getSPontos() const {
@@ -482,6 +488,17 @@ bool Empresa::createEcoPonto(int idv) {
 	return false;
 }
 
+bool Empresa::createEcoCentro(int idv) {
+	vector<Vertex<Info> *>::const_iterator it = mapa.getVertexSet().begin();
+	for (; it != mapa.getVertexSet().end(); it++) {
+		if ((*it)->getInfo().getRelativeId() == idv) {
+			createEcoCentro((*it));
+			return true;
+		}
+	}
+	return false;
+}
+
 void Empresa::createEcoPonto(Vertex<Info>* vertex) {
 	vector<Contentor> contentores;
 	contentores.push_back(Contentor(2500, Cores::amarelo));
@@ -497,6 +514,15 @@ void Empresa::createEcoPonto(Vertex<Info>* vertex) {
 		gv->rearrange();
 	}
 	ecopontos.push_back(ecoponto);
+}
+
+void Empresa::createEcoCentro(Vertex<Info>* vertex) {
+	EcoCentro ecc(vertex);
+	if (gv != NULL) {
+		gv->setVertexColor(vertex->getInfo().getRelativeId(), "black");
+		gv->rearrange();
+	}
+	ecocentros.push_back(ecc);
 }
 
 //string Empresa::shortestPath(int ids, int idd) {
@@ -528,10 +554,11 @@ double Empresa::getLixoTotal(Cores::Cor cor) {
 	vector<EcoPonto*> pint = getPontosInt();
 	vector<EcoPonto*>::const_iterator it = pint.begin();
 
-	for(; it != pint.end(); it++) {
+	for (; it != pint.end(); it++) {
 		vector<Contentor>::const_iterator ite = (*it)->getContentores().begin();
-		for(; ite != (*it)->getContentores().end(); ite++) {
-			if((*ite).getCor() == cor && ((*ite).getOcupada() / (*ite).getUtil()) >= 0.7) {
+		for (; ite != (*it)->getContentores().end(); ite++) {
+			if ((*ite).getCor() == cor
+					&& ((*ite).getOcupada() / (*ite).getUtil()) >= 0.7) {
 				//cout << (*ite).getCor() << " " << ((*ite).getOcupada() / (*ite).getUtil()) << endl;
 				maxLixo += (*ite).getOcupada();
 			}
@@ -542,25 +569,35 @@ double Empresa::getLixoTotal(Cores::Cor cor) {
 }
 
 //alterado
-void Empresa::dynamic()
-{
-	vector<Cores::Cor> cores = {Cores::azul, Cores::amarelo,Cores::verde,Cores::vermelho,Cores::preto};
+void Empresa::dynamic() {
+	vector<Cores::Cor> cores = { Cores::azul, Cores::amarelo, Cores::verde,
+			Cores::vermelho, Cores::preto };
 	for (int i = 0; i < 5; i++) {
 		if (i == 0)
-			cout << "--------------------------------   Contetor Azul   -----------------------------------" << endl;
+			cout
+					<< "--------------------------------   Contetor Azul   -----------------------------------"
+					<< endl;
 		else if (i == 1)
-			cout << "--------------------------------  Contetor Amarelo -----------------------------------" << endl;
+			cout
+					<< "--------------------------------  Contetor Amarelo -----------------------------------"
+					<< endl;
 		else if (i == 2)
-			cout << "--------------------------------   Contetor Verde  -----------------------------------" << endl;
+			cout
+					<< "--------------------------------   Contetor Verde  -----------------------------------"
+					<< endl;
 		else if (i == 3)
-			cout << "-------------------------------- Contetor Vermelho -----------------------------------" << endl;
+			cout
+					<< "-------------------------------- Contetor Vermelho -----------------------------------"
+					<< endl;
 		else
-			cout << "-------------------------------- Contetor Generico -----------------------------------" << endl;
+			cout
+					<< "-------------------------------- Contetor Generico -----------------------------------"
+					<< endl;
 
 		int n = ceil(getLixoTotal(cores.at(i)));
 		vector<int> capacityDone;
 		vector<int> lastTruck;
-		vector<int> capacities = { 0, 3000, 2500, 2000, 1000}; //0 is an invalid coin
+		vector<int> capacities = { 0, 3000, 2500, 2000, 1000 }; //0 is an invalid coin
 
 		for (int i = 0; i <= n; i++) {
 			capacityDone.push_back(0);
@@ -576,7 +613,8 @@ void Empresa::dynamic()
 					int remainder = j - capacity;
 					if (capacityDone.at(j) + capacity <= j
 							&& (capacity + capacityDone.at(remainder)) <= j) {
-						capacityDone.at(j) = capacity + capacityDone.at(remainder);
+						capacityDone.at(j) = capacity
+								+ capacityDone.at(remainder);
 						lastTruck.at(j) = i;
 					}
 				}
@@ -601,7 +639,7 @@ void Empresa::dynamic()
 		}
 		if (extraTruck != 0)
 			cout << "Requires extra Truck " << extraTruck << endl;
-		cout << "Number of Trucks: " <<  counter << endl;
+		cout << "Number of Trucks: " << counter << endl;
 	}
 }
 
