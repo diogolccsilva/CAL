@@ -111,8 +111,6 @@ void Empresa::readMapa() {
 		}
 	}
 
-	cout << Graph<Info>::minLong << "  " << Graph<Info>::minLat << endl;
-
 	//mapa.setP();
 
 	if (map2.is_open()) {
@@ -156,7 +154,6 @@ void Empresa::readMapa() {
 								tempDest = vertexSet.at(j);
 
 						}
-						//cout << nodeDistance(tempNo, tempDest) << endl;
 						if (ruas.at(i).isBi())
 							mapa.addEdge(tempDest->getInfo(), tempNo->getInfo(),
 									nodeDistance(tempNo, tempDest),
@@ -176,7 +173,6 @@ void Empresa::readMapa() {
 	map3.close();
 
 	mapa.display();
-	//cout << "Tamanho: " << mapa.getVertexSet().size() << endl;
 	mapa.floydWarshallShortestPath();
 
 }
@@ -281,7 +277,6 @@ string Empresa::recolha(int ids, int idd) {
 	s << shortestPath(a, idd) << "Estacao de tratamento: " << idd << endl;
 	gv->rearrange();
 	return s.str();
-
 }
 
 //double Empresa::recolhaAux(int ids, queue<EcoPonto*> &q,
@@ -388,8 +383,6 @@ void Empresa::createGraphViewer() {
 		gv->addNode(idNo, x, y);
 	}
 
-	cout << minLong * M_PI / 180.0 << "  " << minLat * M_PI / 180.0 << endl;
-
 	unsigned long idNoOrigem = 0;
 	unsigned long idNoDestino = 0;
 
@@ -403,7 +396,6 @@ void Empresa::createGraphViewer() {
 			cnt++;
 			idNoOrigem = (*itv)->getInfo().getRelativeId();
 			idNoDestino = ite->getDest()->getInfo().getRelativeId();
-			//cout << "S: " << idNoOrigem << " D: " << idNoDestino << " E: " << cnt << endl;
 			gv->addEdge(cnt, idNoOrigem, idNoDestino, EdgeType::DIRECTED);
 			//		gv->setEdgeLabel(cnt, ite->getName());
 		}

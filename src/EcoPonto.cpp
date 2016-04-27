@@ -11,11 +11,13 @@ namespace std {
 
 int EcoPonto::cnt = 0;
 
-EcoPonto::EcoPonto():id(cnt),vertex(NULL) {
+EcoPonto::EcoPonto() :
+		id(cnt), vertex(NULL) {
 	cnt++;
 }
 
-EcoPonto::EcoPonto(vector<Contentor> contentores):id(cnt),contentores(contentores),vertex(NULL) {
+EcoPonto::EcoPonto(vector<Contentor> contentores) :
+		id(cnt), contentores(contentores), vertex(NULL) {
 	cnt++;
 }
 
@@ -29,6 +31,7 @@ const vector<Contentor>& EcoPonto::getContentores() const {
 
 vector<Contentor*> EcoPonto::check() {
 	vector<Contentor*> temp;
+
 	//cout << "Entra check \n";
 	for (unsigned int i = 0; i < contentores.size(); i++) {
 		//cout << contentores.at(i).cOcupada / (contentores.at(i).cUtil * 1.0) << endl;

@@ -74,7 +74,7 @@ void gestaoEcoPontos(Empresa& emp) {
 			getch();
 			break;
 		}
-		case'6':
+		case '6':
 			system("cls");
 			emp.geraLixo();
 			cout << "Lixo criado!" << endl;
@@ -193,7 +193,7 @@ int menu() {
 		case '1':
 			gestao(emp);
 			break;
-		case '2':
+		case '2': {
 			int x, y;
 			cout << "onde e a central?  ";
 			cin >> x;
@@ -201,6 +201,7 @@ int menu() {
 			cin >> y;
 			cout << emp.recolha(x, y) << endl;
 			getch();
+		}
 			break;
 		case '3':
 			break;
