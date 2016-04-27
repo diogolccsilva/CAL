@@ -5,7 +5,7 @@
  *      Author: Diogo
  */
 
-#include "Empresa.h"
+#include "Company.h"
 
 namespace std {
 
@@ -20,59 +20,59 @@ double nodeDistance(Vertex<Info> *v1, Vertex<Info> *v2) {
 	return 2.0 * earth_rad * asin(sqrt(u * u + cos(lat1r) * cos(lat2r) * v * v));
 }
 
-Empresa::Empresa() {
-	readMapa();
+Company::Company() {
+	readMap();
 	createGraphViewer();
 }
 
-const map<Cores::Cor, vector<Camiao*>>& Empresa::getCamioes() const {
-	return camioes;
+const map<Colors::Color, vector<Truck*>>& Company::getTrucks() const {
+	return trucks;
 }
 
-const vector<EcoCentro>& Empresa::getEcocentros() const {
-	return ecocentros;
+const vector<RecyclingCenter>& Company::getReCenters() const {
+	return recenters;
 }
 
-const vector<EcoPonto>& Empresa::getEcopontos() const {
-	return ecopontos;
+const vector<RecyclingBin>& Company::getReBins() const {
+	return rebins;
 }
 
-int Empresa::createCamioes() {
+int Company::createTrucks() {
 	vector<int> capacities = { 3000, 2500, 2000, 1000 };
-	vector<Cores::Cor> cores = { Cores::azul, Cores::amarelo, Cores::verde,
-			Cores::vermelho, Cores::preto };
+	vector<Colors::Color> cores = { Colors::blue, Colors::yellow, Colors::green,
+			Colors::red, Colors::black };
 	int cnt = 0;
 	for (int i = 0; i < 5; i++)
 		for (unsigned int j = 0; j < capacities.size(); j++)
 			for (int k = 0; k < 5; k++) {
-				Camiao camiao = Camiao(capacities.at(j), cores.at(i));
-				addCamiao(camiao);
+				Truck camiao = Truck(capacities.at(j), cores.at(i));
+				addTruck(camiao);
 				cnt++;
 			}
 	return cnt;
 }
 
-const Graph<Info> Empresa::getMapa() const {
-	return mapa;
+const Graph<Info> Company::getGMap() const {
+	return gmap;
 }
 
-void Empresa::addCamiao(Camiao& camiao) {
-	vcamioes.push_back(camiao);
-	camioes[camiao.getCor()].push_back(&camiao);
+void Company::addTruck(Truck& camiao) {
+	vtrucks.push_back(camiao);
+	trucks[camiao.getColor()].push_back(&camiao);
 }
 
-void Empresa::addEcocentro(const EcoCentro ecocentro) {
-	ecocentros.push_back(ecocentro);
+void Company::addReCenter(const RecyclingCenter ecocentro) {
+	recenters.push_back(ecocentro);
 }
 
-void Empresa::addEcoponto(const EcoPonto ecoponto) {
-	ecopontos.push_back(ecoponto);
+void Company::addReBin(const RecyclingBin ecoponto) {
+	rebins.push_back(ecoponto);
 }
 
-void Empresa::readMapa() {
+void Company::readMap() {
 	string temp;
-	vector<Rua> ruas;
-	mapa = Graph<Info>();
+	vector<Street> ruas;
+	gmap = Graph<Info>();
 	ifstream map1, map2, map3;
 	map1.open("map1.txt");
 	map2.open("map2.txt");
@@ -105,7 +105,7 @@ void Empresa::readMapa() {
 					Graph<Info>::minLong = tempInfo.getRlong();
 				}
 				Vertex<Info> *vertex;
-				mapa.addVertex(tempInfo, vertex);
+				gmap.addVertex(tempInfo, vertex);
 				//createRandomEcoPonto(vertex);
 			}
 		}
@@ -115,12 +115,12 @@ void Empresa::readMapa() {
 
 	if (map2.is_open()) {
 		while (!map2.eof()) {
-			Rua tempRua = Rua();
+			Street tempRua = Street();
 			getline(map2, temp, ';');
 			if (temp != "") {
 				tempRua.setId(atol(temp.c_str()));
 				getline(map2, temp, ';');
-				tempRua.setNome(temp);
+				tempRua.setName(temp);
 				getline(map2, temp);
 				if (temp == "true")
 					tempRua.setBi(true);
@@ -142,7 +142,7 @@ void Empresa::readMapa() {
 				idNo = atol(temp.c_str());
 				getline(map3, temp);
 				idDest = atol(temp.c_str());
-				vector<Vertex<Info> *> vertexSet = mapa.getVertexSet();
+				vector<Vertex<Info> *> vertexSet = gmap.getVertexSet();
 
 				for (unsigned int i = 0; i < ruas.size(); i++) {
 					if (ruas.at(i).getId() == idRua) {
@@ -155,12 +155,12 @@ void Empresa::readMapa() {
 
 						}
 						if (ruas.at(i).isBi())
-							mapa.addEdge(tempDest->getInfo(), tempNo->getInfo(),
+							gmap.addEdge(tempDest->getInfo(), tempNo->getInfo(),
 									nodeDistance(tempNo, tempDest),
-									ruas.at(i).getNome());
-						mapa.addEdge(tempNo->getInfo(), tempDest->getInfo(),
+									ruas.at(i).getName());
+						gmap.addEdge(tempNo->getInfo(), tempDest->getInfo(),
 								nodeDistance(tempNo, tempDest),
-								ruas.at(i).getNome());
+								ruas.at(i).getName());
 					}
 
 				}
@@ -172,67 +172,67 @@ void Empresa::readMapa() {
 	map2.close();
 	map3.close();
 
-	mapa.display();
-	mapa.floydWarshallShortestPath();
+	gmap.display();
+	gmap.floydWarshallShortestPath();
 
 }
 
-bool Empresa::createRandomEcoPonto(Vertex<Info>* vertex) {
+bool Company::createRandomReBin(Vertex<Info>* vertex) {
 	int n = rand() % 100;
 	if (n < 5) {
-		createEcoPonto(vertex);
+		createReBin(vertex);
 		return true;
 	}
 	return false;
 }
 
-Empresa::~Empresa() {
+Company::~Company() {
 	// TODO Auto-generated destructor stub
 }
 
-int Empresa::createRandomEcoPontos() {
+int Company::createRandomReBins() {
 	srand(time(NULL));
-	ecopontos.clear();
+	eraseReBins();
 	int cnt = 0;
-	vector<Vertex<Info> *> v = mapa.getVertexSet();
+	vector<Vertex<Info> *> v = gmap.getVertexSet();
 	vector<Vertex<Info> *>::const_iterator it = v.begin();
 	for (; it != v.end(); it++) {
-		if (createRandomEcoPonto(*it))
+		if (createRandomReBin(*it))
 			cnt++;
 	}
 	return cnt;
 }
 
-vector<EcoPonto*> Empresa::getPontosInt() {
-	vector<EcoPonto*> temp;
-	for (unsigned int i = 0; i < ecopontos.size(); i++) {
-		if (ecopontos.at(i).check().size() != 0) {
+vector<RecyclingBin*> Company::getIntPoints() {
+	vector<RecyclingBin*> temp;
+	for (unsigned int i = 0; i < rebins.size(); i++) {
+		if (rebins.at(i).check().size() != 0) {
 			gv->setVertexColor(
-					ecopontos.at(i).getVertex()->getInfo().getRelativeId(),
+					rebins.at(i).getVertex()->getInfo().getRelativeId(),
 					"blue");
-			temp.push_back(&ecopontos.at(i));
+			temp.push_back(&rebins.at(i));
 		}
 	}
 	gv->rearrange();
 	return temp;
 }
 
-double Empresa::recolhaIlimitadaAux(int ids, int idd, queue<EcoPonto*> &q,
-		vector<EcoPonto*> pinteresses) {
-	vector<EcoPonto*>::iterator it = pinteresses.begin();
-	vector<EcoPonto*>::iterator ite = pinteresses.begin();
+double Company::unlimitedRunAux(int ids, int idd, queue<RecyclingBin*> &q,
+		vector<RecyclingBin*> pinteresses) {
+	vector<RecyclingBin*>::iterator it = pinteresses.begin();
+	vector<RecyclingBin*>::iterator ite = pinteresses.begin();
 	int a = ids, c = idd;
 	double best = INT_MAX;
 
 	for (; it != pinteresses.end(); it++) {
 		int b = (*it)->getVertex()->getInfo().getRelativeId();
-		double dist1 = mapa.getWeight(a, b);
+		double dist1 = gmap.getWeight(a, b);
 		if (dist1 == INT_MAX) {
 			pinteresses.erase(it);
 			it--;
 		}
 
-		double dist2 = mapa.getWeight(b, c);
+		double dist2 = gmap.getWeight(b, c);
 		if (dist2 == INT_MAX) {
 			pinteresses.erase(it);
 			it--;
@@ -248,24 +248,24 @@ double Empresa::recolhaIlimitadaAux(int ids, int idd, queue<EcoPonto*> &q,
 		q.push((*ite));
 		pinteresses.erase(ite);
 		if (pinteresses.size() > 1) {
-			best += recolhaIlimitadaAux(a, c, q, pinteresses);
+			best += unlimitedRunAux(a, c, q, pinteresses);
 		}
 		return best;
 	}
 	return 0;
 }
 
-string Empresa::recolhaIlimitada(int ids, int idd) {
-	vector<EcoPonto*> pinteresses = getPontosInt();
+string Company::unlimitedRun(int ids, int idd) {
+	vector<RecyclingBin*> pinteresses = getIntPoints();
 	stringstream s;
-	queue<EcoPonto*> q;
-	if (mapa.getWeight(ids, idd) == INT_MAX) {
+	queue<RecyclingBin*> q;
+	if (gmap.getWeight(ids, idd) == INT_MAX) {
 		return "Nao ha caminho da origem ao destino!";
 	}
 	gv->setVertexColor(ids, "red");
 	gv->setVertexColor(idd, "red");
 	gv->rearrange();
-	recolhaIlimitadaAux(ids, idd, q, pinteresses);
+	unlimitedRunAux(ids, idd, q, pinteresses);
 	int a = ids;
 	cout << "q.size(): " << q.size() << endl;
 	while (q.size() > 0) {
@@ -337,8 +337,8 @@ string Empresa::recolhaIlimitada(int ids, int idd) {
 //
 //}
 
-void Empresa::createGraphViewer() {
-	vector<Vertex<Info> *> vs = mapa.getVertexSet();
+void Company::createGraphViewer() {
+	vector<Vertex<Info> *> vs = gmap.getVertexSet();
 
 	gv = new GraphViewer(100000, 100000, false);
 
@@ -405,9 +405,9 @@ void Empresa::createGraphViewer() {
 	gv->rearrange();
 }
 
-string Empresa::shortestPath(int ids, int idd) {
-	auto v = mapa.getfloydWarshallPath(mapa.getVertexSet().at(ids)->getInfo(),
-			mapa.getVertexSet().at(idd)->getInfo());
+string Company::shortestPath(int ids, int idd) {
+	auto v = gmap.getfloydWarshallPath(gmap.getVertexSet().at(ids)->getInfo(),
+			gmap.getVertexSet().at(idd)->getInfo());
 	if (v.size() == 0) {
 		cout << "Pontos sem ligacao!" << endl;
 		return "\0";
@@ -415,114 +415,136 @@ string Empresa::shortestPath(int ids, int idd) {
 	auto it = v.begin();
 	stringstream s;
 	for (; (it + 1) != v.end(); it++) {
-		gv->setEdgeColor(mapa.getEdge((*it), (*(it + 1))).getID(), "red");
+		gv->setEdgeColor(gmap.getEdge((*it), (*(it + 1))).getID(), "red");
 		s << (*it).getRelativeId() << "   "
-				<< mapa.getEdge((*it), (*(it + 1))).getName() << endl;
+				<< gmap.getEdge((*it), (*(it + 1))).getName() << endl;
 	}
 	return s.str();
 }
 
-string Empresa::getSCamioes() const {
-	vector<Camiao>::const_iterator it = vcamioes.begin();
+string Company::getSTrucks() const {
+	vector<Truck>::const_iterator it = vtrucks.begin();
 	stringstream s;
-	for (; it != vcamioes.end(); it++) {
+	for (; it != vtrucks.end(); it++) {
 		s << (*it) << endl;
 	}
 	return s.str();
 }
 
-string Empresa::getSCentros() const {
-	vector<EcoCentro>::const_iterator it = ecocentros.begin();
+string Company::getSCenters() const {
+	vector<RecyclingCenter>::const_iterator it = recenters.begin();
 	stringstream s;
-	for (; it != ecocentros.end(); it++) {
+	for (; it != recenters.end(); it++) {
 		s << (*it) << endl;
 	}
 	return s.str();
 }
 
-string Empresa::getSPontos() const {
-	vector<EcoPonto>::const_iterator it = ecopontos.begin();
+string Company::getSBins() const {
+	vector<RecyclingBin>::const_iterator it = rebins.begin();
 	stringstream s;
-	for (; it != ecopontos.end(); it++) {
+	for (; it != rebins.end(); it++) {
 		s << (*it) << endl;
 	}
 	return s.str();
 }
 
-int Empresa::eraseEcoPontos() {
-	vector<EcoPonto>::iterator it = ecopontos.begin();
+int Company::eraseReBins() {
+	vector<RecyclingBin>::iterator it = rebins.begin();
 	int cnt = 0;
-	for (; it != ecopontos.end(); it++) {
+	for (; it != rebins.end(); it++) {
 		gv->setVertexColor(it->getVertex()->getInfo().getRelativeId(),
 				"yellow");
 		cnt++;
 	}
 	gv->rearrange();
-	ecopontos.clear();
-	EcoPonto::resetCnt();
+	rebins.clear();
+	RecyclingBin::resetCnt();
 	return cnt;
 }
 
-bool Empresa::removeEcoPonto(int id) {
-	vector<EcoPonto>::iterator it = ecopontos.begin();
-	for (; it != ecopontos.end(); it++) {
+int Company::eraseReCenters() {
+	vector<RecyclingCenter>::iterator it = recenters.begin();
+	int cnt = 0;
+	for (; it != recenters.end(); it++) {
+		gv->setVertexColor(it->getVertex()->getInfo().getRelativeId(),
+				"yellow");
+		cnt++;
+	}
+	gv->rearrange();
+	recenters.clear();
+	RecyclingCenter::resetCnt();
+	return cnt;
+}
+
+int Company::eraseTrucks() {
+	int cnt = vtrucks.size();
+	trucks.clear();
+	vtrucks.clear();
+	Truck::resetCnt();
+	return cnt;
+}
+
+bool Company::removeReBin(int id) {
+	vector<RecyclingBin>::iterator it = rebins.begin();
+	for (; it != rebins.end(); it++) {
 		if (it->getId() == id) {
 			gv->setVertexColor(it->getVertex()->getInfo().getRelativeId(),
 					"yellow");
 			gv->rearrange();
-			ecopontos.erase(it);
+			rebins.erase(it);
 			return true;
 		}
 	}
 	return false;
 }
 
-bool Empresa::createEcoPonto(int idv) {
-	vector<Vertex<Info> *>::const_iterator it = mapa.getVertexSet().begin();
-	for (; it != mapa.getVertexSet().end(); it++) {
+bool Company::createReBins(int idv) {
+	vector<Vertex<Info> *>::const_iterator it = gmap.getVertexSet().begin();
+	for (; it != gmap.getVertexSet().end(); it++) {
 		if ((*it)->getInfo().getRelativeId() == idv) {
-			createEcoPonto((*it));
+			createReBin((*it));
 			return true;
 		}
 	}
 	return false;
 }
 
-bool Empresa::createEcoCentro(int idv) {
-	vector<Vertex<Info> *>::const_iterator it = mapa.getVertexSet().begin();
-	for (; it != mapa.getVertexSet().end(); it++) {
+bool Company::createReCenter(int idv) {
+	vector<Vertex<Info> *>::const_iterator it = gmap.getVertexSet().begin();
+	for (; it != gmap.getVertexSet().end(); it++) {
 		if ((*it)->getInfo().getRelativeId() == idv) {
-			createEcoCentro((*it));
+			createReCenter((*it));
 			return true;
 		}
 	}
 	return false;
 }
 
-void Empresa::createEcoPonto(Vertex<Info>* vertex) {
-	vector<Contentor> contentores;
-	contentores.push_back(Contentor(2500, Cores::amarelo));
-	contentores.push_back(Contentor(2500, Cores::azul));
-	contentores.push_back(Contentor(2500, Cores::preto));
-	contentores.push_back(Contentor(2500, Cores::verde));
-	contentores.push_back(Contentor(2500, Cores::vermelho));
-	EcoPonto ecoponto = EcoPonto();
-	ecoponto.setContentores(contentores);
+void Company::createReBin(Vertex<Info>* vertex) {
+	vector<Container> contentores;
+	contentores.push_back(Container(2500, Colors::yellow));
+	contentores.push_back(Container(2500, Colors::blue));
+	contentores.push_back(Container(2500, Colors::black));
+	contentores.push_back(Container(2500, Colors::green));
+	contentores.push_back(Container(2500, Colors::red));
+	RecyclingBin ecoponto = RecyclingBin();
+	ecoponto.setContainers(contentores);
 	ecoponto.setVertex(vertex);
 	if (gv != NULL) {
 		gv->setVertexColor(vertex->getInfo().getRelativeId(), "green");
 		gv->rearrange();
 	}
-	ecopontos.push_back(ecoponto);
+	rebins.push_back(ecoponto);
 }
 
-void Empresa::createEcoCentro(Vertex<Info>* vertex) {
-	EcoCentro ecc(vertex);
+void Company::createReCenter(Vertex<Info>* vertex) {
+	RecyclingCenter ecc(vertex);
 	if (gv != NULL) {
 		gv->setVertexColor(vertex->getInfo().getRelativeId(), "black");
 		gv->rearrange();
 	}
-	ecocentros.push_back(ecc);
+	recenters.push_back(ecc);
 }
 
 //string Empresa::shortestPath(int ids, int idd) {
@@ -542,25 +564,25 @@ void Empresa::createEcoCentro(Vertex<Info>* vertex) {
 //	return s.str();
 //}
 
-int Empresa::geraLixo() {
-	for (unsigned int i = 0; i < ecopontos.size(); i++) {
-		ecopontos.at(i).geraLixo();
+int Company::generateGarbage() {
+	for (unsigned int i = 0; i < rebins.size(); i++) {
+		rebins.at(i).generateGarbage();
 	}
 }
 
 //alterado
-double Empresa::getLixoTotal(Cores::Cor cor) {
+double Company::getTotalGarbage(Colors::Color cor) {
 	double maxLixo = 0;
-	vector<EcoPonto*> pint = getPontosInt();
-	vector<EcoPonto*>::const_iterator it = pint.begin();
+	vector<RecyclingBin*> pint = getIntPoints();
+	vector<RecyclingBin*>::const_iterator it = pint.begin();
 
 	for (; it != pint.end(); it++) {
-		vector<Contentor>::const_iterator ite = (*it)->getContentores().begin();
-		for (; ite != (*it)->getContentores().end(); ite++) {
-			if ((*ite).getCor() == cor
-					&& ((*ite).getOcupada() / (*ite).getUtil()) >= 0.7) {
+		vector<Container>::const_iterator ite = (*it)->getContainers().begin();
+		for (; ite != (*it)->getContainers().end(); ite++) {
+			if ((*ite).getColor() == cor
+					&& ((*ite).getOcupiedCapacity() / (*ite).getUsableCapacity()) >= 0.7) {
 				//cout << (*ite).getCor() << " " << ((*ite).getOcupada() / (*ite).getUtil()) << endl;
-				maxLixo += (*ite).getOcupada();
+				maxLixo += (*ite).getOcupiedCapacity();
 			}
 		}
 	}
@@ -569,9 +591,9 @@ double Empresa::getLixoTotal(Cores::Cor cor) {
 }
 
 //alterado
-void Empresa::dynamic() {
-	vector<Cores::Cor> cores = { Cores::azul, Cores::amarelo, Cores::verde,
-			Cores::vermelho, Cores::preto };
+void Company::dynamic() {
+	vector<Colors::Color> cores = { Colors::blue, Colors::yellow, Colors::green,
+			Colors::red, Colors::black };
 	for (int i = 0; i < 5; i++) {
 		if (i == 0)
 			cout
@@ -594,7 +616,7 @@ void Empresa::dynamic() {
 					<< "-------------------------------- Contetor Generico -----------------------------------"
 					<< endl;
 
-		int n = ceil(getLixoTotal(cores.at(i)));
+		int n = ceil(getTotalGarbage(cores.at(i)));
 		vector<int> capacityDone;
 		vector<int> lastTruck;
 		vector<int> capacities = { 0, 3000, 2500, 2000, 1000 }; //0 is an invalid coin
@@ -642,5 +664,202 @@ void Empresa::dynamic() {
 		cout << "Number of Trucks: " << counter << endl;
 	}
 }
+
+string Company::getUnlimitedRun(int idp, int idc) {
+	vector<RecyclingCenter>::const_iterator itp, itc;
+	vector<RecyclingCenter>::const_iterator it = recenters.begin();
+	int cnt = 0;
+	for (; it != recenters.end(); it++) {
+		if (it->getId() == idp) {
+			itp = it;
+			cnt++;
+		}
+		if (it->getId() == idc) {
+			itc = it;
+			cnt++;
+		}
+		if (cnt == 2) {
+			return unlimitedRun(itp->getVertex()->getInfo().getRelativeId(),
+					itc->getVertex()->getInfo().getRelativeId());
+		}
+	}
+	return "Ecocentros inexistentes!\n";
+}
+
+string Company::getLimitedRun(int idp, int idc) {
+	vector<RecyclingCenter>::const_iterator itp, itc;
+	vector<RecyclingCenter>::const_iterator it = recenters.begin();
+	int cnt = 0;
+	for (; it != recenters.end(); it++) {
+		if (it->getId() == idp) {
+			itp = it;
+			cnt++;
+		}
+		if (it->getId() == idc) {
+			itc = it;
+			cnt++;
+		}
+		if (cnt == 2) {
+			return limitedRun(itp->getVertex()->getInfo().getRelativeId(),
+					itc->getVertex()->getInfo().getRelativeId());
+		}
+	}
+	return "Ecocentros inexistentes!\n";
+}
+
+double Company::limitedRunAux(int ids, int idd, queue<RecyclingBin*> &q,
+		vector<RecyclingBin*> &pinteresses, vector<RecyclingBin*> pinteressestemp,
+		Truck* camiao, double &totalGarbage, Colors::Color color) {
+	vector<RecyclingBin*>::iterator it = pinteressestemp.begin();
+	vector<RecyclingBin*>::iterator ite = pinteressestemp.begin();
+	int a = ids, c = idd;
+	double best = INT_MAX;
+
+	//cout << "Entrou recursiva " << endl;
+
+	for (; it != pinteressestemp.end(); it++) {
+		int b = (*it)->getVertex()->getInfo().getRelativeId();
+		double dist1 = gmap.getWeight(a, b);
+		if (dist1 == INT_MAX) {
+			vector<RecyclingBin*>::iterator itc = pinteresses.begin();
+			for (; itc != pinteresses.end(); itc++) {
+				if ((*it)->getId() == (*itc)->getId()) {
+					pinteresses.erase(itc);
+					break;
+				}
+			}
+			pinteressestemp.erase(it);
+			it--;
+		}
+
+		double dist2 = gmap.getWeight(b, c);
+		if (dist2 == INT_MAX) {
+			vector<RecyclingBin*>::iterator itc = pinteresses.begin();
+			for (; itc != pinteresses.end(); itc++) {
+				if ((*it)->getId() == (*itc)->getId()) {
+					pinteresses.erase(itc);
+					break;
+				}
+			}
+			pinteressestemp.erase(it);
+			it--;
+		}
+
+		if (dist1 < best) {
+			best = dist1;
+			ite = it;
+		}
+	}
+	a = (*ite)->getVertex()->getInfo().getRelativeId();
+	if (best != INT_MAX) {
+		//cout << "Lixo do contentor " << (*ite)->getLixo(cor) << endl;
+		//cout << "capacidade disponivel do camiao " << (camiao->getCUtil() - camiao->getCOcupada())<< endl;
+		if ((*ite)->getGarbage(color)
+				<= (camiao->getUsableCapacity() - camiao->getOcupiedCapacity())) {
+			//cout << "Recolhendo Lixo" << endl;
+			q.push((*ite));
+			camiao->setOcupiedCapacity(camiao->getOcupiedCapacity() + (*ite)->getGarbage(color));
+			totalGarbage += (*ite)->getGarbage(color);
+			(*ite)->setCapacity(color, 0);
+			//cout << "New capacity " << (*ite)->getLixo(cor) << endl;
+			vector<RecyclingBin*>::iterator itc = pinteresses.begin();
+			for (; itc != pinteresses.end(); itc++) {
+				if ((*ite)->getId() == (*itc)->getId()) {
+					pinteresses.erase(itc);
+					break;
+				}
+			}
+			pinteressestemp.erase(ite);
+			//cout << "Capacidade depois de lixo " << (camiao->getCUtil() - camiao->getCOcupada()) << endl;
+			//cout << pinteressestemp.size() << endl;
+			if (pinteressestemp.size() > 1)
+				best += limitedRunAux(a, c, q, pinteresses,pinteressestemp, camiao, totalGarbage, color);
+		} else {
+			pinteressestemp.erase(ite);
+			if (pinteressestemp.size() > 1)
+				best += limitedRunAux(a, c, q, pinteresses,pinteressestemp, camiao, totalGarbage, color);
+		}
+		return best;
+	}
+	return 0;
+}
+
+string Company::limitedRun(int ids, int idd) {
+	stringstream finalString;
+	vector < string > route;
+	vector<Colors::Color> colors = {Colors::blue, Colors::yellow, Colors::green, Colors::red, Colors::black};
+
+	if (gmap.getWeight(ids, idd) == INT_MAX) {
+		return "Nao ha caminho da origem ao destino!";
+	}
+
+	gv->setVertexColor(ids, "red");
+	gv->setVertexColor(idd, "red");
+	gv->rearrange();
+
+	if (trucks.size() == 0)
+		return "Nao ha camioes!";
+
+	for (unsigned int i = 0; i < trucks.size(); i++) {
+		int a = ids;
+		queue<RecyclingBin*> q;
+		double totalGarbage = getTotalGarbage(colors.at(i));
+		double garbage = 0;
+		stringstream s;
+		s << "Camioes " << Colors::colors[colors.at(i)] << endl;
+		//cout << "Camioes " << Colores::cores[cores.at(i)] << endl;
+		vector<RecyclingBin*> pinteresses = getIntPoints(colors.at(i));
+
+		/*if (pinteresses.size() == 0) {
+		 stringstream s;
+		 s << "Nao ha lixo para recolher da cor " << Colors::cores[cores.at(i)] << "!";
+		 return s.str();
+		 }*/
+
+		for (unsigned int j = 0; j < trucks[colors.at(i)].size(); j++) {
+			s << "Camiao " << j << endl;
+			vector<RecyclingBin*> pinteressescopy = pinteresses;
+
+			if (pinteresses.size() > 0) {
+				limitedRunAux(ids, idd, q, pinteresses, pinteressescopy,trucks[colors.at(i)].at(j), garbage,colors.at(i));
+
+				while (q.size() > 0) {
+					int b = q.front()->getVertex()->getInfo().getRelativeId();
+					s << shortestPath(a, b) << "eco: " << b << endl;
+					a = b;
+					q.pop();
+				}
+				s << shortestPath(a, idd) << "Estacao de tratamento: " << idd
+						<< endl;
+				gv->rearrange();
+			}
+		}
+		if (pinteresses.size() > 0)
+			s << "Nao fui possivel recolher tudo" << endl;
+		else if (pinteresses.size() == 0 && garbage != totalGarbage)
+			s << "Nao fui possivel recolher tudo! Sobrou "
+					<< (totalGarbage - garbage) << endl;
+		else
+			route.push_back(s.str());
+		cout << s.str() << endl;
+	}
+	vector<string>::iterator it = route.begin();
+	for (; it < route.end(); it++)
+		finalString << (*it) << endl;
+	return "";
+}
+
+vector<RecyclingBin*> Company::getIntPoints(Colors::Color color) {
+	vector<RecyclingBin*> temp;
+	for (unsigned int i = 0; i < rebins.size(); i++) {
+		if (rebins.at(i).check(color).size() != 0) {
+			gv->setVertexColor(rebins.at(i).getVertex()->getInfo().getRelativeId(),"blue");
+			temp.push_back(&rebins.at(i));
+		}
+	}
+	gv->rearrange();
+	return temp;
+}
+
 
 } /* namespace std */

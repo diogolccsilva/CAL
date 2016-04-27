@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "Empresa.h"
+#include "Company.h"
 
 using namespace std;
 
@@ -20,7 +20,7 @@ using namespace std;
  cute::makeRunner(lis,argc,argv)(s, "AllTests");
  }*/
 
-void gestaoEcoPontos(Empresa& emp) {
+void gestaoEcoPontos(Company& emp) {
 	while (1) {
 		system("cls");
 		cout << "1. Ver EcoPontos;" << endl;
@@ -33,12 +33,12 @@ void gestaoEcoPontos(Empresa& emp) {
 		switch (getch()) {
 		case '1':
 			system("cls");
-			cout << emp.getSPontos() << endl;
+			cout << emp.getSBins() << endl;
 			getch();
 			break;
 		case '2': {
 			system("cls");
-			int c = emp.createRandomEcoPontos();
+			int c = emp.createRandomReBins();
 			cout << "Criou " << c << " ecopontos!" << endl;
 			getch();
 			break;
@@ -48,7 +48,7 @@ void gestaoEcoPontos(Empresa& emp) {
 			cout << "Id do vertex: ";
 			int idv;
 			cin >> idv;
-			if (emp.createEcoPonto(idv)) {
+			if (emp.createReBins(idv)) {
 				cout << "Ecoponto criado!" << endl;
 			} else {
 				cout << "Vertex inexistente! Ecoponto nao criado!" << endl;
@@ -61,23 +61,21 @@ void gestaoEcoPontos(Empresa& emp) {
 			cout << "ID do ecoponto: ";
 			int id;
 			cin >> id;
-			if (emp.removeEcoPonto(id)) {
+			if (emp.removeReBin(id)) {
 				cout << "Ecoponto removido!" << endl;
 			} else {
 				cout << "Ecoponto inexistente!" << endl;
 			}
 			break;
 		}
-		case '5': {
+		case '5':
 			system("cls");
-			int c = emp.eraseEcoPontos();
-			cout << "Eliminou " << c << " ecopontos!" << endl;
+			cout << "Eliminou " << emp.eraseReBins() << " ecopontos!" << endl;
 			getch();
 			break;
-		}
 		case '6':
 			system("cls");
-			emp.geraLixo();
+			emp.generateGarbage();
 			cout << "Lixo criado!" << endl;
 			getch();
 			break;
@@ -89,7 +87,7 @@ void gestaoEcoPontos(Empresa& emp) {
 	}
 }
 
-void gestaoCamioes(Empresa& emp) {
+void gestaoCamioes(Company& emp) {
 	while (1) {
 		system("cls");
 		cout << "1. Ver camioes;" << endl;
@@ -101,12 +99,12 @@ void gestaoCamioes(Empresa& emp) {
 		switch (getch()) {
 		case '1':
 			system("cls");
-			cout << emp.getSCamioes() << endl;
+			cout << emp.getSTrucks() << endl;
 			getch();
 			break;
 		case '2':
 			system("cls");
-			cout << "Criou " << emp.createCamioes() << " camioes!" << endl;
+			cout << "Criou " << emp.createTrucks() << " camioes!" << endl;
 			getch();
 			break;
 		case '3':
@@ -119,6 +117,11 @@ void gestaoCamioes(Empresa& emp) {
 
 			getch();
 			break;
+		case '5':
+			system("cls");
+			cout << "Eliminou " << emp.eraseTrucks() << " camioes!" << endl;
+			getch();
+			break;
 		case '9':
 			return;
 		default:
@@ -127,7 +130,7 @@ void gestaoCamioes(Empresa& emp) {
 	}
 }
 
-void gestaoEcoCentros(Empresa& emp) {
+void gestaoEcoCentros(Company& emp) {
 	while (1) {
 		system("cls");
 		cout << "1. Ver EcoCentros;" << endl;
@@ -139,7 +142,7 @@ void gestaoEcoCentros(Empresa& emp) {
 		switch (getch()) {
 		case '1':
 			system("cls");
-			cout << emp.getSCentros() << endl;
+			cout << emp.getSCenters() << endl;
 			getch();
 			break;
 		case '2':
@@ -152,7 +155,7 @@ void gestaoEcoCentros(Empresa& emp) {
 			cout << "Vertex id: " << endl;
 			int idv;
 			cin >> idv;
-			if (emp.createEcoCentro(idv)) {
+			if (emp.createReCenter(idv)) {
 				cout << "Ecocentro criado!" << endl;
 			} else {
 				cout << "Vertex inexistente! Ecocentro nao criado!" << endl;
@@ -160,6 +163,15 @@ void gestaoEcoCentros(Empresa& emp) {
 			getch();
 			break;
 		case '4':
+			system("cls");
+			cout << "Nao implementado!" << endl;
+			getch();
+			break;
+		case '5':
+			system("cls");
+			cout << "Eliminou " << emp.eraseReCenters() << " ecocentros!"
+					<< endl;
+			getch();
 			break;
 		case '9':
 			return;
@@ -169,7 +181,7 @@ void gestaoEcoCentros(Empresa& emp) {
 	}
 }
 
-void gestao(Empresa& emp) {
+void gestao(Company& emp) {
 	while (1) {
 		system("cls");
 		cout << "1. Gerir EcoPontos;" << endl;
@@ -200,28 +212,63 @@ void gestao(Empresa& emp) {
 	}
 }
 
+void rotas(Company& emp) {
+	while (1) {
+		system("cls");
+		cout << "1. Rota com capacidade ilimitada;" << endl;
+		cout << "2. Rota com capacidade limitada;" << endl;
+		cout << "9. Sair;" << endl;
+		switch (getch()) {
+		case '1': {
+			system("cls");
+			int idp, idc;
+			cout << "Id do ecocentro de partida: ";
+			cin >> idp;
+			cout << "Id do ecocentro de chegada: ";
+			cin >> idc;
+			cout << emp.getUnlimitedRun(idp, idc);
+			getch();
+			break;
+		}
+		case '2': {
+			system("cls");
+			int idp, idc;
+			cout << "Id do ecocentro de partida: ";
+			cin >> idp;
+			cout << "Id do ecocentro de chegada: ";
+			cin >> idc;
+			cout << emp.getLimitedRun(idp, idc);
+			getch();
+			break;
+		}
+		case '9':
+			return;
+		default:
+			break;
+		}
+	}
+}
+
 int menu() {
-	Empresa emp = Empresa();
+	Company emp = Company();
 	while (1) {
 		system("cls");
 		cout << "1. Gestao de dados;" << endl;
-		cout << "2. " << endl;
+		cout << "2. Calculo de rotas;" << endl; //CAROLINA HELP ME PLIZ
+		cout << "3. Informacao para recolha;" << endl;
 		cout << "9. Sair;" << endl;
 		switch (getch()) {
 		case '1':
 			gestao(emp);
 			break;
-		case '2': {
-			int x, y;
-			cout << "onde e a central?  ";
-			cin >> x;
-			cout << "estacao? ";
-			cin >> y;
-			cout << emp.recolhaIlimitada(x, y) << endl;
+		case '2':
+			rotas(emp);
+			break;
+		case '3': {
+			system("cls");
+			emp.dynamic();
 			getch();
 		}
-			break;
-		case '3':
 			break;
 		case '4':
 			break;

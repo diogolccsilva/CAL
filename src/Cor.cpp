@@ -5,8 +5,8 @@
  *      Author: Diogo
  */
 
-#include "Cor.h"
+#include "Color.h"
 
 namespace std {
-	map<Cores::Cor, string> Cores::cores = Cores::create_map();
+	map<Colors::Color, string> Colors::colors = Colors::create_map();
 }
