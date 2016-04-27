@@ -37,7 +37,7 @@ class Graph {
 	void dfs(Vertex<T> *v, vector<T> &res) const;
 	double p;
 public:
-	static double minLat, minLong;
+	static double minLat, minLong,maxLat,maxLong;
 	bool addVertex(const T &in,Vertex<T> *v1);
 	bool addEdge(const T &sourc, const T &dest, double w, string n);
 	Edge<T> getEdge(const T &sourc, const T &dest);

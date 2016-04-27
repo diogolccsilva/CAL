@@ -8,9 +8,13 @@
 namespace std {
 
 template<class T>
-double Graph<T>::minLat = M_PI/2;
+double Graph<T>::minLat = M_PI / 2;
 template<class T>
 double Graph<T>::minLong = M_PI;
+template<class T>
+double Graph<T>::maxLat = -M_PI/2;
+template<class T>
+double Graph<T>::maxLong = -M_PI;
 
 template<class T>
 int Graph<T>::getNumVertex() const {
@@ -22,7 +26,7 @@ vector<Vertex<T> *> Graph<T>::getVertexSet() const {
 }
 
 template<class T>
-bool Graph<T>::addVertex(const T &in,Vertex<T> *v1) {
+bool Graph<T>::addVertex(const T &in, Vertex<T> *v1) {
 	typename vector<Vertex<T>*>::iterator it = vertexSet.begin();
 	typename vector<Vertex<T>*>::iterator ite = vertexSet.end();
 	for (; it != ite; it++)
@@ -203,7 +207,8 @@ double Graph<T>::getWeight(int originIndex, int destinationIndex) {
 }
 
 template<class T>
-vector<T> Graph<T>::getfloydWarshallPath(int originIndex, int destinationIndex) {
+vector<T> Graph<T>::getfloydWarshallPath(int originIndex,
+		int destinationIndex) {
 
 	vector<T> res;
 
@@ -313,20 +318,20 @@ void Graph<T>::floydWarshallShortestPath() {
 template<class T>
 Edge<T> Graph<T>::getEdge(const T& sourc, const T& dest) {
 	typename vector<Vertex<T> *>::const_iterator it = vertexSet.begin();
-	for (;it!=vertexSet.end();it++){
-		if ((*it)->info == sourc){
+	for (; it != vertexSet.end(); it++) {
+		if ((*it)->info == sourc) {
 			typename vector<Edge<T> >::const_iterator ite = (*it)->adj.begin();
-			for (;ite!=(*it)->adj.end();ite++){
+			for (; ite != (*it)->adj.end(); ite++) {
 				if (ite->dest->info == dest)
 					return (*ite);
 			}
 		}
 	}
-	return Edge<T>(new Vertex<T>(dest),INT_INFINITY,"\0");
+	return Edge<T>(new Vertex<T>(dest), INT_INFINITY, "\0");
 }
 
 template<class T>
-void Graph<T>::display(){
+void Graph<T>::display() {
 //	for (unsigned int i = 0; i < vertexSet.size(); i++) {
 //		vertexSet.at(i)->display();
 //	}

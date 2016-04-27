@@ -8,7 +8,7 @@
 
 namespace std {
 
-Contentor::Contentor(double capacidade,Cor cor){
+Contentor::Contentor(double capacidade,Cores::Cor cor){
 	srand(time(NULL));
 	double n=rand()%100;
 
@@ -31,11 +31,11 @@ void Contentor::setOcupada(double ocupada) {
 	cOcupada = ocupada;
 }
 
-Contentor::Cor Contentor::getCor() const {
+Cores::Cor Contentor::getCor() const {
 	return cor;
 }
 
-void Contentor::setCor(Cor cor) {
+void Contentor::setCor(Cores::Cor cor) {
 	this->cor = cor;
 }
 

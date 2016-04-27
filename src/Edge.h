@@ -19,14 +19,16 @@ class Edge {
 	Vertex<T> * dest;
 	double weight;
 	string name;
+	int ID;
+	static int cnt;
 public:
 	Edge(Vertex<T> *d, double w, string name);
 
-	const string& getName() const {
-		return name;
-	}
+	const string& getName() const;
 
 	const Vertex<T>* getDest();
+
+	const int getID() const;
 
 	friend class Graph<T> ;
 	friend class Vertex<T> ;

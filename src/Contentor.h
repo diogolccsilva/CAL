@@ -8,25 +8,31 @@
 #ifndef SRC_CONTENTOR_H_
 #define SRC_CONTENTOR_H_
 
+#include <iostream>
 #include <time.h>
-#include <stdlib.h>
+#include <cstdlib>
+#include "Cor.h"
+
 namespace std {
 
 class Contentor {
-public:
-	enum Cor {azul,amarelo,verde,vermelho,preto};
 private:
-	double cUtil,cOcupada;
-	Cor cor;
+	double cUtil, cOcupada;
+	Cores::Cor cor;
 public:
-	Contentor(double capacidade,Cor cor);
+	Contentor(double capacidade, Cores::Cor cor);
 	virtual ~Contentor();
 	double getOcupada() const;
 	void setOcupada(double ocupada);
-	Cor getCor() const;
-	void setCor(Cor cor);
+	Cores::Cor getCor() const;
+	void setCor(Cores::Cor cor);
 	double getUtil() const;
 	void setUtil(double util);
+
+	friend ostream& operator<<(ostream& os, const Contentor& obj) {
+		os << "Cor: " << Cores::cores[obj.cor] << " Capacidade Util: " << obj.cUtil << " Capacidade Ocupada: " << obj.cOcupada << endl;
+		return os;
+	}
 
 	friend class EcoPonto;
 };

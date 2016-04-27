@@ -23,40 +23,42 @@ double nodeDistance(Vertex<Info> *v1, Vertex<Info> *v2) {
 Empresa::Empresa() {
 	readMapa();
 	createGraphViewer();
-	createRandomEcoPontos();
-	geraLixo();
 }
 
-const vector<Camiao>& Empresa::getCamioes() const {
+const map<Cores::Cor, vector<Camiao*>>& Empresa::getCamioes() const {
 	return camioes;
-}
-
-void Empresa::setCamioes(const vector<Camiao>& camioes) {
-	this->camioes = camioes;
 }
 
 const vector<EcoCentro>& Empresa::getEcocentros() const {
 	return ecocentros;
 }
 
-void Empresa::setEcocentros(const vector<EcoCentro>& ecocentros) {
-	this->ecocentros = ecocentros;
-}
-
 const vector<EcoPonto>& Empresa::getEcopontos() const {
 	return ecopontos;
 }
 
-void Empresa::setEcopontos(const vector<EcoPonto>& ecopontos) {
-	this->ecopontos = ecopontos;
+int Empresa::createCamioes() {
+	vector<int> capacities = { 3000, 2500, 2000, 1000 };
+	vector<Cores::Cor> cores = { Cores::azul, Cores::amarelo,
+			Cores::verde, Cores::vermelho, Cores::preto };
+	int cnt = 0;
+	for (int i = 0; i < 5; i++)
+		for (unsigned int j = 0; j < capacities.size(); j++)
+			for (int k = 0; k < 5; k++) {
+				Camiao camiao = Camiao(capacities.at(j), cores.at(i));
+				addCamiao(camiao);
+				cnt++;
+			}
+	return cnt;
 }
 
 const Graph<Info> Empresa::getMapa() const {
 	return mapa;
 }
 
-void Empresa::addCamiao(const Camiao camiao) {
-	camioes.push_back(camiao);
+void Empresa::addCamiao(Camiao& camiao) {
+	vcamioes.push_back(camiao);
+	camioes[camiao.getCor()].push_back(&camiao);
 }
 
 void Empresa::addEcocentro(const EcoCentro ecocentro) {
@@ -90,15 +92,15 @@ void Empresa::readMapa() {
 				getline(map1, temp);
 				tempInfo.setRlong(atof(temp.c_str()));
 
-				//				if (tempInfo.getGlat() > latmax) {
-				//					latmax = tempInfo.getGlat();
-				//				}
+				if (tempInfo.getRlat() > Graph<Info>::maxLat) {
+					Graph<Info>::maxLat = tempInfo.getRlat();
+				}
 				if (tempInfo.getRlat() < Graph<Info>::minLat) {
 					Graph<Info>::minLat = tempInfo.getRlat();
 				}
-				//				if (tempInfo.getGlong() > longmax) {
-				//					longmax = tempInfo.getGlong();
-				//				}
+				if (tempInfo.getRlong() > Graph<Info>::maxLong) {
+					Graph<Info>::maxLong = tempInfo.getRlong();
+				}
 				if (tempInfo.getRlong() < Graph<Info>::minLong) {
 					Graph<Info>::minLong = tempInfo.getRlong();
 				}
@@ -182,106 +184,163 @@ void Empresa::readMapa() {
 bool Empresa::createRandomEcoPonto(Vertex<Info>* vertex) {
 	int n = rand() % 100;
 	if (n < 5) {
-		vector<Contentor> contentores;
-		contentores.push_back(Contentor(2500, Contentor::amarelo));
-		contentores.push_back(Contentor(2500, Contentor::azul));
-		contentores.push_back(Contentor(2500, Contentor::preto));
-		contentores.push_back(Contentor(2500, Contentor::verde));
-		contentores.push_back(Contentor(2500, Contentor::vermelho));
-		EcoPonto ecoponto = EcoPonto();
-		ecoponto.setContentores(contentores);
-		ecoponto.setVertex(vertex);
-		if (gv != NULL) {
-			gv->setVertexColor(vertex->getInfo().getRelativeId(), "green");
-			gv->rearrange();
-		}
-		ecopontos.push_back(ecoponto);
+		createEcoPonto(vertex);
 		return true;
 	}
 	return false;
-}
-
-void Empresa::setMapa(const Graph<Info>& mapa) {
-	this->mapa = mapa;
 }
 
 Empresa::~Empresa() {
 	// TODO Auto-generated destructor stub
 }
 
-void Empresa::createRandomEcoPontos() {
+int Empresa::createRandomEcoPontos() {
 	srand(time(NULL));
 	ecopontos.clear();
+	int cnt = 0;
 	vector<Vertex<Info> *> v = mapa.getVertexSet();
 	vector<Vertex<Info> *>::const_iterator it = v.begin();
 	for (; it != v.end(); it++) {
-		createRandomEcoPonto(*it);
+		if (createRandomEcoPonto(*it))
+			cnt++;
 	}
+	return cnt;
 }
 
 vector<EcoPonto*> Empresa::getPontosInt() {
-	cout<<"ecos size "<<ecopontos.size()<<endl;
 	vector<EcoPonto*> temp;
 	for (unsigned int i = 0; i < ecopontos.size(); i++) {
-		if (ecopontos.at(i).check().size() != 0)
+		if (ecopontos.at(i).check().size() != 0) {
+			gv->setVertexColor(
+					ecopontos.at(i).getVertex()->getInfo().getRelativeId(),
+					"blue");
 			temp.push_back(&ecopontos.at(i));
+		}
 	}
-
+	gv->rearrange();
 	return temp;
 }
 
-string Empresa::recolha(int ids) {
-	int idd, a=ids, b;
+double Empresa::recolhaAux(int ids, int idd, queue<EcoPonto*> &q,
+		vector<EcoPonto*> pinteresses) {
+	vector<EcoPonto*>::iterator it = pinteresses.begin();
+	vector<EcoPonto*>::iterator ite = pinteresses.begin();
+	int a = ids, c = idd;
+	double best = INT_MAX;
+
+	for (; it != pinteresses.end(); it++) {
+		int b = (*it)->getVertex()->getInfo().getRelativeId();
+		double dist1 = mapa.getWeight(a, b);
+		if (dist1 == INT_MAX) {
+			pinteresses.erase(it);
+			it--;
+		}
+
+		double dist2 = mapa.getWeight(b, c);
+		if (dist2 == INT_MAX) {
+			pinteresses.erase(it);
+			it--;
+		}
+
+		if (dist1 < best) {
+			best = dist1;
+			ite = it;
+		}
+	}
+	a = (*ite)->getVertex()->getInfo().getRelativeId();
+	if (best != INT_MAX) {
+		q.push((*ite));
+		pinteresses.erase(ite);
+		if (pinteresses.size() > 1) {
+			best += recolhaAux(a, c, q, pinteresses);
+		}
+		return best;
+	}
+	return 0;
+}
+
+string Empresa::recolha(int ids, int idd) {
 	vector<EcoPonto*> pinteresses = getPontosInt();
-	double minW = INT_INFINITY;
 	stringstream s;
-
-	cout<<"pinteresse "<<pinteresses.size()<< endl;
-
-	while (pinteresses.size() > 0) {
-		for (unsigned int i = 0; i < pinteresses.size(); i++) {
-			if (mapa.getWeight(a,
-					pinteresses.at(i)->getVertex()->getInfo().getRelativeId()) ==INT_MAX){
-				pinteresses.erase(pinteresses.begin() + i);
-				i--;
-				cout << "nao chego la mano " << a << endl;
-			}
-			else if (mapa.getWeight(a,
-					pinteresses.at(i)->getVertex()->getInfo().getRelativeId())
-					< minW) {
-				b = pinteresses.at(i)->getVertex()->getInfo().getRelativeId();
-				pinteresses.erase(pinteresses.begin() + i);
-				s << shortestPath(a,b)<<"eco: "<<a<<endl;
-
-				a = b;
-				i--;
-			}
-		}
-
-
+	queue<EcoPonto*> q;
+	if (mapa.getWeight(ids, idd) == INT_MAX) {
+		return "Nao ha caminho da origem ao destino!";
 	}
-
-	minW = INT_INFINITY;
-	/*
-	for (unsigned int i = 0; i < ecocentros.size(); i++) {
-		if (mapa.getWeight(a,
-				ecocentros.at(i)->getVertex()->getInfo().getRelativeId()) ==INT_MAX)
-			ecocentros.erase(ecocentros.begin() + i);
-		if (mapa.getWeight(a,
-				ecocentros.at(i)->getVertex()->getInfo().getRelativeId())
-				< minW) {
-			b = ecocentros.at(i)->getVertex()->getInfo().getRelativeId();
-			ecocentros.erase(ecocentros.begin() + i);
-		}
+	gv->setVertexColor(ids, "red");
+	gv->setVertexColor(idd, "red");
+	gv->rearrange();
+	recolhaAux(ids, idd, q, pinteresses);
+	int a = ids;
+	cout << "q.size(): " << q.size() << endl;
+	while (q.size() > 0) {
+		int b = q.front()->getVertex()->getInfo().getRelativeId();
+		s << shortestPath(a, b) << "eco: " << b << endl;
+		a = b;
+		q.pop();
 	}
-*/
-
-
+	s << shortestPath(a, idd) << "Estacao de tratamento: " << idd << endl;
+	gv->rearrange();
 	return s.str();
 
-
-
 }
+
+//double Empresa::recolhaAux(int ids, queue<EcoPonto*> &q,
+//		vector<EcoPonto*> pinteresses) {
+//	vector<EcoPonto*>::iterator it = pinteresses.begin();
+//	vector<EcoPonto*>::iterator ite = pinteresses.begin();
+//	int a = ids;
+//	double best = INT_MAX;
+//	for (; it != pinteresses.end(); it++) {
+//		int b = (*it)->getVertex()->getInfo().getRelativeId();
+//		double dist = mapa.getWeight(a, b);
+//		cout << "a: " << a << " b: " << b << " dist: " << dist << endl;
+//		if (dist == INT_MAX) {
+//			pinteresses.erase(it);
+//			it--;
+//		}
+//		if (dist < best) {
+//			best = dist;
+//			ite = it;
+//		}
+//		//cout << "dist: " << dist << endl;
+//	}
+//	a = (*ite)->getVertex()->getInfo().getRelativeId();
+//	cout << "best: " << best << " na: " << a << endl;
+//	if (best != INT_MAX) {
+//		q.push((*ite));
+//		pinteresses.erase(ite);
+//		if (pinteresses.size() > 1) {
+//			best += recolhaAux(a, q, pinteresses);
+//		}
+//		cout << "Return best: " << best << endl;
+//		return best;
+//	}
+//	return 0;
+//}
+
+//string Empresa::recolha(int ids) {
+//	vector<EcoPonto*> pinteresses = getPontosInt();
+//	double minW = INT_INFINITY;
+//	stringstream s;
+//
+//	cout << "pinteresse " << pinteresses.size() << endl;
+//	queue<EcoPonto*> q;
+//	recolhaAux(ids, q, pinteresses);
+//	int a = ids;
+//	cout << "a: " << a << endl;
+//	cout << "q.size: " << q.size() << endl;
+//	while (q.size() > 0) {
+//		int b = q.front()->getVertex()->getInfo().getRelativeId();
+//		cout << "b: " << b << endl;
+//		s << shortestPath(a, b) << "eco: " << b << endl;
+//		a = b;
+//		q.pop();
+//	}
+//	minW = INT_INFINITY;
+//
+//	return s.str();
+//
+//}
 
 void Empresa::createGraphViewer() {
 	vector<Vertex<Info> *> vs = mapa.getVertexSet();
@@ -295,19 +354,37 @@ void Empresa::createGraphViewer() {
 
 	string line;
 
-	double minLong = Graph<Info>::minLong;
-	double minLat = Graph<Info>::minLat;
+	double minLong = Graph<Info>::minLong - 2 * M_PI;
+	double minLat = Graph<Info>::minLat - 2 * M_PI;
+	double maxLat = Graph<Info>::maxLat - 2 * M_PI;
+	double maxLong = Graph<Info>::maxLong - 2 * M_PI;
+
+	int r = 60000000;
+	int ymin = (minLong / M_PI) * r;
+	int xmin = (log((1 + sin(minLat)) / (1 - sin(minLat))) / (4 * M_PI)) * r;
+	int ymax = (maxLong / M_PI) * r;
+	int xmax = (log((1 + sin(maxLat)) / (1 - sin(maxLat))) / (4 * M_PI)) * r;
+	cout << "xmin: " << xmin << " xmax: " << xmax << " ymin: " << ymin
+			<< " ymax: " << ymax << endl;
 
 	unsigned long idNo = 0;
-	int r = 10000000;
 	//Read nodes
 	vector<Vertex<Info> *>::const_iterator itv = vs.begin(); //typename vector<Vertex<T> *>::const_iterator
 	for (; itv != vs.end(); itv++) {
 		idNo = (*itv)->getInfo().getRelativeId();
-		int y = (int) (((sin((*itv)->getInfo().getRlong() + M_PI)
-				- sin(minLong + M_PI)) * r)) % r;
-		int x = (int) (((sin((*itv)->getInfo().getRlat()) - sin(minLat)) * r))
-				% r;
+		double longt = (*itv)->getInfo().getRlong() - 2 * M_PI;
+		double latt = (*itv)->getInfo().getRlat() - 2 * M_PI;
+		int y = -((longt / M_PI) * r - (ymax + ymin) / 2);
+		int x = (log((1 + sin(latt)) / (1 - sin(latt))) / (4 * M_PI)) * r
+				- (xmin + xmax) / 2;
+		cout << "x: " << x << " y: " << y << endl;
+
+//		double x = r * cos(latt) * cos(longt);
+//		double y = r * cos(longt) * sin(longt);
+//		int y = (int) (((sin((*itv)->getInfo().getRlong() + M_PI)
+//				- sin(minLong + M_PI)) * r)) % r;
+//		int x = (int) (((sin((*itv)->getInfo().getRlat()) - sin(minLat)) * r))
+//				% r;
 		gv->addNode(idNo, x, y);
 	}
 
@@ -328,7 +405,7 @@ void Empresa::createGraphViewer() {
 			idNoDestino = ite->getDest()->getInfo().getRelativeId();
 			//cout << "S: " << idNoOrigem << " D: " << idNoDestino << " E: " << cnt << endl;
 			gv->addEdge(cnt, idNoOrigem, idNoDestino, EdgeType::DIRECTED);
-	//		gv->setEdgeLabel(cnt, ite->getName());
+			//		gv->setEdgeLabel(cnt, ite->getName());
 		}
 	}
 
@@ -345,16 +422,194 @@ string Empresa::shortestPath(int ids, int idd) {
 	auto it = v.begin();
 	stringstream s;
 	for (; (it + 1) != v.end(); it++) {
-		//cout << mapa.getEdge((*it), (*(it + 1))).getName() << endl;
-		s << (*it).getRelativeId() <<"   "<<mapa.getEdge((*it), (*(it + 1))).getName() << endl;
+		gv->setEdgeColor(mapa.getEdge((*it), (*(it + 1))).getID(), "red");
+		s << (*it).getRelativeId() << "   "
+				<< mapa.getEdge((*it), (*(it + 1))).getName() << endl;
 	}
 	return s.str();
 }
 
-int Empresa::geraLixo(){
-	for(unsigned int i=0; i< ecopontos.size();i++){
-		ecopontos.at(i).geraLixo();
+string Empresa::getSCamioes() const {
+	vector<Camiao>::const_iterator it = vcamioes.begin();
+	stringstream s;
+	for (; it != vcamioes.end(); it++) {
+		s << (*it) << endl;
+	}
+	return s.str();
+}
 
+string Empresa::getSCentros() const {
+
+}
+
+string Empresa::getSPontos() const {
+	vector<EcoPonto>::const_iterator it = ecopontos.begin();
+	stringstream s;
+	for (; it != ecopontos.end(); it++) {
+		s << (*it) << endl;
+	}
+	return s.str();
+}
+
+int Empresa::eraseEcoPontos() {
+	vector<EcoPonto>::iterator it = ecopontos.begin();
+	int cnt = 0;
+	for (; it != ecopontos.end(); it++) {
+		gv->setVertexColor(it->getVertex()->getInfo().getRelativeId(),
+				"yellow");
+		cnt++;
+	}
+	gv->rearrange();
+	ecopontos.clear();
+	EcoPonto::resetCnt();
+	return cnt;
+}
+
+bool Empresa::removeEcoPonto(int id) {
+	vector<EcoPonto>::iterator it = ecopontos.begin();
+	for (; it != ecopontos.end(); it++) {
+		if (it->getId() == id) {
+			gv->setVertexColor(it->getVertex()->getInfo().getRelativeId(),
+					"yellow");
+			gv->rearrange();
+			ecopontos.erase(it);
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Empresa::createEcoPonto(int idv) {
+	vector<Vertex<Info> *>::const_iterator it = mapa.getVertexSet().begin();
+	for (; it != mapa.getVertexSet().end(); it++) {
+		if ((*it)->getInfo().getRelativeId() == idv) {
+			createEcoPonto((*it));
+			return true;
+		}
+	}
+	return false;
+}
+
+void Empresa::createEcoPonto(Vertex<Info>* vertex) {
+	vector<Contentor> contentores;
+	contentores.push_back(Contentor(2500, Cores::amarelo));
+	contentores.push_back(Contentor(2500, Cores::azul));
+	contentores.push_back(Contentor(2500, Cores::preto));
+	contentores.push_back(Contentor(2500, Cores::verde));
+	contentores.push_back(Contentor(2500, Cores::vermelho));
+	EcoPonto ecoponto = EcoPonto();
+	ecoponto.setContentores(contentores);
+	ecoponto.setVertex(vertex);
+	if (gv != NULL) {
+		gv->setVertexColor(vertex->getInfo().getRelativeId(), "green");
+		gv->rearrange();
+	}
+	ecopontos.push_back(ecoponto);
+}
+
+//string Empresa::shortestPath(int ids, int idd) {
+//	auto v = mapa.getfloydWarshallPath(mapa.getVertexSet().at(ids)->getInfo(),
+//			mapa.getVertexSet().at(idd)->getInfo());
+//	if (v.size() == 0) {
+//		cout << "Pontos sem ligacao!" << endl;
+//		return "\0";
+//	}
+//	auto it = v.begin();
+//	stringstream s;
+//	for (; (it + 1) != v.end(); it++) {
+//		//cout << mapa.getEdge((*it), (*(it + 1))).getName() << endl;
+//		s << (*it).getRelativeId() << "   "
+//				<< mapa.getEdge((*it), (*(it + 1))).getName() << endl;
+//	}
+//	return s.str();
+//}
+
+int Empresa::geraLixo() {
+	for (unsigned int i = 0; i < ecopontos.size(); i++) {
+		ecopontos.at(i).geraLixo();
+	}
+}
+
+//alterado
+double Empresa::getLixoTotal(Cores::Cor cor) {
+	double maxLixo = 0;
+	vector<EcoPonto*> pint = getPontosInt();
+	vector<EcoPonto*>::const_iterator it = pint.begin();
+
+	for(; it != pint.end(); it++) {
+		vector<Contentor>::const_iterator ite = (*it)->getContentores().begin();
+		for(; ite != (*it)->getContentores().end(); ite++) {
+			if((*ite).getCor() == cor && ((*ite).getOcupada() / (*ite).getUtil()) >= 0.7) {
+				//cout << (*ite).getCor() << " " << ((*ite).getOcupada() / (*ite).getUtil()) << endl;
+				maxLixo += (*ite).getOcupada();
+			}
+		}
+	}
+	cout << "Lixo a recolher: " << maxLixo << endl;
+	return maxLixo;
+}
+
+//alterado
+void Empresa::dynamic()
+{
+	vector<Cores::Cor> cores = {Cores::azul, Cores::amarelo,Cores::verde,Cores::vermelho,Cores::preto};
+	for (int i = 0; i < 5; i++) {
+		if (i == 0)
+			cout << "--------------------------------   Contetor Azul   -----------------------------------" << endl;
+		else if (i == 1)
+			cout << "--------------------------------  Contetor Amarelo -----------------------------------" << endl;
+		else if (i == 2)
+			cout << "--------------------------------   Contetor Verde  -----------------------------------" << endl;
+		else if (i == 3)
+			cout << "-------------------------------- Contetor Vermelho -----------------------------------" << endl;
+		else
+			cout << "-------------------------------- Contetor Generico -----------------------------------" << endl;
+
+		int n = ceil(getLixoTotal(cores.at(i)));
+		vector<int> capacityDone;
+		vector<int> lastTruck;
+		vector<int> capacities = { 0, 3000, 2500, 2000, 1000}; //0 is an invalid coin
+
+		for (int i = 0; i <= n; i++) {
+			capacityDone.push_back(0);
+			lastTruck.push_back(0);
+		}
+
+		//exactly like the backpack problem (just a little tuneup)
+		for (unsigned int i = 1; i < capacities.size(); i++) {
+			int capacity = capacities.at(i);
+			if (capacity <= n) {
+				for (int j = capacity; j <= n; j++) {
+					//consider also the value already saved
+					int remainder = j - capacity;
+					if (capacityDone.at(j) + capacity <= j
+							&& (capacity + capacityDone.at(remainder)) <= j) {
+						capacityDone.at(j) = capacity + capacityDone.at(remainder);
+						lastTruck.at(j) = i;
+					}
+				}
+			}
+		}
+
+		int temp = n, counter = 0, extraTruck = 0;
+
+		if (capacityDone.at(n) != n) {
+			temp -= (n - capacityDone.at(n));
+			counter++;
+			for (unsigned int i = 0; i < capacities.size(); i++)
+				if ((n - capacityDone.at(n)) <= capacities.at(i))
+					extraTruck = capacities.at(i);
+		}
+
+		while (temp > 0) {
+			//cout << "temp " << temp << endl;
+			cout << capacities.at(lastTruck.at(temp)) << endl;
+			temp -= capacities.at(lastTruck.at(temp));
+			counter++;
+		}
+		if (extraTruck != 0)
+			cout << "Requires extra Truck " << extraTruck << endl;
+		cout << "Number of Trucks: " <<  counter << endl;
 	}
 }
 
