@@ -217,7 +217,7 @@ vector<EcoPonto*> Empresa::getPontosInt() {
 	return temp;
 }
 
-double Empresa::recolhaAux(int ids, int idd, queue<EcoPonto*> &q,
+double Empresa::recolhaIlimitadaAux(int ids, int idd, queue<EcoPonto*> &q,
 		vector<EcoPonto*> pinteresses) {
 	vector<EcoPonto*>::iterator it = pinteresses.begin();
 	vector<EcoPonto*>::iterator ite = pinteresses.begin();
@@ -248,14 +248,14 @@ double Empresa::recolhaAux(int ids, int idd, queue<EcoPonto*> &q,
 		q.push((*ite));
 		pinteresses.erase(ite);
 		if (pinteresses.size() > 1) {
-			best += recolhaAux(a, c, q, pinteresses);
+			best += recolhaIlimitadaAux(a, c, q, pinteresses);
 		}
 		return best;
 	}
 	return 0;
 }
 
-string Empresa::recolha(int ids, int idd) {
+string Empresa::recolhaIlimitada(int ids, int idd) {
 	vector<EcoPonto*> pinteresses = getPontosInt();
 	stringstream s;
 	queue<EcoPonto*> q;
@@ -265,7 +265,7 @@ string Empresa::recolha(int ids, int idd) {
 	gv->setVertexColor(ids, "red");
 	gv->setVertexColor(idd, "red");
 	gv->rearrange();
-	recolhaAux(ids, idd, q, pinteresses);
+	recolhaIlimitadaAux(ids, idd, q, pinteresses);
 	int a = ids;
 	cout << "q.size(): " << q.size() << endl;
 	while (q.size() > 0) {

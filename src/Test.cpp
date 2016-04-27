@@ -217,7 +217,7 @@ int menu() {
 			cin >> x;
 			cout << "estacao? ";
 			cin >> y;
-			cout << emp.recolha(x, y) << endl;
+			cout << emp.recolhaIlimitada(x, y) << endl;
 			getch();
 		}
 			break;

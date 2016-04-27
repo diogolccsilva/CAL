@@ -52,7 +52,7 @@ class Empresa {
 	map<Cores::Cor, vector<Camiao*>> camioes;
 
 	//Utilidades
-	double recolhaAux(int ids, int idd, queue<EcoPonto*> &q,
+	double recolhaIlimitadaAux(int ids, int idd, queue<EcoPonto*> &q,
 			vector<EcoPonto*> pinteresses);
 public:
 	Empresa();
@@ -84,7 +84,7 @@ public:
 	string getSCamioes() const;
 
 	//Utilidades
-	string recolha(int ids, int idd);
+	string recolhaIlimitada(int ids, int idd);
 	vector<EcoPonto*> getPontosInt();
 	string shortestPath(int ids, int idd);
 	void dynamic();
