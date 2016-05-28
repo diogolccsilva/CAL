@@ -337,6 +337,26 @@ void Graph<T>::display() {
 //	}
 }
 
-template class Graph<Info> ;
+template<class T>
+void Graph<T>::resetEdgeColors(GraphViewer *gv) {
+	typename vector<Vertex<T> *>::iterator it = vertexSet.begin();
+
+	for(; it != vertexSet.end(); it++) {
+		for(unsigned int i = 0; i < (*it)->getAdj().size(); i++) {
+			gv->setEdgeColor((*it)->getAdj().at(i).getID(), "black");
+		}
+	}
+}
+
+template<class T>
+void Graph<T>::resetVertexColors(GraphViewer *gv) {
+	typename vector<Vertex<T> *>::iterator it = vertexSet.begin();
+
+	for(; it != vertexSet.end(); it++) {
+		gv->setVertexColor((*it)->getInfo().getRelativeId(), LIGHT_GRAY);
+	}
+}
+
+template class Graph<Info>;
 
 } /* namespace std */

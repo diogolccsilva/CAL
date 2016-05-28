@@ -14,6 +14,8 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include <conio.h>
+#include <cstdlib>
 
 #include "Color.h"
 #include "Graph.h"
@@ -49,11 +51,14 @@ class Company {
 
 	//Camioes
 	vector<Truck> vtrucks;
-	map<Colors::Color, vector<Truck*>> trucks;
+	map<Colors::Color, vector<Truck>> trucks;
 
 	//Utilidades
 	double unlimitedRunAux(int ids, int idd, queue<RecyclingBin*> &q,
 			vector<RecyclingBin*> pinteresses);
+	void resetEdgeColors();
+	void resetReBinsColors();
+	void resetVertexColors();
 public:
 	Company();
 	virtual ~Company();
@@ -134,7 +139,7 @@ public:
 	 * @brief
 	 * @return
 	 */
-	int generateGarbage();
+	void generateGarbage();
 	/**
 	 * @brief
 	 * @param cor
@@ -147,7 +152,7 @@ public:
 	 * @brief
 	 * @return
 	 */
-	const map<Colors::Color, vector<Truck*>>& getTrucks() const;
+	const map<Colors::Color, vector<Truck>>& getTrucks() const;
 	/**
 	 * @brief
 	 * @param camiao
@@ -221,8 +226,8 @@ public:
 	 */
 	double limitedRunAux(int ids, int idd, queue<RecyclingBin*> &q,
 			vector<RecyclingBin*> &pinteresses,
-			vector<RecyclingBin*> pinteressestemp, Truck* camiao,
-			double &totalGarbage, Colors::Color color);
+			vector<RecyclingBin*> pinteressestemp, Truck camiao,
+			double &totalGarbage, Colors::Color color, bool &finishedCollecting);
 	/**
 	 *
 	 * @param ids

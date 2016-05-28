@@ -55,6 +55,8 @@ public:
 	void getfloydWarshallPathAux(int index1, int index2, vector<T> & res);
 	vector<T> getfloydWarshallPath(int originIndex, int destinationIndex) ;
 	double getWeight(int originIndex, int destinationIndex);
+	void resetEdgeColors(GraphViewer *gv);
+	void resetVertexColors(GraphViewer *gv);
 
 	void display();
 
