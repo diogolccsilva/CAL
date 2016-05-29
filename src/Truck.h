@@ -14,48 +14,56 @@
 namespace std {
 
 class Truck {
-	double cUsable,cOcupied;
+	double cUsable,cOccupied;
 	int id;
 	static int cnt;
 	Colors::Color color;
 public:
+
 	/**
-	 * @brief
-	 * @param cUtil
-	 * @param cor
+	 * Truck constructor.
+	 * @param cUsable Usable capacity.
+	 * @param color Color representing the type of garbage the truck is collecting.
 	 */
-	Truck(double cUtil,Colors::Color color);
+	Truck(double cUsable,Colors::Color color);
+
 	/**
-	 * @brief default destructor
+	 * @brief Default destructor.
 	 */
 	virtual ~Truck();
-	/**
-	 * @brief
-	 * @return
-	 */
-	double getOcupiedCapacity() const;
+
 	/**
 	 *
-	 * @param capacity
+	 * @return The occupied capacity.
+	 */
+	double getOcupiedCapacity() const;
+
+	/**
+	 *
+	 * @param capacity Occupied capacity.
 	 */
 	void setOcupiedCapacity(double capacity);
+
 	/**
-	 * @brief
-	 * @return truck's usable capacity
+	 *
+	 * @return The usable capacity.
 	 */
 	double getUsableCapacity() const;
+
 	/**
-	 * @brief
-	 * @return id
+	 *
+	 * @return Truck's ID.
 	 */
 	int getId() const;
+
 	/**
-	 * @brief
-	 * @return the color that represents the kind of garbage that the truck carries
+	 *
+	 * @return The color that represents the kind of garbage the truck collects.
 	 */
 	Colors::Color getColor() const;
+
 	/**
-	 * @brief resets Camiao's id counter to 0
+	 * @brief Resets the truck's ID counter to 0.
 	 */
 	static void resetCnt();
 	friend ostream& operator<<(ostream& os, const Truck& obj) {

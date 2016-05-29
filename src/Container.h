@@ -17,7 +17,7 @@ namespace std {
 
 class Container {
 private:
-	double cUsable, cOcupied;
+	double cUsable, cOccupied;
 	Colors::Color color;
 public:
 
@@ -35,13 +35,13 @@ public:
 
 	/**
 	 *
-	 * @return The ocupied capacity.
+	 * @return The occupied capacity.
 	 */
 	double getOcupiedCapacity() const;
 
 	/**
 	 *
-	 * @param cocupied Ocupied capacity.
+	 * @param cocupied Occupied capacity.
 	 */
 	void setOcupiedCapacity(double cocupied);
 
@@ -69,7 +69,7 @@ public:
 	 */
 	void setUsableCapacity(double cusable);
 	friend ostream& operator<<(ostream& os, const Container& obj) {
-		os << "Cor: " << Colors::colors[obj.color] << " Capacidade Util: " << obj.cUsable << " Capacidade Ocupada: " << obj.cOcupied << endl;
+		os << "Cor: " << Colors::colors[obj.color] << " Capacidade Util: " << obj.cUsable << " Capacidade Ocupada: " << obj.cOccupied << endl;
 		return os;
 	}
 

@@ -35,7 +35,7 @@ vector<Container*> RecyclingBin::check() {
 	//cout << "Entra check \n";
 	for (unsigned int i = 0; i < containers.size(); i++) {
 		//cout << contentores.at(i).cOcupada / (contentores.at(i).cUtil * 1.0) << endl;
-		if (containers.at(i).cOcupied / (containers.at(i).cUsable * 1.0) >= 0.7)
+		if (containers.at(i).cOccupied / (containers.at(i).cUsable * 1.0) >= 0.7)
 			temp.push_back(&containers.at(i));
 	}
 	return temp;
@@ -92,7 +92,7 @@ vector<Container*> RecyclingBin::check(Colors::Color color) {
 	//cout << "Entra check \n";
 	for (unsigned int i = 0; i < containers.size(); i++) {
 		//cout << contentores.at(i).cOcupada / (contentores.at(i).cUtil * 1.0) << endl;
-		if (containers.at(i).getColor() == color && containers.at(i).cOcupied / (containers.at(i).cUsable * 1.0) >= 0.7)
+		if (containers.at(i).getColor() == color && containers.at(i).cOccupied / (containers.at(i).cUsable * 1.0) >= 0.7)
 			temp.push_back(&containers.at(i));
 	}
 	return temp;
