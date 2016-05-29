@@ -1,8 +1,6 @@
 /*
  * Empresa.h
  *
- *  Created on: Apr 25, 2016
- *      Author: Diogo
  */
 
 #ifndef SRC_COMPANY_H_
@@ -23,6 +21,7 @@
 #include "Street.h"
 #include "Truck.h"
 #include "Vertex.h"
+#include "Driver.h"
 
 #define _USE_MATH_DEFINES
 
@@ -50,6 +49,7 @@ class Company {
 	//Camioes
 	vector<Truck> vtrucks;
 	map<Colors::Color, vector<Truck*>> trucks;
+	vector<Driver> drivers;
 
 	//Utilidades
 	double unlimitedRunAux(int ids, int idd, queue<RecyclingBin*> &q,

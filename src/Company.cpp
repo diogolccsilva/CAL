@@ -1,8 +1,6 @@
 /*
  * Empresa.cpp
  *
- *  Created on: Apr 25, 2016
- *      Author: Diogo
  */
 
 #include "Company.h"
@@ -730,6 +728,7 @@ double Company::limitedRunAux(int ids, int idd, queue<RecyclingBin*> &q,
 			}
 			pinteressestemp.erase(it);
 			it--;
+			continue;
 		}
 
 		double dist2 = gmap.getWeight(b, c);
@@ -743,6 +742,7 @@ double Company::limitedRunAux(int ids, int idd, queue<RecyclingBin*> &q,
 			}
 			pinteressestemp.erase(it);
 			it--;
+			continue;
 		}
 
 		if (dist1 < best) {

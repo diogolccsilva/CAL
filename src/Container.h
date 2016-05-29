@@ -1,8 +1,6 @@
 /*
  * Contentor.h
  *
- *  Created on: 21/03/2016
- *      Author: Diogo
  */
 
 #ifndef SRC_CONTAINER_H_

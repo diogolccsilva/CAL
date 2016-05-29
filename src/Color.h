@@ -1,7 +1,6 @@
 /*
- * Cor.h
+ * Color.h
  *
- *  Created on: Apr 27, 2016
  */
 
 #ifndef SRC_COLOR_H_
