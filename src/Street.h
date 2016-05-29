@@ -17,43 +17,51 @@ class Street {
 	string nome;
 	bool bi;
 public:
+
 	/**
-	 * @brief default constructor
+	 * @brief Default constructor.
 	 */
 	Street();
+
 	/**
-	 *
+	 * Default destructor.
 	 */
 	virtual ~Street();
+
 	/**
 	 *
-	 * @return
+	 * @return True if the street is bidirectional or false otherwise.
 	 */
 	bool isBi() const;
+
 	/**
 	 *
-	 * @param bi
+	 * @param bi True for bidirectional street or false otherwise.
 	 */
 	void setBi(bool bi);
+
 	/**
-	 *
+	 * @return Street ID.
 	 */
 	unsigned long getId() const;
+
 	/**
 	 *
-	 * @param id
+	 * @param id Street ID.
 	 */
 	void setId(int id);
+
 	/**
 	 *
-	 * @return
+	 * @return Street name.
 	 */
 	const string getName() const;
+
 	/**
 	 *
-	 * @param name
+	 * @param name Street name.
 	 */
-	void setName(const string& nome);
+	void setName(const string& name);
 };
 
 } /* namespace std */
