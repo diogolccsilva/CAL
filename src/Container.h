@@ -20,44 +20,52 @@ private:
 	double cUsable, cOcupied;
 	Colors::Color color;
 public:
+
 	/**
-	 *
-	 * @param capacity
-	 * @param color
+	 * Container constructor.
+	 * @param capacity Maximum capacity of the container.
+	 * @param color Color of the container, i.e, the type of garbage it contains.
 	 */
 	Container(double capacity, Colors::Color color);
+
 	/**
 	 * @brief default destructor
 	 */
 	virtual ~Container();
+
 	/**
-	 *
-	 * @return
+	 * Getter of ocupied capacity.
+	 * @return The ocupied capacity.
 	 */
 	double getOcupiedCapacity() const;
+
 	/**
-	 *
-	 * @param cocupied
+	 * Setter of ocupied capacity.
+	 * @param cocupied Ocupied capacity.
 	 */
 	void setOcupiedCapacity(double cocupied);
+
 	/**
-	 *
-	 * @return color
+	 * Getter of the color.
+	 * @return Color of the container.
 	 */
 	Colors::Color getColor() const;
+
 	/**
-	 *
-	 * @param color
+	 * Setter of the color.
+	 * @param color Color associated with the specified garbage.
 	 */
 	void setColor(Colors::Color color);
+
 	/**
-	 *
-	 * @return
+	 * Getter of the usable capacity.
+	 * @return The usable capacity.
 	 */
 	double getUsableCapacity() const;
+
 	/**
-	 *
-	 * @param cusable
+	 * Setter of the usable capacity.
+	 * @param cusable Usable capacity.
 	 */
 	void setUsableCapacity(double cusable);
 	friend ostream& operator<<(ostream& os, const Container& obj) {
