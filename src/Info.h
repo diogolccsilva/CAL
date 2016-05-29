@@ -15,86 +15,106 @@ private:
 	static int cnt;
 
 public:
+
 	/**
-	 * @brief default constructor
+	 * @brief Default constructor.
 	 */
 	Info();
+
 	/**
-	 * @brief default destructor
+	 * @brief Default destructor.
 	 */
 	virtual ~Info();
+
 	bool operator == (const Info &p2) const;
+
 	/**
 	 *
-	 * @return
+	 * @return Info relative ID.
 	 */
 	int getRelativeId() const{
 		return relativeID;
 	}
+
 	/**
 	 *
-	 * @return
+	 * @return Info Latitude in degrees.
 	 */
 	double getGlat() const {
 		return glat;
 	}
+
 	/**
 	 *
-	 * @param glat
+	 * @param glat Latitude in degrees.
 	 */
 	void setGlat(double glat) {
 		this->glat = glat;
 	}
 
+	/**
+	 *
+	 * @return Info Longitude in degrees.
+	 */
 	double getGlong() const {
 		return glong;
 	}
+
 	/**
 	 *
-	 * @param glong
+	 * @param glong Longitude in degrees.
 	 */
 	void setGlong(double glong) {
 		this->glong = glong;
 	}
+
 	/**
 	 *
+	 * @return Info ID.
 	 */
 	unsigned long getId() const {
 		return id;
 	}
+
 	/**
 	 *
-	 * @param id
+	 * @param id Info ID.
 	 */
 	void setId(int id);
+
 	/**
 	 *
-	 * @return
+	 * @return Info name.
 	 */
 	const string getName() const;
+
 	/**
 	 *
-	 * @param nome
+	 * @param name Info name.
 	 */
 	void setNome(const string& name);
+
 	/**
 	 *
-	 * @return
+	 * @return Info latitude in radians.
 	 */
 	double getRlat() const;
+
 	/**
 	 *
-	 * @param rlat
+	 * @param rlat Latitude in radians.
 	 */
 	void setRlat(double rlat);
+
 	/**
 	 *
-	 * @return
+	 * @return Info longitude in radians.
 	 */
 	double getRlong() const;
+
 	/**
 	 *
-	 * @param rlong
+	 * @param rlong Longitude in radians.
 	 */
 	void setRlong(double rlong);
 };

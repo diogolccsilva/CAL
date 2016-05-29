@@ -34,37 +34,37 @@ public:
 	virtual ~Container();
 
 	/**
-	 * Getter of ocupied capacity.
+	 *
 	 * @return The ocupied capacity.
 	 */
 	double getOcupiedCapacity() const;
 
 	/**
-	 * Setter of ocupied capacity.
+	 *
 	 * @param cocupied Ocupied capacity.
 	 */
 	void setOcupiedCapacity(double cocupied);
 
 	/**
-	 * Getter of the color.
+	 *
 	 * @return Color of the container.
 	 */
 	Colors::Color getColor() const;
 
 	/**
-	 * Setter of the color.
+	 *
 	 * @param color Color associated with the specified garbage.
 	 */
 	void setColor(Colors::Color color);
 
 	/**
-	 * Getter of the usable capacity.
+	 *
 	 * @return The usable capacity.
 	 */
 	double getUsableCapacity() const;
 
 	/**
-	 * Setter of the usable capacity.
+	 *
 	 * @param cusable Usable capacity.
 	 */
 	void setUsableCapacity(double cusable);

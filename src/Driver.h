@@ -18,7 +18,16 @@ class Driver {
 	int id;
 	string name;
 public:
+
+	/**
+	 * Driver constructor.
+	 * @param name Driver's name.
+	 */
 	Driver(string name);
+
+	/**
+	 * Default destructor.
+	 */
 	virtual ~Driver();
 };
 
