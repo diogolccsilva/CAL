@@ -160,7 +160,6 @@ void Company::readMap() {
 								nodeDistance(tempNo, tempDest),
 								ruas.at(i).getName());
 					}
-
 				}
 			}
 		}

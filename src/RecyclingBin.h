@@ -25,73 +25,87 @@ private:
 	int id;
 	static int cnt;
 public:
+
 	/**
-	 * @brief default constructor
+	 * @brief Default constructor.
 	 */
 	RecyclingBin();
+
 	/**
-	 *
-	 * @param contentores
+	 * RecyclingBin constructor.
+	 * @param containers Vectors of containers.
 	 */
 	RecyclingBin(vector<Container> containers);
+
 	/**
-	 *	@brief default destructor
+	 *	@brief Default destructor.
 	 */
 	virtual ~RecyclingBin();
+
 	/**
 	 *
-	 * @return
+	 * @return The container vector.
 	 */
 	const vector<Container>& getContainers() const;
+
 	/**
 	 *
-	 * @return
+	 * @return A vector with the containers with enough garbage to be collected.
 	 */
 	vector<Container*> check();
+
 	/**
 	 *
-	 * @param color
-	 * @return
+	 * @param color Color representing the type of garbage.
+	 * @return A vector with the containers with enough garbage to be collected of the specified color.
 	 */
 	vector<Container*> check(Colors::Color color);
+
 	/**
 	 *
-	 * @param containers
+	 * @param containers Vector of containers.
 	 */
-	void setContainers(const vector<Container>& contentores);
+	void setContainers(const vector<Container>& containers);
+
 	/**
 	 *
-	 * @return
+	 * @return The vertex where the Recycling Bin is located.
 	 */
 	const Vertex<Info>* getVertex() const;
+
 	/**
 	 *
-	 * @param vertex
+	 * @param vertex Vertex representing the location of the Recycling Bin.
 	 */
 	void setVertex(Vertex<Info>* vertex);
+
 	/**
-	 *
+	 * Generates a random amount of garbage.
 	 */
 	void generateGarbage();
+
 	/**
 	 *
-	 * @return
+	 * @return Recycling Bin ID.
 	 */
 	int getId() const;
+
 	/**
-	 * @brief resets EcoPonto's id counter to 0
+	 * @brief resets Recycling Bin's ID counter to 0.
 	 */
 	static void resetCnt();
+
 	/**
 	 *
-	 * @param color
-	 * @param capacity
+	 * @param color Color represeting the type of garbage.
+	 * @param capacity Maximum capacity to be set.
 	 */
 	void setCapacity(Colors::Color color, double capacity);
+
 	/**
 	 *
-	 * @param color
-	 * @return
+	 * @param color Color representing the type of garbage.
+	 * @return The garbage with the color specified.
 	 */
 	double getGarbage(Colors::Color color);
 
