@@ -7,7 +7,7 @@
 
 namespace std {
 
-static int Driver::sid = 0;
+int Driver::sid = 0;
 
 Driver::Driver(string name):name(name),id(sid++) {
 	// TODO Auto-generated constructor stub
