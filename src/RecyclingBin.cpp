@@ -83,7 +83,6 @@ double RecyclingBin::getGarbage(Colors::Color color) {
 		if(it->getColor() == color)
 			return it->getOcupiedCapacity();
 	return 0;
-
 }
 
 vector<Container*> RecyclingBin::check(Colors::Color color) {
