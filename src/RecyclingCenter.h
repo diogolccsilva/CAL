@@ -20,29 +20,35 @@ class RecyclingCenter {
 	int id;
 	static int cnt;
 public:
+
 	/**
-	 * @brief
-	 * @param vertex
+	 * @brief Recycling Center constructor.
+	 * @param vertex Vertex representing the Recycling Center location.
 	 */
 	RecyclingCenter(Vertex<Info>* vertex);
+
 	/**
-	 * @brief default destructor
+	 * @brief Default destructor.
 	 */
 	virtual ~RecyclingCenter();
+
 	/**
-	 * @brief
-	 * @return
+	 *
+	 * @return The Recycling Center ID.
 	 */
 	int getId() const;
+
 	/**
-	 * @brief
-	 * @return
+	 *
+	 * @return The vertex representing the Recycling Center location.
 	 */
 	const Vertex<Info>* getVertex() const;
+
 	/**
-	 *	@brief resets RecyclingCenter's id counter to 0
+	 *	@brief resets Recycling Center's ID counter to 0.
 	 */
 	static void resetCnt();
+
 	friend ostream& operator<<(ostream& os, const RecyclingCenter& obj) {
 		os << "ID: " << obj.id << " VertexID: "
 				<< obj.vertex->getInfo().getRelativeId() << endl;
