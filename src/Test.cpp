@@ -296,8 +296,7 @@ void gestao(Company& emp) {
 		cout << "1. Gerir EcoPontos;" << endl;
 		cout << "2. Gerir Camioes;" << endl;
 		cout << "3. Gerir EcoCentros;" << endl;
-		cout << "4. " << endl;
-		cout << "5. Gerir Condutores;" << endl;
+		cout << "4. Gerir Condutores;" << endl;
 		cout << "9. Sair;" << endl;
 		switch (getch()) {
 		case '1':
@@ -310,11 +309,6 @@ void gestao(Company& emp) {
 			gestaoEcoCentros(emp);
 			break;
 		case '4':
-			system("cls");
-			emp.dynamic();
-			getch();
-			break;
-		case '5':
 			gestaoCondutores(emp);
 			break;
 		case '9':
@@ -367,7 +361,7 @@ int menu() {
 	while (1) {
 		system("cls");
 		cout << "1. Gestao de dados;" << endl;
-		cout << "2. Calculo de rotas;" << endl; //CAROLINA HELP ME PLIZ
+		cout << "2. Calculo de rotas;" << endl;
 		cout << "3. Informacao para recolha;" << endl;
 		cout << "9. Sair;" << endl;
 		switch (getch()) {
