@@ -371,12 +371,12 @@ void Company::createGraphViewer() {
 				- (xmin + xmax) / 2;
 		cout << "x: " << x << " y: " << y << endl;
 
-//		double x = r * cos(latt) * cos(longt);
-//		double y = r * cos(longt) * sin(longt);
-//		int y = (int) (((sin((*itv)->getInfo().getRlong() + M_PI)
-//				- sin(minLong + M_PI)) * r)) % r;
-//		int x = (int) (((sin((*itv)->getInfo().getRlat()) - sin(minLat)) * r))
-//				% r;
+		//		double x = r * cos(latt) * cos(longt);
+		//		double y = r * cos(longt) * sin(longt);
+		//		int y = (int) (((sin((*itv)->getInfo().getRlong() + M_PI)
+		//				- sin(minLong + M_PI)) * r)) % r;
+		//		int x = (int) (((sin((*itv)->getInfo().getRlat()) - sin(minLat)) * r))
+		//				% r;
 		gv->addNode(idNo, x, y);
 	}
 
@@ -453,7 +453,7 @@ int Company::eraseReBins() {
 
 	for (; it != rebins.end(); it++) {
 		gv->setVertexColor(it->getVertex()->getInfo().getRelativeId(),
-		LIGHT_GRAY);
+				LIGHT_GRAY);
 		cnt++;
 	}
 	gv->rearrange();
@@ -467,7 +467,7 @@ int Company::eraseReCenters() {
 	int cnt = 0;
 	for (; it != recenters.end(); it++) {
 		gv->setVertexColor(it->getVertex()->getInfo().getRelativeId(),
-		LIGHT_GRAY);
+				LIGHT_GRAY);
 		cnt++;
 	}
 	gv->rearrange();
@@ -545,7 +545,7 @@ bool Company::removeReBin(int id) {
 	for (; it != rebins.end(); it++) {
 		if (it->getId() == id) {
 			gv->setVertexColor(it->getVertex()->getInfo().getRelativeId(),
-			LIGHT_GRAY);
+					LIGHT_GRAY);
 			gv->rearrange();
 			rebins.erase(it);
 			return true;
@@ -619,7 +619,7 @@ double Company::getTotalGarbage(Colors::Color cor) {
 		for (; ite != (*it)->getContainers().end(); ite++) {
 			if ((*ite).getColor() == cor
 					&& ((*ite).getOcupiedCapacity() / (*ite).getUsableCapacity())
-							>= 0.7) {
+					>= 0.7) {
 				//cout << (*ite).getCor() << " " << ((*ite).getOcupada() / (*ite).getUtil()) << endl;
 				maxLixo += (*ite).getOcupiedCapacity();
 			}
@@ -636,24 +636,24 @@ void Company::dynamic() {
 	for (int i = 0; i < 5; i++) {
 		if (i == 0)
 			cout
-					<< "--------------------------------   Contetor Azul   -----------------------------------"
-					<< endl;
+			<< "--------------------------------   Contetor Azul   -----------------------------------"
+			<< endl;
 		else if (i == 1)
 			cout
-					<< "--------------------------------  Contetor Amarelo -----------------------------------"
-					<< endl;
+			<< "--------------------------------  Contetor Amarelo -----------------------------------"
+			<< endl;
 		else if (i == 2)
 			cout
-					<< "--------------------------------   Contetor Verde  -----------------------------------"
-					<< endl;
+			<< "--------------------------------   Contetor Verde  -----------------------------------"
+			<< endl;
 		else if (i == 3)
 			cout
-					<< "-------------------------------- Contetor Vermelho -----------------------------------"
-					<< endl;
+			<< "-------------------------------- Contetor Vermelho -----------------------------------"
+			<< endl;
 		else
 			cout
-					<< "-------------------------------- Contetor Generico -----------------------------------"
-					<< endl;
+			<< "-------------------------------- Contetor Generico -----------------------------------"
+			<< endl;
 
 		int n = ceil(getTotalGarbage(cores.at(i)));
 		vector<int> capacityDone;
@@ -754,61 +754,56 @@ vector<int> Company::getStreet(string name) {
 	for (unsigned int i = 0; i < gmap.getVertexSet().size(); i++) {
 		for (unsigned int j = 0; j < gmap.getVertexSet().at(i)->getAdj().size();
 				j++) {
-			if (gmap.getVertexSet().at(i)->getAdj().at(j).getName() == name) {
-				gv->setEdgeColor(
-						gmap.getVertexSet().at(i)->getAdj().at(j).getID(),
-						"red");
-				cout << "found" << endl;
+			string tmp1 = gmap.getVertexSet().at(i)->getAdj().at(j).getName();
+			transform(tmp1.begin(), tmp1.end(), tmp1.begin(), towlower);
+
+			if (tmp1 == name) {
+				gv->setEdgeColor(gmap.getVertexSet().at(i)->getAdj().at(j).getID(),"red");
 				auto a = gmap.getVertexSet().at(i)->getAdj().at(j);
 				auto s = a.getDest()->getInfo();
 				ids.push_back(s.getRelativeId());
-				cout << "Nome rua a pint "
-						<< gmap.getVertexSet().at(i)->getAdj().at(j).getName()
-						<< endl;
-				cout << "id vert " << s.getId() << " tam " << ids.size();
+
 			}
 		}
 	}
+	gv->rearrange();
 	return ids;
 }
 
 vector<string> Company::findAproxRoad(string toSearch) {
 	unordered_set<string> ruas;
-	string rua;
+	string rua, tmp2 = toSearch;
 	int idv;
+
+	transform(tmp2.begin(), tmp2.end(), tmp2.begin(), towlower);
 
 	for (unsigned int i = 0; i < gmap.getVertexSet().size(); i++) {
 		for (unsigned int j = 0; j < gmap.getVertexSet().at(i)->getAdj().size();
 				j++) {
-			if (gmap.getVertexSet().at(i)->getAdj().at(j).getName() != ""
-					&& editDistance(toSearch,
-							gmap.getVertexSet().at(i)->getAdj().at(j).getName())
-							<= 15)
-				ruas.insert(
-						gmap.getVertexSet().at(i)->getAdj().at(j).getName());
+			string tmp1 = gmap.getVertexSet().at(i)->getAdj().at(j).getName();
+			transform(tmp1.begin(), tmp1.end(), tmp1.begin(), towlower);
+		//	cout<<tmp1<< " "<<editDistance(tmp2,tmp1)<<" "<<exactCmp(tmp1,tmp2)<<endl;
+			if (tmp1 != "" && ((editDistance(tmp2,tmp1)<= 10) || exactCmp(tmp1,tmp2) > 0)){
+				ruas.insert(tmp1);
+			//	cout << tmp1 << " exact " <<exactCmp(tmp1, tmp2) <<	" aprox "<< editDistance(tmp2, tmp1)<<endl;
+				}
 		}
 	}
 
 	vector<string> ruas2(ruas.begin(), ruas.end());
 
 	sort(ruas2.begin(), ruas2.end(),
-			[toSearch](const string& a, const string& b)
-			{	return editDistance(toSearch, a) < editDistance(toSearch, b);});
+			[tmp2](const string& a, const string& b)
+			{if(exactCmp(a,tmp2) != 0 && exactCmp(b,tmp2) != 0)
+				return editDistance(tmp2, a) < editDistance(tmp2, b);
+			else return (exactCmp(a,tmp2) != 0);});
 	int i = 1;
-	if (editDistance(toSearch, ruas2.at(0)) == 0)
+	if (editDistance(tmp2, ruas2.at(0)) == 0)
 		cout << i << " " << ruas2.at(0) << endl;
 	else {
 		for (auto rua : ruas2)
 			cout << i++ << " " << rua << endl;
 	}
-
-// cout << "Selecione a rua" <<endl;
-// cin >> i;
-// cin.ignore(1000, '\n');
-// if(i-1 > 0 && i <= ruas2.size()) //TODO ARRANJAR
-//  rua = ruas2.at(i - 1);
-//  cout<<"RUA "<<rua<<" i "<<i<<endl;
-
 	return ruas2;
 }
 
@@ -913,7 +908,7 @@ double Company::limitedRunAux(int ids, int idd, queue<RecyclingBin*> &q,
 				q.push((*ite));
 				camiao.setOcupiedCapacity(
 						camiao.getOcupiedCapacity()
-								+ (*ite)->getGarbage(color));
+						+ (*ite)->getGarbage(color));
 				totalGarbage += (*ite)->getGarbage(color);
 				(*ite)->setCapacity(color, 0);
 				//cout << "New capacity " << (*ite)->getGarbage(color) << endl;
@@ -1013,7 +1008,7 @@ string Company::limitedRun(int ids, int idd) {
 			s << "Nao fui possivel recolher tudo" << endl;
 		else if (pinteresses.size() == 0 && garbage != totalGarbage)
 			s << "Nao fui possivel recolher tudo! Sobrou "
-					<< (totalGarbage - garbage) << endl;
+			<< (totalGarbage - garbage) << endl;
 
 	}
 	return "";
@@ -1048,7 +1043,7 @@ void Company::resetReBinsColors() {
 
 	for (; it != rebins.end(); it++) {
 		gv->setVertexColor(it->getVertex()->getInfo().getRelativeId(),
-		CYAN);
+				CYAN);
 	}
 }
 

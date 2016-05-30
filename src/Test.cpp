@@ -54,13 +54,13 @@ void gestaoEcoPontos(Company& emp) {
 			cin.ignore(1000, '\n');
 			if (i - 1 >= 0 && i <= ruas.size()) { //TODO ARRANJAR
 				rua = ruas.at(i - 1);
-				cout << "RUA " << rua << " i " << i << endl;
+				//cout << "RUA " << rua << " i " << i << endl;
 				ids = emp.getStreet(rua);
 				cout << "ID do vertice: ";
 				cin >> idv;
 				cin.ignore(1000, '\n');
 				if (find(ids.begin(), ids.end(), idv) == ids.end())
-					cout << "Vertex não pertence à rua! Ecoponto nao criado!"
+					cout << "Vertex nao pertence a rua! Ecoponto nao criado!"
 							<< endl;
 				else {
 
