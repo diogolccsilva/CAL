@@ -10,7 +10,7 @@ namespace std {
 int Truck::cnt = 0;
 
 Truck::Truck(double cUtil,Colors::Color cor) :
-		id(cnt), cUsable(cUtil), cOcupied(0),color(cor) {
+		id(cnt), cUsable(cUtil), cOccupied(0),color(cor) {
 	cnt++;
 }
 
@@ -19,11 +19,11 @@ Truck::~Truck() {
 }
 
 double Truck::getOcupiedCapacity() const {
-	return cOcupied;
+	return cOccupied;
 }
 
 void Truck::setOcupiedCapacity(double capacity) {
-	cOcupied = capacity;
+	cOccupied = capacity;
 }
 
 int Truck::getId() const {

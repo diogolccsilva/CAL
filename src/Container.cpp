@@ -12,7 +12,7 @@ Container::Container(double capacity,Colors::Color color){
 	double n=rand()%100;
 
 	this->cUsable = capacity;
-	this->cOcupied = capacity*(n/100.0);
+	this->cOccupied = capacity*(n/100.0);
 	this->color = color;
 }
 
@@ -21,11 +21,11 @@ Container::~Container() {
 }
 
 double Container::getOcupiedCapacity() const {
-	return cOcupied;
+	return cOccupied;
 }
 
 void Container::setOcupiedCapacity(double cocupied) {
-	cOcupied = cocupied;
+	cOccupied = cocupied;
 }
 
 Colors::Color Container::getColor() const {

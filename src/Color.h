@@ -12,8 +12,13 @@
 namespace std {
 
 struct Colors {
+	/*! Color Enum */
 	enum Color {
-		blue, yellow, green, red, black
+		/*! Represents the color blue */ blue,
+		/*! Represents the color yellow */ yellow,
+		/*! Represents the color green */ green,
+		/*! Represents the color red */ red,
+		/*! Represents the color black */ black
 	};
 	static map<Color, string> create_map() {
 		map<Color, string> m;

@@ -22,12 +22,31 @@ class Edge {
 	int ID;
 	static int cnt;
 public:
+
+	/**
+	 * Edge constructor.
+	 * @param d Destination node.
+	 * @param w Edge weight.
+	 * @param name Edge name.
+	 */
 	Edge(Vertex<T> *d, double w, string name);
 
+	/**
+	 *
+	 * @return The edge name.
+	 */
 	const string& getName() const;
 
+	/**
+	 *
+	 * @return The destination node.
+	 */
 	const Vertex<T>* getDest();
 
+	/**
+	 *
+	 * @return The edge ID.
+	 */
 	const int getID() const;
 
 	friend class Graph<T> ;

@@ -17,51 +17,59 @@ namespace std {
 
 class Container {
 private:
-	double cUsable, cOcupied;
+	double cUsable, cOccupied;
 	Colors::Color color;
 public:
+
 	/**
-	 *
-	 * @param capacity
-	 * @param color
+	 * Container constructor.
+	 * @param capacity Maximum capacity of the container.
+	 * @param color Color of the container, i.e, the type of garbage it contains.
 	 */
 	Container(double capacity, Colors::Color color);
+
 	/**
 	 * @brief default destructor
 	 */
 	virtual ~Container();
+
 	/**
 	 *
-	 * @return
+	 * @return The occupied capacity.
 	 */
 	double getOcupiedCapacity() const;
+
 	/**
 	 *
-	 * @param cocupied
+	 * @param cocupied Occupied capacity.
 	 */
 	void setOcupiedCapacity(double cocupied);
+
 	/**
 	 *
-	 * @return color
+	 * @return Color of the container.
 	 */
 	Colors::Color getColor() const;
+
 	/**
 	 *
-	 * @param color
+	 * @param color Color associated with the specified garbage.
 	 */
 	void setColor(Colors::Color color);
+
 	/**
 	 *
-	 * @return
+	 * @return The usable capacity.
 	 */
 	double getUsableCapacity() const;
+
 	/**
 	 *
-	 * @param cusable
+	 * @param cusable Usable capacity.
 	 */
 	void setUsableCapacity(double cusable);
 	friend ostream& operator<<(ostream& os, const Container& obj) {
-		os << "Cor: " << Colors::colors[obj.color] << " Capacidade Util: " << obj.cUsable << " Capacidade Ocupada: " << obj.cOcupied << endl;
+		os << "Cor: " << Colors::colors[obj.color] << " Capacidade Util: " << obj.cUsable << " Capacidade Ocupada: " << obj.cOccupied << endl;
 		return os;
 	}
 

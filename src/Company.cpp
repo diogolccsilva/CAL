@@ -221,7 +221,6 @@ void Company::readMap() {
 								nodeDistance(tempNo, tempDest),
 								ruas.at(i).getName());
 					}
-
 				}
 			}
 		}
@@ -231,7 +230,6 @@ void Company::readMap() {
 	map2.close();
 	map3.close();
 
-	gmap.display();
 	gmap.floydWarshallShortestPath();
 
 }
@@ -407,6 +405,7 @@ void Company::createGraphViewer() {
 string Company::shortestPath(int ids, int idd) {
 	auto v = gmap.getfloydWarshallPath(gmap.getVertexSet().at(ids)->getInfo(),
 			gmap.getVertexSet().at(idd)->getInfo());
+
 	if (v.size() == 0) {
 		cout << "Pontos sem ligacao!" << endl;
 		return "\0";
