@@ -209,13 +209,14 @@ void procurarCondutor(Company& emp) {
 		cout << "2. Algoritmo Aproximado;" << endl;
 		cout << "3. Mixed;" << endl;
 		cout << "9. Sair;" << endl;
+		string nome;
+		vector<Driver> conds;
 		switch (getch()) {
 		case '1': {
 			system("cls");
 			cout << "Nome: ";
-			string nome;
 			getline(cin, nome);
-			vector<Driver> conds = emp.getExactDriver(nome);
+			conds = emp.getExactDriver(nome);
 			if (conds.size() > 0) {
 				for (unsigned int i = 0; i < conds.size(); i++) {
 					cout << conds[i] << endl;
@@ -228,15 +229,9 @@ void procurarCondutor(Company& emp) {
 		}
 		case '2':
 			system("cls");
-			cout << "Nao implementado!" << endl;
-			getch();
-			break;
-		case '3':
-			system("cls");
 			cout << "Nome: ";
-			string nome;
 			getline(cin, nome);
-			vector<Driver> conds = emp.getDriver(nome);
+			conds = emp.getApproxDriver(nome);
 			if (conds.size() > 0) {
 				for (unsigned int i = 0; i < conds.size(); i++) {
 					cout << conds[i] << endl;
@@ -246,6 +241,21 @@ void procurarCondutor(Company& emp) {
 			}
 			getch();
 			break;
+		case '3': {
+			system("cls");
+			cout << "Nome: ";
+			getline(cin, nome);
+			conds = emp.getDriver(nome);
+			if (conds.size() > 0) {
+				for (unsigned int i = 0; i < conds.size(); i++) {
+					cout << conds[i] << endl;
+				}
+			} else {
+				cout << "Condutor inexistente!" << endl;
+			}
+			getch();
+			break;
+		}
 		case '9':
 			return;
 		default:
@@ -275,6 +285,7 @@ void gestaoCondutores(Company& emp) {
 			cout << "Numero de condutores: ";
 			int n;
 			cin >> n;
+			cin.ignore(std::numeric_limits<int>::max(), '\n');
 			emp.createRandomDrivers(n);
 			cout << "Condutores criados!" << endl;
 			getch();

@@ -488,7 +488,6 @@ bool Company::setDriverFree(Driver driver) {
 
 vector<Driver> Company::getDriver(string name) const {
 	vector<Driver> res;
-	unordered_set<Driver> ud;
 	vector<Driver>::const_iterator it;
 	string tmp2 = name;
 	transform(tmp2.begin(), tmp2.end(), tmp2.begin(), towlower);
@@ -497,7 +496,7 @@ vector<Driver> Company::getDriver(string name) const {
 		string tmp1 = it->getName();
 		transform(tmp1.begin(), tmp1.end(), tmp1.begin(), towlower);
 		if (editDistance(tmp2, tmp1) <= 10 || exactCmp(tmp1, tmp2) > 0) {
-			ud.insert((*it));
+			res.push_back((*it));
 		}
 	}
 
@@ -511,8 +510,6 @@ vector<Driver> Company::getDriver(string name) const {
 		return editDistance(tmp2, an) < editDistance(tmp2, bn);
 		return (exactCmp(an,tmp2) != 0);
 	});
-
-	copy(ud.begin(), ud.end(), back_inserter(res));
 
 	return res;
 }
