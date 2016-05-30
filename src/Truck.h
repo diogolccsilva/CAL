@@ -11,7 +11,7 @@
 
 #include "Color.h"
 
-namespace std {
+using namespace std;
 
 class Truck {
 	double cUsable,cOccupied;
@@ -71,7 +71,5 @@ public:
 	    return os;
 	}
 };
-
-} /* namespace std */
 
 #endif /* SRC_TRUCK_H_ */

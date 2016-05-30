@@ -10,7 +10,7 @@
 
 #include <string>
 
-namespace std {
+using namespace std;
 
 class Street {
 	unsigned long id;
@@ -63,7 +63,5 @@ public:
 	 */
 	void setName(const string& name);
 };
-
-} /* namespace std */
 
 #endif /* SRC_STREET_H_ */

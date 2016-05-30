@@ -16,7 +16,7 @@
 #include "Info.h"
 #include "Vertex.h"
 
-namespace std {
+using namespace std;
 
 class RecyclingBin {
 private:
@@ -117,7 +117,5 @@ public:
 		return os;
 	}
 };
-
-} /* namespace std */
 
 #endif /* SRC_RECYCLINGBIN_H_ */

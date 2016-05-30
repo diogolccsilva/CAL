@@ -7,7 +7,7 @@
 
 #include "RecyclingCenter.h"
 
-namespace std {
+using namespace std;
 
 int RecyclingCenter::cnt = 0;
 
@@ -30,5 +30,3 @@ int RecyclingCenter::getId() const {
 void RecyclingCenter::resetCnt() {
 	cnt = 0;
 }
-
-} /* namespace std */

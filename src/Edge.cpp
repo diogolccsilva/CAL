@@ -6,7 +6,7 @@
 #include "Edge.h"
 #include "Info.h"
 
-namespace std {
+using namespace std;
 
 template<class T>
 int Edge<T>::cnt = 0;
@@ -33,5 +33,3 @@ const int Edge<T>::getID() const {
 }
 
 template class Edge<Info> ;
-
-} /* namespace std */

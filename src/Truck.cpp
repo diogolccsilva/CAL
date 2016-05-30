@@ -5,7 +5,7 @@
 
 #include "Truck.h"
 
-namespace std {
+using namespace std;
 
 int Truck::cnt = 0;
 
@@ -41,5 +41,3 @@ Colors::Color Truck::getColor() const {
 void Truck::resetCnt() {
 	cnt = 0;
 }
-
-} /* namespace std */

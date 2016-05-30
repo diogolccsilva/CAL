@@ -7,7 +7,7 @@
 
 #include "Street.h"
 
-namespace std {
+using namespace std;
 
 Street::Street() {
 	// TODO Auto-generated constructor stub
@@ -41,5 +41,3 @@ const string Street::getName() const {
 void Street::setName(const string& nome) {
 	this->nome = nome;
 }
-
-} /* namespace std */

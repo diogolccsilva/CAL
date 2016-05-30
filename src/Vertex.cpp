@@ -6,7 +6,7 @@
 #include "Vertex.h"
 #include "Info.h"
 
-namespace std {
+using namespace std;
 
 template<class T>
 Vertex<T>::Vertex(T in):info(in),visited(false){
@@ -68,6 +68,3 @@ void Vertex<T>::display() const{
 
 
 template class Vertex<Info>;
-
-
-} /* namespace std */

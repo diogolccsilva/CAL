@@ -9,7 +9,7 @@
 #include <vector>
 #include <string>
 
-namespace std {
+using namespace std;
 
 template<class T> class Graph;
 template<class T> class Vertex;
@@ -52,7 +52,5 @@ public:
 	friend class Graph<T> ;
 	friend class Vertex<T> ;
 };
-
-} /* namespace std */
 
 #endif /* SRC_EDGE_H_ */

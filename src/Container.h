@@ -13,7 +13,7 @@
 
 #include "Color.h"
 
-namespace std {
+using namespace std;
 
 class Container {
 private:
@@ -75,7 +75,5 @@ public:
 
 	friend class RecyclingBin;
 };
-
-} /* namespace std */
 
 #endif /* SRC_CONTAINER_H_ */

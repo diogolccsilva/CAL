@@ -25,7 +25,7 @@
 #include <cmath>
 #include <algorithm>
 
-namespace std {
+using namespace std ;
 
 const int INT_INFINITY = INT_MAX;
 
@@ -172,7 +172,5 @@ public:
 		p = a;
 	}
 };
-
-} /* namespace std */
 
 #endif /* SRC_GRAPH_H_ */

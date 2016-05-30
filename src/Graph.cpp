@@ -5,7 +5,7 @@
 
 #include "Graph.h"
 
-namespace std {
+using namespace std;
 
 template<class T>
 double Graph<T>::minLat = M_PI / 2;
@@ -352,5 +352,3 @@ void Graph<T>::resetVertexColors(GraphViewer *gv) {
 }
 
 template class Graph<Info> ;
-
-} /* namespace std */
