@@ -19,7 +19,7 @@ class Driver {
 	static int cnt;
 	string name;
 	int id;
-	bool ocupied;
+	bool occupied;
 public:
 
 	/**
@@ -32,12 +32,38 @@ public:
 	 * Default destructor.
 	 */
 	virtual ~Driver();
+
+	/**
+	 * @brief Sets the cnt parameter to 0.
+	 */
 	static void resetCnt();
+
+	/**
+	 *
+	 * @return The name of the driver.
+	 */
 	string getName() const;
+
+	/**
+	 *
+	 * @return The id of the driver.
+	 */
 	int getId() const;
-	bool getOcupied() const;
-	void setOcupied(bool oc);
+
+	/**
+	 *
+	 * @return Weather if driver is occupied or not.
+	 */
+	bool getOccupied() const;
+
+	/**
+	 * @brief Sets the occupied parameter of the driver with the given value.
+	 * @param oc
+	 */
+	void setOccupied(bool oc);
+
 	bool operator==(Driver &d);
+
 	friend ostream& operator<<(ostream& os, const Driver& obj) {
 		os << "ID: "<< obj.id << endl << "Nome: " << obj.name << endl;
 		return os;

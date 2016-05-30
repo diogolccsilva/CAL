@@ -420,7 +420,7 @@ void rotas(Company& emp) {
 					unsigned int s = conds.size();
 					for (unsigned int i = 0; i < s; i++) {
 						cout << i + 1 << ": " << conds[i];
-						if (conds[i].getOcupied()) {
+						if (conds[i].getOccupied()) {
 							cout << " (Ocupado)" << endl;
 						} else {
 							cout << " (Livre)" << endl;
@@ -435,11 +435,11 @@ void rotas(Company& emp) {
 							cout << "Condutor inexistente!" << endl;
 						} else {
 							Driver d = conds.at(t - 1);
-							if (d.getOcupied()) {
+							if (d.getOccupied()) {
 								cout << "Condutor ocupado!" << endl;
 							} else {
 								driversfinal.push_back(d);
-								emp.setDriverOcupied(d);
+								emp.setDriverOccupied(d);
 								i++;
 							}
 						}

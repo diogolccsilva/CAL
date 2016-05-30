@@ -31,12 +31,12 @@ int Driver::getId() const {
 	return id;
 }
 
-bool Driver::getOcupied() const {
-	return ocupied;
+bool Driver::getOccupied() const {
+	return occupied;
 }
 
-void Driver::setOcupied(bool oc) {
-	ocupied = oc;
+void Driver::setOccupied(bool oc) {
+	occupied = oc;
 }
 
 bool Driver::operator==(Driver& d) {

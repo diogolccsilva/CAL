@@ -464,11 +464,11 @@ string Company::getSDrivers() const {
 	return s.str();
 }
 
-bool Company::setDriverOcupied(Driver driver) {
+bool Company::setDriverOccupied(Driver driver) {
 	vector<Driver>::iterator it;
 	for (it = drivers.begin(); it != drivers.end(); it++) {
 		if (it->getId() == driver.getId()) {
-			it->setOcupied(true);
+			it->setOccupied(true);
 			return true;
 		}
 	}
@@ -479,7 +479,7 @@ bool Company::setDriverFree(Driver driver) {
 	vector<Driver>::iterator it;
 	for (it = drivers.begin(); it != drivers.end(); it++) {
 		if (it->getId() == driver.getId()) {
-			it->setOcupied(false);
+			it->setOccupied(false);
 			return true;
 		}
 	}
@@ -495,7 +495,8 @@ vector<Driver> Company::getDriver(string name) const {
 	for (it = drivers.begin(); it != drivers.end(); it++) {
 		string tmp1 = it->getName();
 		transform(tmp1.begin(), tmp1.end(), tmp1.begin(), towlower);
-		if (editDistance(tmp2, tmp1) <= 10 || exactCmp(tmp1, tmp2) > 0) {
+		if (editDistance(tmp2, tmp1) <= (tmp1.size() / 2)
+				|| exactCmp(tmp1, tmp2) > 0) {
 			res.push_back((*it));
 		}
 	}
@@ -537,10 +538,18 @@ vector<Driver> Company::getApproxDriver(string name) const {
 	for (it = drivers.begin(); it != drivers.end(); it++) {
 		string tmp1 = it->getName();
 		transform(tmp1.begin(), tmp1.end(), tmp1.begin(), towlower);
-		if (editDistance(tmp2, tmp1) <= 10) {
+		if (editDistance(tmp2, tmp1) <= (tmp1.size() / 2)) {
 			res.push_back((*it));
 		}
 	}
+	sort(res.begin(), res.end(), [tmp2](const Driver& a, const Driver& b)
+	{
+		string an = a.getName();
+		transform(an.begin(), an.end(), an.begin(), towlower);
+		string bn = b.getName();
+		transform(bn.begin(), bn.end(), bn.begin(), towlower);
+		return editDistance(tmp2, an) < editDistance(tmp2, bn);
+	});
 	return res;
 }
 
@@ -826,19 +835,20 @@ vector<string> Company::findAproxRoad(string toSearch) {
 			}
 		}
 	}
-
 	vector<string> ruas2(ruas.begin(), ruas.end());
-
-	sort(ruas2.begin(), ruas2.end(), [tmp2](const string& a, const string& b)
-	{	if(exactCmp(a,tmp2) != 0 && exactCmp(b,tmp2) != 0)
-		return editDistance(tmp2, a) < editDistance(tmp2, b);
-		else return (exactCmp(a,tmp2) != 0);});
-	int i = 1;
-	if (editDistance(tmp2, ruas2.at(0)) == 0)
-		cout << i << " " << ruas2.at(0) << endl;
-	else {
-		for (auto rua : ruas2)
-			cout << i++ << " " << rua << endl;
+	if (ruas.size() > 0) {
+		sort(ruas2.begin(), ruas2.end(),
+				[tmp2](const string& a, const string& b)
+				{	if(exactCmp(a,tmp2) != 0 && exactCmp(b,tmp2) != 0)
+					return editDistance(tmp2, a) < editDistance(tmp2, b);
+					else return (exactCmp(a,tmp2) != 0);});
+		int i = 1;
+		if (editDistance(tmp2, ruas2.at(0)) == 0)
+			cout << i << " " << ruas2.at(0) << endl;
+		else {
+			for (auto rua : ruas2)
+				cout << i++ << " " << rua << endl;
+		}
 	}
 	return ruas2;
 }

@@ -186,7 +186,7 @@ public:
 
 	/**
 	 *
-	 * @return
+	 * @return The number of trucks the company has.
 	 */
 	int getNTrucks() const;
 
@@ -210,13 +210,13 @@ public:
 
 	/**
 	 *
-	 * @return
+	 * @return The number of trucks needed to collect the garbage of the given color.
 	 */
 	pair<int,int> getNecessaryTrucks(Colors::Color color); //para a cor especifica
 
 	/**
 	 *
-	 * @return
+	 * @return The total number of trucks needed to collect all the garbage.
 	 */
 	pair<int,int> getNecessaryTrucks(); //para todas as cores
 
@@ -228,73 +228,74 @@ public:
 	int eraseTrucks();
 
 	/**
-	 *
+	 * @brief Adds given driver to the comany.
 	 * @param driver
 	 */
 	void addDriver(const Driver driver);
 
 	/**
-	 *
+	 * @brief Creates n drivers with random names and adds them to the company.
 	 * @param n
 	 */
 	void createRandomDrivers(int n);
 
 	/**
 	 *
-	 * @return
+	 * @return A string with all the drivers' information.
 	 */
 	string getSDrivers() const;
 
 	/**
-	 *
+	 * @brief Sets driver's occupied value to true.
 	 * @param driver
-	 * @return
+	 * @return Weather if driver exists or not.
 	 */
-	bool setDriverOcupied(Driver driver);
+	bool setDriverOccupied(Driver driver);
 
 	/**
-	 *
+	 * @brief Sets driver's occupied value to false.
 	 * @param driver
-	 * @return
+	 * @return Weather if driver exists or not.
 	 */
 	bool setDriverFree(Driver driver);
 
 	/**
 	 *
-	 * @return
+	 * @return A vector with all the drivers of the company
 	 */
 	vector<Driver> getDrivers() const;
 
 	/**
 	 *
 	 * @param name
-	 * @return
+	 * @return A vector with all the potential drivers with the given name using mixed string search.
 	 */
 	vector<Driver> getDriver(string name) const;
 
 	/**
 	 *
 	 * @param name
-	 * @return
+	 * @return A vector with all the potential drivers with the given name using exact string search.
 	 */
 	vector<Driver> getExactDriver(string name) const;
 
 	/**
 	 *
 	 * @param name
-	 * @return
+	 * @return A vector with all the potential drivers with the given name using approximate string search.
 	 */
 	vector<Driver> getApproxDriver(string name) const;
 
 	/**
-	 *
-	 * @return
+	 * @brief Removes driver with given id.
+	 * @param id
+	 * @return Weather it was able to remove the driver or not.
 	 */
 	bool removeDriver(int id);
 
 	/**
-	 *
-	 * @return
+	 * @brief Removes all the drivers from company
+	 * @return The number of drivers removed from comany.
 	 */
 	int eraseDrivers();
 
@@ -303,7 +304,7 @@ public:
 	 *
 	 * @return A vector with the recycling bins that need to be collected.
 	 */
-	vector<RecyclingBin*> getIntPoints(); //TODO: refractor
+	vector<RecyclingBin*> getIntPoints();
 
 	/**
 	 *
@@ -340,23 +341,25 @@ public:
 	 * @return String with the path.
 	 */
 	string getLimitedRun(int idp, int idc);
+
 	/**
-	 *
+	 * @brief Paints the edges of the street with the given name with the color red.
 	 * @param name
-	 * @return
+	 * @return A vector with de id's of the vertexes that belong to the street with the given name.
 	 */
 	vector<int> getStreet(string name);
+
 	/**
 	 *
 	 * @param toSearch
-	 * @return
+	 * @return A vector with all the potential streets with the given name using mixed string search.
 	 */
 	vector<string> findAproxRoad(string toSearch);
 
 	/**
 	 *
 	 * @param id
-	 * @return
+	 * @return Weather if a recycling center with the given id exists or not.
 	 */
 	bool recCenterExists(int id);
 };
