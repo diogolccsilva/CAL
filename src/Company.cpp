@@ -18,9 +18,70 @@ double nodeDistance(Vertex<Info> *v1, Vertex<Info> *v2) {
 	return 2.0 * earth_rad * asin(sqrt(u * u + cos(lat1r) * cos(lat2r) * v * v));
 }
 
+void preExactCmp(string pattern, vector<int> & prefix) {
+	int m = pattern.length();
+	prefix[0] = -1;
+	int k = -1;
+	for (int q = 1; q < m; q++) {
+		while (k > -1 && pattern[k + 1] != pattern[q])
+			k = prefix[k];
+		if (pattern[k + 1] == pattern[q])
+			k = k + 1;
+		prefix[q] = k;
+	}
+}
+
+int exactCmp(string text, string pattern) {
+	int num = 0;
+	int m = pattern.length();
+	vector<int> prefix(m);
+	preExactCmp(pattern, prefix);
+	int n = text.length();
+	int q = -1;
+	for (int i = 0; i < n; i++) {
+		while (q > -1 && pattern[q + 1] != text[i])
+			q = prefix[q];
+		if (pattern[q + 1] == text[i])
+			q++;
+		if (q == m - 1) {
+			num++;
+			q = prefix[q];
+		}
+	}
+	return num;
+}
+
+int editDistance(string pattern, string text) {
+	int n = text.length();
+	vector<int> d(n + 1);
+	int old, neww;
+	for (int j = 0; j <= n; j++)
+		d[j] = j;
+	int m = pattern.length();
+	for (int i = 1; i <= m; i++) {
+		old = d[0];
+		d[0] = i;
+		for (int j = 1; j <= n; j++) {
+			if (pattern[i - 1] == text[j - 1])
+				neww = old;
+			else {
+				neww = min(old, d[j]);
+				neww = min(neww, d[j - 1]);
+				neww = neww + 1;
+			}
+			old = d[j];
+			d[j] = neww;
+		}
+	}
+	return d[n];
+}
+
 Company::Company() {
 	readMap();
 	createGraphViewer();
+}
+
+Company::~Company() {
 }
 
 const map<Colors::Color, vector<Truck>>& Company::getTrucks() const {
@@ -36,9 +97,9 @@ const vector<RecyclingBin>& Company::getReBins() const {
 }
 
 int Company::createTrucks() {
-	vector<int> capacities = {3000, 2500, 2000, 1000};
+	vector<int> capacities = { 3000, 2500, 2000, 1000 };
 	vector<Colors::Color> cores = { Colors::blue, Colors::yellow, Colors::green,
-			Colors::red, Colors::black};
+			Colors::red, Colors::black };
 	int cnt = 0;
 	for (int i = 0; i < 5; i++)
 		for (unsigned int j = 0; j < capacities.size(); j++)
@@ -102,7 +163,7 @@ void Company::readMap() {
 				if (tempInfo.getRlong() < Graph<Info>::minLong) {
 					Graph<Info>::minLong = tempInfo.getRlong();
 				}
-				Vertex<Info> *vertex;
+				Vertex<Info> *vertex = NULL;
 				gmap.addVertex(tempInfo, vertex);
 				//createRandomEcoPonto(vertex);
 			}
@@ -184,10 +245,6 @@ bool Company::createRandomReBin(Vertex<Info>* vertex) {
 	return false;
 }
 
-Company::~Company() {
-	// TODO Auto-generated destructor stub
-}
-
 int Company::createRandomReBins() {
 	srand(time(NULL));
 	eraseReBins();
@@ -208,7 +265,8 @@ vector<RecyclingBin*> Company::getIntPoints() {
 	resetReBinsColors();
 	for (unsigned int i = 0; i < rebins.size(); i++) {
 		if (rebins.at(i).check().size() != 0) {
-			gv->setVertexColor(rebins.at(i).getVertex()->getInfo().getRelativeId(), CYAN);
+			gv->setVertexColor(
+					rebins.at(i).getVertex()->getInfo().getRelativeId(), CYAN);
 			temp.push_back(&rebins.at(i));
 		}
 	}
@@ -277,64 +335,6 @@ string Company::unlimitedRun(int ids, int idd) {
 	gv->rearrange();
 	return s.str();
 }
-
-//double Empresa::recolhaAux(int ids, queue<EcoPonto*> &q,
-//		vector<EcoPonto*> pinteresses) {
-//	vector<EcoPonto*>::iterator it = pinteresses.begin();
-//	vector<EcoPonto*>::iterator ite = pinteresses.begin();
-//	int a = ids;
-//	double best = INT_MAX;
-//	for (; it != pinteresses.end(); it++) {
-//		int b = (*it)->getVertex()->getInfo().getRelativeId();
-//		double dist = mapa.getWeight(a, b);
-//		cout << "a: " << a << " b: " << b << " dist: " << dist << endl;
-//		if (dist == INT_MAX) {
-//			pinteresses.erase(it);
-//			it--;
-//		}
-//		if (dist < best) {
-//			best = dist;
-//			ite = it;
-//		}
-//		//cout << "dist: " << dist << endl;
-//	}
-//	a = (*ite)->getVertex()->getInfo().getRelativeId();
-//	cout << "best: " << best << " na: " << a << endl;
-//	if (best != INT_MAX) {
-//		q.push((*ite));
-//		pinteresses.erase(ite);
-//		if (pinteresses.size() > 1) {
-//			best += recolhaAux(a, q, pinteresses);
-//		}
-//		cout << "Return best: " << best << endl;
-//		return best;
-//	}
-//	return 0;
-//}
-
-//string Empresa::recolha(int ids) {
-//	vector<EcoPonto*> pinteresses = getPontosInt();
-//	double minW = INT_INFINITY;
-//	stringstream s;
-//
-//	cout << "pinteresse " << pinteresses.size() << endl;
-//	queue<EcoPonto*> q;
-//	recolhaAux(ids, q, pinteresses);
-//	int a = ids;
-//	cout << "a: " << a << endl;
-//	cout << "q.size: " << q.size() << endl;
-//	while (q.size() > 0) {
-//		int b = q.front()->getVertex()->getInfo().getRelativeId();
-//		cout << "b: " << b << endl;
-//		s << shortestPath(a, b) << "eco: " << b << endl;
-//		a = b;
-//		q.pop();
-//	}
-//	minW = INT_INFINITY;
-//
-//	return s.str();
-//
-//}
 
 void Company::createGraphViewer() {
 	vector<Vertex<Info> *> vs = gmap.getVertexSet();
@@ -453,7 +453,8 @@ int Company::eraseReBins() {
 	int cnt = 0;
 
 	for (; it != rebins.end(); it++) {
-		gv->setVertexColor(it->getVertex()->getInfo().getRelativeId(), LIGHT_GRAY);
+		gv->setVertexColor(it->getVertex()->getInfo().getRelativeId(),
+		LIGHT_GRAY);
 		cnt++;
 	}
 	gv->rearrange();
@@ -466,7 +467,8 @@ int Company::eraseReCenters() {
 	vector<RecyclingCenter>::iterator it = recenters.begin();
 	int cnt = 0;
 	for (; it != recenters.end(); it++) {
-		gv->setVertexColor(it->getVertex()->getInfo().getRelativeId(), LIGHT_GRAY);
+		gv->setVertexColor(it->getVertex()->getInfo().getRelativeId(),
+		LIGHT_GRAY);
 		cnt++;
 	}
 	gv->rearrange();
@@ -483,11 +485,68 @@ int Company::eraseTrucks() {
 	return cnt;
 }
 
+void Company::addDriver(const Driver driver) {
+	drivers.push_back(driver);
+}
+
+void Company::addRandomDrivers(int n) {
+	//TODO
+}
+
+string Company::getSDrivers() const {
+	vector<Driver>::const_iterator it;
+	stringstream s;
+	for (it = drivers.begin(); it != drivers.end(); it++) {
+		s << (*it) << endl;
+	}
+	return s.str();
+}
+
+vector<Driver> Company::getExactDriver(string name) const {
+	vector<Driver> res;
+	vector<Driver>::const_iterator it;
+	for (it = drivers.begin(); it != drivers.end(); it++) {
+		string tmp1 = it->getName();
+		string tmp2 = name;
+		transform(tmp1.begin(), tmp1.end(), tmp1.begin(), towlower);
+		transform(tmp2.begin(), tmp2.end(), tmp2.begin(), towlower);
+		if (exactCmp(tmp1, tmp2)) {
+			res.push_back(*it);
+		}
+	}
+	return res;
+}
+
+vector<Driver> Company::getApproxDriver(string name) const {
+	vector<Driver> res;
+
+	return res;
+}
+
+bool Company::removeDriver(int id) {
+	vector<Driver>::iterator it;
+	for (it = drivers.begin(); it != drivers.end(); it++) {
+		if (it->getId() == id) {
+			drivers.erase(it);
+			return true;
+		}
+	}
+	return false;
+}
+
+int Company::eraseDrivers() {
+	int cnt = drivers.size();
+	drivers.clear();
+	Driver::resetCnt();
+	return cnt;
+}
+
 bool Company::removeReBin(int id) {
 	vector<RecyclingBin>::iterator it = rebins.begin();
 	for (; it != rebins.end(); it++) {
 		if (it->getId() == id) {
-			gv->setVertexColor(it->getVertex()->getInfo().getRelativeId(), LIGHT_GRAY);
+			gv->setVertexColor(it->getVertex()->getInfo().getRelativeId(),
+			LIGHT_GRAY);
 			gv->rearrange();
 			rebins.erase(it);
 			return true;
@@ -545,30 +604,12 @@ void Company::createReCenter(Vertex<Info>* vertex) {
 	recenters.push_back(ecc);
 }
 
-//string Empresa::shortestPath(int ids, int idd) {
-//	auto v = mapa.getfloydWarshallPath(mapa.getVertexSet().at(ids)->getInfo(),
-//			mapa.getVertexSet().at(idd)->getInfo());
-//	if (v.size() == 0) {
-//		cout << "Pontos sem ligacao!" << endl;
-//		return "\0";
-//	}
-//	auto it = v.begin();
-//	stringstream s;
-//	for (; (it + 1) != v.end(); it++) {
-//		//cout << mapa.getEdge((*it), (*(it + 1))).getName() << endl;
-//		s << (*it).getRelativeId() << "   "
-//				<< mapa.getEdge((*it), (*(it + 1))).getName() << endl;
-//	}
-//	return s.str();
-//}
-
 void Company::generateGarbage() {
 	for (unsigned int i = 0; i < rebins.size(); i++) {
 		rebins.at(i).generateGarbage();
 	}
 }
 
-//alterado
 double Company::getTotalGarbage(Colors::Color cor) {
 	double maxLixo = 0;
 	vector<RecyclingBin*> pint = getIntPoints();
@@ -578,7 +619,8 @@ double Company::getTotalGarbage(Colors::Color cor) {
 		vector<Container>::const_iterator ite = (*it)->getContainers().begin();
 		for (; ite != (*it)->getContainers().end(); ite++) {
 			if ((*ite).getColor() == cor
-					&& ((*ite).getOcupiedCapacity() / (*ite).getUsableCapacity()) >= 0.7) {
+					&& ((*ite).getOcupiedCapacity() / (*ite).getUsableCapacity())
+							>= 0.7) {
 				//cout << (*ite).getCor() << " " << ((*ite).getOcupada() / (*ite).getUtil()) << endl;
 				maxLixo += (*ite).getOcupiedCapacity();
 			}
@@ -588,7 +630,6 @@ double Company::getTotalGarbage(Colors::Color cor) {
 	return maxLixo;
 }
 
-//alterado
 void Company::dynamic() {
 	vector<Colors::Color> cores = { Colors::blue, Colors::yellow, Colors::green,
 			Colors::red, Colors::black };
@@ -663,6 +704,114 @@ void Company::dynamic() {
 	}
 }
 
+tuple<int, int> Company::getNecessaryTrucks(Colors::Color color) {
+	tuple<int, int> res;
+	for (int i = 0; i < 5; i++) {
+		int n = ceil(getTotalGarbage(color));
+		vector<int> capacityDone;
+		vector<int> lastTruck;
+		vector<int> capacities = { 0, 3000, 2500, 2000, 1000 }; //0 is an invalid capacity
+
+		for (int i = 0; i <= n; i++) {
+			capacityDone.push_back(0);
+			lastTruck.push_back(0);
+		}
+
+		//exactly like the backpack problem (just a little tuneup)
+		for (unsigned int i = 1; i < capacities.size(); i++) {
+			int capacity = capacities.at(i);
+			if (capacity <= n) {
+				for (int j = capacity; j <= n; j++) {
+					//consider also the value already saved
+					int remainder = j - capacity;
+					if (capacityDone.at(j) + capacity <= j
+							&& (capacity + capacityDone.at(remainder)) <= j) {
+						capacityDone.at(j) = capacity
+								+ capacityDone.at(remainder);
+						lastTruck.at(j) = i;
+					}
+				}
+			}
+		}
+		int temp = n, counter = 0, extraTruck = 0;
+		if (capacityDone.at(n) != n) {
+			temp -= (n - capacityDone.at(n));
+			counter++;
+			for (unsigned int i = 0; i < capacities.size(); i++)
+				if ((n - capacityDone.at(n)) <= capacities.at(i))
+					extraTruck = capacities.at(i);
+		}
+		while (temp > 0) {
+			cout << capacities.at(lastTruck.at(temp)) << endl;
+			temp -= capacities.at(lastTruck.at(temp));
+			counter++;
+		}
+	}
+}
+
+vector<int> Company::getStreet(string name) {
+	vector<int> ids;
+	for (unsigned int i = 0; i < gmap.getVertexSet().size(); i++) {
+		for (unsigned int j = 0; j < gmap.getVertexSet().at(i)->getAdj().size();
+				j++) {
+			if (gmap.getVertexSet().at(i)->getAdj().at(j).getName() == name) {
+				gv->setEdgeColor(
+						gmap.getVertexSet().at(i)->getAdj().at(j).getID(),
+						"red");
+				cout << "found" << endl;
+				auto a = gmap.getVertexSet().at(i)->getAdj().at(j);
+				auto s = a.getDest()->getInfo();
+				ids.push_back(s.getRelativeId());
+				cout << "Nome rua a pint "
+						<< gmap.getVertexSet().at(i)->getAdj().at(j).getName()
+						<< endl;
+				cout << "id vert " << s.getId() << " tam " << ids.size();
+			}
+		}
+	}
+	return ids;
+}
+
+vector<string> Company::findAproxRoad(string toSearch) {
+	unordered_set<string> ruas;
+	string rua;
+	int idv;
+
+	for (unsigned int i = 0; i < gmap.getVertexSet().size(); i++) {
+		for (unsigned int j = 0; j < gmap.getVertexSet().at(i)->getAdj().size();
+				j++) {
+			if (gmap.getVertexSet().at(i)->getAdj().at(j).getName() != ""
+					&& editDistance(toSearch,
+							gmap.getVertexSet().at(i)->getAdj().at(j).getName())
+							<= 15)
+				ruas.insert(
+						gmap.getVertexSet().at(i)->getAdj().at(j).getName());
+		}
+	}
+
+	vector<string> ruas2(ruas.begin(), ruas.end());
+
+	sort(ruas2.begin(), ruas2.end(),
+			[toSearch](const string& a, const string& b)
+			{	return editDistance(toSearch, a) < editDistance(toSearch, b);});
+	int i = 1;
+	if (editDistance(toSearch, ruas2.at(0)) == 0)
+		cout << i << " " << ruas2.at(0) << endl;
+	else {
+		for (auto rua : ruas2)
+			cout << i++ << " " << rua << endl;
+	}
+
+// cout << "Selecione a rua" <<endl;
+// cin >> i;
+// cin.ignore(1000, '\n');
+// if(i-1 > 0 && i <= ruas2.size()) //TODO ARRANJAR
+//  rua = ruas2.at(i - 1);
+//  cout<<"RUA "<<rua<<" i "<<i<<endl;
+
+	return ruas2;
+}
+
 string Company::getUnlimitedRun(int idp, int idc) {
 	vector<RecyclingCenter>::const_iterator itp, itc;
 	vector<RecyclingCenter>::const_iterator it = recenters.begin();
@@ -707,8 +856,9 @@ string Company::getLimitedRun(int idp, int idc) {
 }
 
 double Company::limitedRunAux(int ids, int idd, queue<RecyclingBin*> &q,
-	vector<RecyclingBin*> &pinteresses, vector<RecyclingBin*> pinteressestemp,
-	Truck camiao, double &totalGarbage, Colors::Color color, bool &finishedCollecting) {
+		vector<RecyclingBin*> &pinteresses,
+		vector<RecyclingBin*> pinteressestemp, Truck camiao,
+		double &totalGarbage, Colors::Color color, bool &finishedCollecting) {
 	vector<RecyclingBin*>::iterator it = pinteressestemp.begin();
 	vector<RecyclingBin*>::iterator ite = pinteressestemp.begin();
 	int a = ids, c = idd;
@@ -723,11 +873,11 @@ double Company::limitedRunAux(int ids, int idd, queue<RecyclingBin*> &q,
 		if (dist1 == INT_MAX) {
 			vector<RecyclingBin*>::iterator itc = pinteresses.begin();
 			/*for (; itc != pinteresses.end(); itc++) {
-				if ((*it)->getId() == (*itc)->getId()) {
-					pinteresses.erase(itc);
-					break;
-				}
-			}*/
+			 if ((*it)->getId() == (*itc)->getId()) {
+			 pinteresses.erase(itc);
+			 break;
+			 }
+			 }*/
 			pinteressestemp.erase(it);
 			it--;
 		} else {
@@ -735,11 +885,11 @@ double Company::limitedRunAux(int ids, int idd, queue<RecyclingBin*> &q,
 			if (dist2 == INT_MAX) {
 				vector<RecyclingBin*>::iterator itc = pinteresses.begin();
 				/*for (; itc != pinteresses.end(); itc++) {
-					if ((*it)->getId() == (*itc)->getId()) {
-						pinteresses.erase(itc);
-						break;
-					}
-				}*/
+				 if ((*it)->getId() == (*itc)->getId()) {
+				 pinteresses.erase(itc);
+				 break;
+				 }
+				 }*/
 				pinteressestemp.erase(it);
 				it--;
 			} else {
@@ -750,17 +900,20 @@ double Company::limitedRunAux(int ids, int idd, queue<RecyclingBin*> &q,
 			}
 		}
 	}
-	if(ite != pinteressestemp.end()) {
+	if (ite != pinteressestemp.end()) {
 		a = (*ite)->getVertex()->getInfo().getRelativeId();
 		if (best != INT_MAX) {
 			//cout << "Lixo do contentor " << (*ite)->getGarbage(color) << endl;
 			//cout << "capacidade utilizada do camiao " << (camiao.getOcupiedCapacity()) << endl;
 			//cout << "capacidade total do camiao " << (camiao.getUsableCapacity()) << endl;
 			//cout << "capacidade disponivel do camiao " << (camiao.getUsableCapacity() - camiao.getOcupiedCapacity()) << endl;
-			if ((*ite)->getGarbage(color) <= (camiao.getUsableCapacity() - camiao.getOcupiedCapacity())) {
+			if ((*ite)->getGarbage(color)
+					<= (camiao.getUsableCapacity() - camiao.getOcupiedCapacity())) {
 				//cout << "Recolhendo Lixo" << endl;
 				q.push((*ite));
-				camiao.setOcupiedCapacity(camiao.getOcupiedCapacity() + (*ite)->getGarbage(color));
+				camiao.setOcupiedCapacity(
+						camiao.getOcupiedCapacity()
+								+ (*ite)->getGarbage(color));
 				totalGarbage += (*ite)->getGarbage(color);
 				(*ite)->setCapacity(color, 0);
 				//cout << "New capacity " << (*ite)->getGarbage(color) << endl;
@@ -775,14 +928,16 @@ double Company::limitedRunAux(int ids, int idd, queue<RecyclingBin*> &q,
 				//cout << "Capacidade depois de lixo " << (camiao.getUsableCapacity() - camiao.getOcupiedCapacity()) << endl;
 				//cout << pinteressestemp.size() << endl;
 
-				if(pinteressestemp.size() == 0)
+				if (pinteressestemp.size() == 0)
 					finishedCollecting = true;
 				if (pinteressestemp.size() > 1)
-					best += limitedRunAux(a, c, q, pinteresses, pinteressestemp, camiao, totalGarbage, color, finishedCollecting);
+					best += limitedRunAux(a, c, q, pinteresses, pinteressestemp,
+							camiao, totalGarbage, color, finishedCollecting);
 			} else {
 				pinteressestemp.erase(ite);
 				if (pinteressestemp.size() > 1)
-					best += limitedRunAux(a, c, q, pinteresses, pinteressestemp, camiao, totalGarbage, color, finishedCollecting);
+					best += limitedRunAux(a, c, q, pinteresses, pinteressestemp,
+							camiao, totalGarbage, color, finishedCollecting);
 			}
 			return best;
 		}
@@ -792,7 +947,8 @@ double Company::limitedRunAux(int ids, int idd, queue<RecyclingBin*> &q,
 }
 
 string Company::limitedRun(int ids, int idd) {
-	vector<Colors::Color> colors = {Colors::blue, Colors::yellow, Colors::green, Colors::red, Colors::black};
+	vector<Colors::Color> colors = { Colors::blue, Colors::yellow,
+			Colors::green, Colors::red, Colors::black };
 	bool finishedCollecting = false;
 
 	if (gmap.getWeight(ids, idd) == INT_MAX) {
@@ -830,7 +986,9 @@ string Company::limitedRun(int ids, int idd) {
 			vector<RecyclingBin*> pinteressescopy = pinteresses;
 
 			if (pinteresses.size() > 0) {
-				limitedRunAux(ids, idd, q, pinteresses, pinteressescopy, trucks[colors.at(i)].at(j), garbage, colors.at(i), finishedCollecting);
+				limitedRunAux(ids, idd, q, pinteresses, pinteressescopy,
+						trucks[colors.at(i)].at(j), garbage, colors.at(i),
+						finishedCollecting);
 
 				while (q.size() > 0) {
 					int b = q.front()->getVertex()->getInfo().getRelativeId();
@@ -838,11 +996,12 @@ string Company::limitedRun(int ids, int idd) {
 					a = b;
 					q.pop();
 				}
-				s << shortestPath(a, idd) << "Estacao de tratamento: " << idd << endl;
+				s << shortestPath(a, idd) << "Estacao de tratamento: " << idd
+						<< endl;
 				gv->rearrange();
 			}
 
-			if(finishedCollecting)
+			if (finishedCollecting)
 				break;
 
 			cout << s.str() << endl;
@@ -853,7 +1012,8 @@ string Company::limitedRun(int ids, int idd) {
 		if (pinteresses.size() > 0)
 			s << "Nao fui possivel recolher tudo" << endl;
 		else if (pinteresses.size() == 0 && garbage != totalGarbage)
-			s << "Nao fui possivel recolher tudo! Sobrou " << (totalGarbage - garbage) << endl;
+			s << "Nao fui possivel recolher tudo! Sobrou "
+					<< (totalGarbage - garbage) << endl;
 
 	}
 	return "";
@@ -865,7 +1025,9 @@ vector<RecyclingBin*> Company::getIntPoints(Colors::Color color) {
 
 	for (unsigned int i = 0; i < rebins.size(); i++) {
 		if (rebins.at(i).check(color).size() != 0) {
-			gv->setVertexColor(rebins.at(i).getVertex()->getInfo().getRelativeId(), Colors::colors[color]);
+			gv->setVertexColor(
+					rebins.at(i).getVertex()->getInfo().getRelativeId(),
+					Colors::colors[color]);
 			temp.push_back(&rebins.at(i));
 		}
 	}
@@ -885,7 +1047,8 @@ void Company::resetReBinsColors() {
 	vector<RecyclingBin>::iterator it = rebins.begin();
 
 	for (; it != rebins.end(); it++) {
-		gv->setVertexColor(it->getVertex()->getInfo().getRelativeId(), CYAN);
+		gv->setVertexColor(it->getVertex()->getInfo().getRelativeId(),
+		CYAN);
 	}
 }
 

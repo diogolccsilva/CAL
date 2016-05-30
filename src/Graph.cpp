@@ -12,7 +12,7 @@ double Graph<T>::minLat = M_PI / 2;
 template<class T>
 double Graph<T>::minLong = M_PI;
 template<class T>
-double Graph<T>::maxLat = -M_PI/2;
+double Graph<T>::maxLat = -M_PI / 2;
 template<class T>
 double Graph<T>::maxLong = -M_PI;
 
@@ -341,8 +341,8 @@ template<class T>
 void Graph<T>::resetEdgeColors(GraphViewer *gv) {
 	typename vector<Vertex<T> *>::iterator it = vertexSet.begin();
 
-	for(; it != vertexSet.end(); it++) {
-		for(unsigned int i = 0; i < (*it)->getAdj().size(); i++) {
+	for (; it != vertexSet.end(); it++) {
+		for (unsigned int i = 0; i < (*it)->getAdj().size(); i++) {
 			gv->setEdgeColor((*it)->getAdj().at(i).getID(), "black");
 		}
 	}
@@ -352,11 +352,11 @@ template<class T>
 void Graph<T>::resetVertexColors(GraphViewer *gv) {
 	typename vector<Vertex<T> *>::iterator it = vertexSet.begin();
 
-	for(; it != vertexSet.end(); it++) {
+	for (; it != vertexSet.end(); it++) {
 		gv->setVertexColor((*it)->getInfo().getRelativeId(), LIGHT_GRAY);
 	}
 }
 
-template class Graph<Info>;
+template class Graph<Info> ;
 
 } /* namespace std */

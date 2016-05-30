@@ -14,6 +14,7 @@
 #include <sstream>
 #include <conio.h>
 #include <cstdlib>
+#include <unordered_set>
 
 #include "Color.h"
 #include "Graph.h"
@@ -62,7 +63,7 @@ class Company {
 public:
 	Company();
 	virtual ~Company();
-	//Mapa
+	//Map
 	/**
 	 * @brief
 	 * @return
@@ -169,10 +170,52 @@ public:
 	 */
 	string getSTrucks() const;
 	/**
+	 *
+	 * @return
+	 */
+	tuple<int,int> getNecessaryTrucks(Colors::Color color);
+	/**
 	 * @brief deletes all existing trucks
 	 * @return number of trucks that got deleted
 	 */
 	int eraseTrucks();
+	/**
+	 *
+	 * @param driver
+	 */
+	void addDriver(const Driver driver);
+	/**
+	 *
+	 * @param n
+	 */
+	void addRandomDrivers(int n);
+	/**
+	 *
+	 * @return
+	 */
+	string getSDrivers() const;
+	/**
+	 *
+	 * @param name
+	 * @return
+	 */
+	vector<Driver> getExactDriver(string name) const;
+	/**
+	 *
+	 * @param name
+	 * @return
+	 */
+	vector<Driver> getApproxDriver(string name) const;
+	/**
+	 *
+	 * @return
+	 */
+	bool removeDriver(int id);
+	/**
+	 *
+	 * @return
+	 */
+	int eraseDrivers();
 
 	//Utilidades
 	/**
@@ -186,7 +229,7 @@ public:
 	 * @brief
 	 * @return
 	 */
-	vector<RecyclingBin*> getIntPoints(); //TODO: refractor
+	vector<RecyclingBin*> getIntPoints();
 	/**
 	 * @brief
 	 * @param ids
@@ -227,7 +270,8 @@ public:
 	double limitedRunAux(int ids, int idd, queue<RecyclingBin*> &q,
 			vector<RecyclingBin*> &pinteresses,
 			vector<RecyclingBin*> pinteressestemp, Truck camiao,
-			double &totalGarbage, Colors::Color color, bool &finishedCollecting);
+			double &totalGarbage, Colors::Color color,
+			bool &finishedCollecting);
 	/**
 	 *
 	 * @param ids
@@ -241,6 +285,18 @@ public:
 	 * @return
 	 */
 	vector<RecyclingBin*> getIntPoints(Colors::Color color);
+	/**
+	 *
+	 * @param name
+	 * @return
+	 */
+	vector<int> getStreet(string name);
+	/**
+	 *
+	 * @param toSearch
+	 * @return
+	 */
+	vector<string> findAproxRoad(string toSearch);
 };
 
 } /* namespace std */
