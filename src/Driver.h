@@ -9,7 +9,7 @@
 #include <iostream>
 #include <string>
 
-namespace std {
+using namespace std;
 
 /*
  *
@@ -18,6 +18,7 @@ class Driver {
 	static int cnt;
 	string name;
 	int id;
+	bool ocupied;
 public:
 
 	/**
@@ -33,12 +34,12 @@ public:
 	static void resetCnt();
 	string getName() const;
 	int getId() const;
+	bool getOcupied() const;
+	void setOcupied(bool oc);
 	friend ostream& operator<<(ostream& os, const Driver& obj) {
 		os << "ID: "<< obj.id << endl << "Nome: " << obj.name << endl;
 		return os;
 	}
 };
-
-} /* namespace std */
 
 #endif /* SRC_DRIVER_H_ */

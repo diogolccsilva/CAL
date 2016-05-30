@@ -46,19 +46,19 @@ void gestaoEcoPontos(Company& emp) {
 			vector<string> ruas;
 			int i, idv;
 			cout << "rua: ";
-			string r,rua;
+			string r, rua;
 			getline(cin, r);
 			ruas = emp.findAproxRoad(r);
 			cout << "Selecione a rua" << endl;
 			cin >> i;
-			cin.ignore(1000, '\n');
+			cin.ignore(std::numeric_limits<int>::max(), '\n');
 			if (i - 1 >= 0 && i <= ruas.size()) { //TODO ARRANJAR
 				rua = ruas.at(i - 1);
 				//cout << "RUA " << rua << " i " << i << endl;
 				ids = emp.getStreet(rua);
 				cout << "ID do vertice: ";
 				cin >> idv;
-				cin.ignore(1000, '\n');
+				cin.ignore(std::numeric_limits<int>::max(), '\n');
 				if (find(ids.begin(), ids.end(), idv) == ids.end())
 					cout << "Vertex nao pertence a rua! Ecoponto nao criado!"
 							<< endl;
@@ -80,6 +80,7 @@ void gestaoEcoPontos(Company& emp) {
 			cout << "ID do ecoponto: ";
 			int id;
 			cin >> id;
+			cin.ignore(std::numeric_limits<int>::max(), '\n');
 			if (emp.removeReBin(id)) {
 				cout << "Ecoponto removido!" << endl;
 			} else {
@@ -171,9 +172,10 @@ void gestaoEcoCentros(Company& emp) {
 			break;
 		case '3':
 			system("cls");
-			cout << "Vertex id: " << endl;
+			cout << "Vertex id: ";
 			int idv;
 			cin >> idv;
+			cin.ignore(std::numeric_limits<int>::max(), '\n');
 			if (emp.createReCenter(idv)) {
 				cout << "Ecocentro criado!" << endl;
 			} else {
@@ -205,6 +207,7 @@ void procurarCondutor(Company& emp) {
 		system("cls");
 		cout << "1. Algoritmo Exato;" << endl;
 		cout << "2. Algoritmo Aproximado;" << endl;
+		cout << "3. Mixed;" << endl;
 		cout << "9. Sair;" << endl;
 		switch (getch()) {
 		case '1': {
@@ -252,11 +255,16 @@ void gestaoCondutores(Company& emp) {
 			cout << emp.getSDrivers() << endl;
 			getch();
 			break;
-		case '2':
+		case '2': {
 			system("cls");
-			cout << "Nao implementado!" << endl;
+			cout << "Numero de condutores: ";
+			int n;
+			cin >> n;
+			emp.createRandomDrivers(n);
+			cout << "Condutores criados!" << endl;
 			getch();
 			break;
+		}
 		case '3': {
 			system("cls");
 			cout << "Nome: ";
@@ -331,8 +339,10 @@ void rotas(Company& emp) {
 			int idp, idc;
 			cout << "Id do ecocentro de partida: ";
 			cin >> idp;
+			cin.ignore(std::numeric_limits<int>::max(), '\n');
 			cout << "Id do ecocentro de chegada: ";
 			cin >> idc;
+			cin.ignore(std::numeric_limits<int>::max(), '\n');
 			cout << emp.getUnlimitedRun(idp, idc);
 			getch();
 			break;
@@ -342,9 +352,81 @@ void rotas(Company& emp) {
 			int idp, idc;
 			cout << "Id do ecocentro de partida: ";
 			cin >> idp;
+			cin.ignore(std::numeric_limits<int>::max(), '\n');
+			if (!emp.recCenterExists(idp)) {
+				cout << "Ecocentro inexistente!" << endl;
+				getch();
+				break;
+			}
 			cout << "Id do ecocentro de chegada: ";
 			cin >> idc;
+			cin.ignore(std::numeric_limits<int>::max(), '\n');
+			if (!emp.recCenterExists(idp)) {
+				cout << "Ecocentro inexistente!" << endl;
+				getch();
+				break;
+			}
+			int n = emp.getNecessaryTrucks().first;
+			int ts = emp.getNTrucks();
+			if (n > ts) {
+				cout << "Nao ha camioes suficientes! (Faltam " << n - ts
+						<< " camioes)" << endl;
+				getch();
+				break;
+			}
+			int ds = emp.getDrivers().size();
+			if (n > ds) {
+				cout << "Nao ha condutores suficientes! (Faltam " << n - ds
+						<< " condutores)" << endl;
+				getch();
+				break;
+			}
+			int i = 0;
+			vector<Driver> driversfinal;
+			while (i != n) {
+				cout << "Escolha o condutor (" << i + 1 << "/" << n << ")"
+						<< endl;
+				cout << "Nome: ";
+				string nome;
+				getline(cin, nome);
+				vector<Driver> conds = emp.getDriver(nome);
+				if (conds.size() > 0) {
+					unsigned int s = conds.size();
+					for (unsigned int i = 0; i < s; i++) {
+						cout << i + 1 << ": " << conds[i];
+						if (conds[i].getOcupied()) {
+							cout << " (Ocupado)" << endl;
+						} else {
+							cout << " (Livre)" << endl;
+						}
+					}
+					int t;
+					if (conds.size() > 1) {
+						cout << "Numero: " << endl;
+						cin >> t;
+						cin.ignore(std::numeric_limits<int>::max(), '\n');
+						if (t > s) {
+							cout << "Condutor inexistente!" << endl;
+						} else {
+							Driver d = conds.at(t - 1);
+							if (d.getOcupied()) {
+								cout << "Condutor ocupado!" << endl;
+							} else {
+								driversfinal.push_back(d);
+								emp.setDriverOcupied(d);
+								i++;
+							}
+						}
+					}
+				} else {
+					cout << "Condutor inexistente!" << endl;
+				}
+			}
 			cout << emp.getLimitedRun(idp, idc);
+			vector<Driver>::const_iterator it;
+			for (it = driversfinal.begin(); it != driversfinal.end(); it++) {
+				emp.setDriverFree((*it));
+			}
 			getch();
 			break;
 		}

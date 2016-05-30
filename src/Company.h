@@ -6,6 +6,8 @@
 #ifndef SRC_COMPANY_H_
 #define SRC_COMPANY_H_
 
+#define _USE_MATH_DEFINES
+
 #include <map>
 #include <queue>
 #include <string>
@@ -15,6 +17,10 @@
 #include <conio.h>
 #include <cstdlib>
 #include <unordered_set>
+#include <utility>
+#include <cmath>
+#include <algorithm>
+#include <random>
 
 #include "Color.h"
 #include "Graph.h"
@@ -25,11 +31,6 @@
 #include "Truck.h"
 #include "Vertex.h"
 #include "Driver.h"
-
-#define _USE_MATH_DEFINES
-
-#include <cmath>
-#include <algorithm>
 
 namespace std {
 
@@ -184,6 +185,12 @@ public:
 	const map<Colors::Color, vector<Truck>>& getTrucks() const;
 
 	/**
+	 *
+	 * @return
+	 */
+	int getNTrucks() const;
+
+	/**
 	 * @brief Adds a truck to the map and the vector of trucks.
 	 * @param truck Truck to be added.
 	 */
@@ -205,7 +212,13 @@ public:
 	 *
 	 * @return
 	 */
-	tuple<int,int> getNecessaryTrucks(Colors::Color color);
+	pair<int,int> getNecessaryTrucks(Colors::Color color); //para a cor especifica
+
+	/**
+	 *
+	 * @return
+	 */
+	pair<int,int> getNecessaryTrucks(); //para todas as cores
 
 	/**
 	 *
@@ -224,13 +237,40 @@ public:
 	 *
 	 * @param n
 	 */
-	void addRandomDrivers(int n);
+	void createRandomDrivers(int n);
 
 	/**
 	 *
 	 * @return
 	 */
 	string getSDrivers() const;
+
+	/**
+	 *
+	 * @param driver
+	 * @return
+	 */
+	bool setDriverOcupied(Driver driver);
+
+	/**
+	 *
+	 * @param driver
+	 * @return
+	 */
+	bool setDriverFree(Driver driver);
+
+	/**
+	 *
+	 * @return
+	 */
+	vector<Driver> getDrivers() const;
+
+	/**
+	 *
+	 * @param name
+	 * @return
+	 */
+	vector<Driver> getDriver(string name) const;
 
 	/**
 	 *
@@ -312,6 +352,13 @@ public:
 	 * @return
 	 */
 	vector<string> findAproxRoad(string toSearch);
+
+	/**
+	 *
+	 * @param id
+	 * @return
+	 */
+	bool recCenterExists(int id);
 };
 
 } /* namespace std */

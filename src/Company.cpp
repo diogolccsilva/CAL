@@ -88,6 +88,10 @@ const map<Colors::Color, vector<Truck>>& Company::getTrucks() const {
 	return trucks;
 }
 
+int Company::getNTrucks() const{
+	return vtrucks.size();
+}
+
 const vector<RecyclingCenter>& Company::getReCenters() const {
 	return recenters;
 }
@@ -488,8 +492,24 @@ void Company::addDriver(const Driver driver) {
 	drivers.push_back(driver);
 }
 
-void Company::addRandomDrivers(int n) {
-	//TODO
+void Company::createRandomDrivers(int n) {
+	vector<string> firstname = { "Maria", "Davi", "Joao", "Miguel", "Pedro",
+			"Arthur", "Ana", "Alice", "Gabriel", "Lucas", "Laura", "Julia",
+			"Bernardo", "Heitor", "Enzo", "Valentina", "Guilherme", "Helena",
+			"Sophia", "Rafael", "Sofia", "Manuela", "Beatriz", "Gustavo",
+			"Matheus", "Lorenzo", "Samuel", "Luiza", "Mariana", "Henrique",
+			"Theo", "Isabella", "Lara", "Felipe", "Livia", "Nicolas", "Daniel",
+			"Heloisa", "Isabela", "Leonardo", "Leticia", "Lorena", "Giovanna",
+			"Isadora", "Eduardo", "Luiz", "Anna", "Jose", "Luisa", "Rafaela" };
+	vector<string> lastname = {};
+	random_device rd;
+	mt19937 gen(rd());
+	uniform_int_distribution<int> fn(0,firstname.size()-1);
+	for (int i = 0;i<n;i++){
+		string name = firstname[fn(gen)];
+		Driver d(name);
+		addDriver(d);
+	}
 }
 
 string Company::getSDrivers() const {
@@ -499,6 +519,34 @@ string Company::getSDrivers() const {
 		s << (*it) << endl;
 	}
 	return s.str();
+}
+
+bool Company::setDriverOcupied(Driver driver) {
+	vector<Driver>::iterator it;
+	for (it = drivers.begin(); it != drivers.end(); it++) {
+		if (it->getId() == driver.getId()) {
+			it->setOcupied(true);
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Company::setDriverFree(Driver driver) {
+	vector<Driver>::iterator it;
+	for (it = drivers.begin(); it != drivers.end(); it++) {
+		if (it->getId() == driver.getId()) {
+			it->setOcupied(false);
+			return true;
+		}
+	}
+	return false;
+}
+
+vector<Driver> Company::getDriver(string name) const {
+	vector<Driver> res;
+	res = getExactDriver(name);
+	return res;
 }
 
 vector<Driver> Company::getExactDriver(string name) const {
@@ -703,49 +751,60 @@ void Company::dynamic() {
 	}
 }
 
-tuple<int, int> Company::getNecessaryTrucks(Colors::Color color) {
-	tuple<int, int> res;
-	for (int i = 0; i < 5; i++) {
-		int n = ceil(getTotalGarbage(color));
-		vector<int> capacityDone;
-		vector<int> lastTruck;
-		vector<int> capacities = { 0, 3000, 2500, 2000, 1000 }; //0 is an invalid capacity
-
-		for (int i = 0; i <= n; i++) {
-			capacityDone.push_back(0);
-			lastTruck.push_back(0);
-		}
-
-		//exactly like the backpack problem (just a little tuneup)
-		for (unsigned int i = 1; i < capacities.size(); i++) {
-			int capacity = capacities.at(i);
-			if (capacity <= n) {
-				for (int j = capacity; j <= n; j++) {
-					//consider also the value already saved
-					int remainder = j - capacity;
-					if (capacityDone.at(j) + capacity <= j
-							&& (capacity + capacityDone.at(remainder)) <= j) {
-						capacityDone.at(j) = capacity
-								+ capacityDone.at(remainder);
-						lastTruck.at(j) = i;
-					}
+pair<int, int> Company::getNecessaryTrucks(Colors::Color color) {
+	pair<int, int> res;
+	int n = ceil(getTotalGarbage(color));
+	vector<int> capacityDone;
+	vector<int> lastTruck;
+	vector<int> capacities = { 0, 3000, 2500, 2000, 1000 }; //0 is an invalid capacity
+	for (int i = 0; i <= n; i++) {
+		capacityDone.push_back(0);
+		lastTruck.push_back(0);
+	}
+	//exactly like the backpack problem (just a little tuneup)
+	for (unsigned int i = 1; i < capacities.size(); i++) {
+		int capacity = capacities.at(i);
+		if (capacity <= n) {
+			for (int j = capacity; j <= n; j++) {
+				//consider also the value already saved
+				int remainder = j - capacity;
+				if (capacityDone.at(j) + capacity <= j
+						&& (capacity + capacityDone.at(remainder)) <= j) {
+					capacityDone.at(j) = capacity + capacityDone.at(remainder);
+					lastTruck.at(j) = i;
 				}
 			}
 		}
-		int temp = n, counter = 0, extraTruck = 0;
-		if (capacityDone.at(n) != n) {
-			temp -= (n - capacityDone.at(n));
-			counter++;
-			for (unsigned int i = 0; i < capacities.size(); i++)
-				if ((n - capacityDone.at(n)) <= capacities.at(i))
-					extraTruck = capacities.at(i);
-		}
-		while (temp > 0) {
-			cout << capacities.at(lastTruck.at(temp)) << endl;
-			temp -= capacities.at(lastTruck.at(temp));
-			counter++;
-		}
 	}
+	int temp = n, counter = 0, extraTruck = 0;
+	if (capacityDone.at(n) != n) {
+		temp -= (n - capacityDone.at(n));
+		counter++;
+		for (unsigned int i = 0; i < capacities.size(); i++)
+			if ((n - capacityDone.at(n)) <= capacities.at(i))
+				extraTruck = capacities.at(i);
+	}
+	while (temp > 0) {
+		temp -= capacities.at(lastTruck.at(temp));
+		counter++;
+	}
+	res.first = counter;
+	res.second = extraTruck;
+	return res;
+}
+
+pair<int, int> Company::getNecessaryTrucks() {
+	vector<Colors::Color> colors = { Colors::blue, Colors::yellow,
+			Colors::green, Colors::red, Colors::black };
+	pair<int, int> total;
+	total.first = 0;
+	total.second = 0;
+	for (unsigned int i = 0; i < colors.size(); i++) {
+		pair<int, int> temp = getNecessaryTrucks(colors.at(i));
+		total.first += temp.first;
+		total.second += temp.second;
+	}
+	return total;
 }
 
 vector<int> Company::getStreet(string name) {
@@ -826,6 +885,19 @@ string Company::getUnlimitedRun(int idp, int idc) {
 		}
 	}
 	return "Ecocentros inexistentes!\n";
+}
+
+vector<Driver> Company::getDrivers() const {
+	return drivers;
+}
+
+bool Company::recCenterExists(int id) {
+	vector<RecyclingCenter>::const_iterator it = recenters.begin();
+	for (; it != recenters.end(); it++) {
+		if (it->getId() == id)
+			return true;
+	}
+	return false;
 }
 
 string Company::getLimitedRun(int idp, int idc) {

@@ -5,12 +5,12 @@
 
 #include "Driver.h"
 
-namespace std {
+using namespace std;
 
 int Driver::cnt = 0;
 
 Driver::Driver(string name) :
-		name(name), id(++cnt) {
+		name(name), id(++cnt),ocupied(false) {
 	// TODO Auto-generated constructor stub
 
 }
@@ -32,4 +32,12 @@ int Driver::getId() const {
 	return id;
 }
 
-} /* namespace std */
+bool Driver::getOcupied() const {
+	return ocupied;
+}
+
+void Driver::setOcupied(bool oc) {
+	ocupied = oc;
+}
+
+
