@@ -190,6 +190,7 @@ int Graph<T>::maxNewChildren(Vertex<T> *v, T &inf) const {
 
 template<class T>
 double Graph<T>::edgeCost(int vOrigIndex, int vDestIndex) {
+
 	if (vertexSet[vOrigIndex] == vertexSet[vDestIndex])
 		return 0;
 
@@ -328,13 +329,6 @@ Edge<T> Graph<T>::getEdge(const T& sourc, const T& dest) {
 		}
 	}
 	return Edge<T>(new Vertex<T>(dest), INT_INFINITY, "\0");
-}
-
-template<class T>
-void Graph<T>::display() {
-//	for (unsigned int i = 0; i < vertexSet.size(); i++) {
-//		vertexSet.at(i)->display();
-//	}
 }
 
 template<class T>

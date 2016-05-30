@@ -169,7 +169,6 @@ void Company::readMap() {
 	map2.close();
 	map3.close();
 
-	gmap.display();
 	gmap.floydWarshallShortestPath();
 
 }
