@@ -45,7 +45,7 @@ void gestaoEcoPontos(Company& emp) {
 			vector<int> ids;
 			vector<string> ruas;
 			int i, idv;
-			cout << "rua: ";
+			cout << "Rua: ";
 			string r, rua;
 			getline(cin, r);
 			ruas = emp.findAproxRoad(r);
