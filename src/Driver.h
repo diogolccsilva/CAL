@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <string>
+#include "StringFuncts.h"
 
 using namespace std;
 
@@ -36,6 +37,7 @@ public:
 	int getId() const;
 	bool getOcupied() const;
 	void setOcupied(bool oc);
+	bool operator==(Driver &d);
 	friend ostream& operator<<(ostream& os, const Driver& obj) {
 		os << "ID: "<< obj.id << endl << "Nome: " << obj.name << endl;
 		return os;

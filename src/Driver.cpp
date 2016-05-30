@@ -10,7 +10,7 @@ using namespace std;
 int Driver::cnt = 0;
 
 Driver::Driver(string name) :
-		name(name), id(++cnt),ocupied(false) {
+		name(name), id(++cnt), ocupied(false) {
 	// TODO Auto-generated constructor stub
 
 }
@@ -22,7 +22,6 @@ Driver::~Driver() {
 void Driver::resetCnt() {
 	cnt = 0;
 }
-
 
 string Driver::getName() const {
 	return name;
@@ -40,4 +39,8 @@ void Driver::setOcupied(bool oc) {
 	ocupied = oc;
 }
 
-
+bool Driver::operator==(Driver& d) {
+	if (id == d.id)
+		return true;
+	return false;
+}

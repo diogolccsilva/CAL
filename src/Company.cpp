@@ -5,7 +5,7 @@
 
 #include "Company.h"
 
-namespace std {
+using namespace std;
 
 double nodeDistance(Vertex<Info> *v1, Vertex<Info> *v2) {
 	double lat1r, lon1r, lat2r, lon2r, u, v, earth_rad = 6371000;
@@ -16,64 +16,6 @@ double nodeDistance(Vertex<Info> *v1, Vertex<Info> *v2) {
 	u = sin((lat2r - lat1r) / 2);
 	v = sin((lon2r - lon1r) / 2);
 	return 2.0 * earth_rad * asin(sqrt(u * u + cos(lat1r) * cos(lat2r) * v * v));
-}
-
-void preExactCmp(string pattern, vector<int> & prefix) {
-	int m = pattern.length();
-	prefix[0] = -1;
-	int k = -1;
-	for (int q = 1; q < m; q++) {
-		while (k > -1 && pattern[k + 1] != pattern[q])
-			k = prefix[k];
-		if (pattern[k + 1] == pattern[q])
-			k = k + 1;
-		prefix[q] = k;
-	}
-}
-
-int exactCmp(string text, string pattern) {
-	int num = 0;
-	int m = pattern.length();
-	vector<int> prefix(m);
-	preExactCmp(pattern, prefix);
-	int n = text.length();
-	int q = -1;
-	for (int i = 0; i < n; i++) {
-		while (q > -1 && pattern[q + 1] != text[i])
-			q = prefix[q];
-		if (pattern[q + 1] == text[i])
-			q++;
-		if (q == m - 1) {
-			num++;
-			q = prefix[q];
-		}
-	}
-	return num;
-}
-
-int editDistance(string pattern, string text) {
-	int n = text.length();
-	vector<int> d(n + 1);
-	int old, neww;
-	for (int j = 0; j <= n; j++)
-		d[j] = j;
-	int m = pattern.length();
-	for (int i = 1; i <= m; i++) {
-		old = d[0];
-		d[0] = i;
-		for (int j = 1; j <= n; j++) {
-			if (pattern[i - 1] == text[j - 1])
-				neww = old;
-			else {
-				neww = min(old, d[j]);
-				neww = min(neww, d[j - 1]);
-				neww = neww + 1;
-			}
-			old = d[j];
-			d[j] = neww;
-		}
-	}
-	return d[n];
 }
 
 Company::Company() {
@@ -88,7 +30,7 @@ const map<Colors::Color, vector<Truck>>& Company::getTrucks() const {
 	return trucks;
 }
 
-int Company::getNTrucks() const{
+int Company::getNTrucks() const {
 	return vtrucks.size();
 }
 
@@ -268,7 +210,8 @@ vector<RecyclingBin*> Company::getIntPoints() {
 	for (unsigned int i = 0; i < rebins.size(); i++) {
 		if (rebins.at(i).check().size() != 0) {
 			gv->setVertexColor(
-					rebins.at(i).getVertex()->getInfo().getRelativeId(), ORANGE);
+					rebins.at(i).getVertex()->getInfo().getRelativeId(),
+					ORANGE);
 			temp.push_back(&rebins.at(i));
 		}
 	}
@@ -457,7 +400,7 @@ int Company::eraseReBins() {
 
 	for (; it != rebins.end(); it++) {
 		gv->setVertexColor(it->getVertex()->getInfo().getRelativeId(),
-				LIGHT_GRAY);
+		LIGHT_GRAY);
 		cnt++;
 	}
 	gv->rearrange();
@@ -471,7 +414,7 @@ int Company::eraseReCenters() {
 	int cnt = 0;
 	for (; it != recenters.end(); it++) {
 		gv->setVertexColor(it->getVertex()->getInfo().getRelativeId(),
-				LIGHT_GRAY);
+		LIGHT_GRAY);
 		cnt++;
 	}
 	gv->rearrange();
@@ -501,11 +444,11 @@ void Company::createRandomDrivers(int n) {
 			"Theo", "Isabella", "Lara", "Felipe", "Livia", "Nicolas", "Daniel",
 			"Heloisa", "Isabela", "Leonardo", "Leticia", "Lorena", "Giovanna",
 			"Isadora", "Eduardo", "Luiz", "Anna", "Jose", "Luisa", "Rafaela" };
-	vector<string> lastname = {};
+	vector<string> lastname = { };
 	random_device rd;
 	mt19937 gen(rd());
-	uniform_int_distribution<int> fn(0,firstname.size()-1);
-	for (int i = 0;i<n;i++){
+	uniform_int_distribution<int> fn(0, firstname.size() - 1);
+	for (int i = 0; i < n; i++) {
 		string name = firstname[fn(gen)];
 		Driver d(name);
 		addDriver(d);
@@ -545,18 +488,43 @@ bool Company::setDriverFree(Driver driver) {
 
 vector<Driver> Company::getDriver(string name) const {
 	vector<Driver> res;
-	res = getExactDriver(name);
+	unordered_set<Driver> ud;
+	vector<Driver>::const_iterator it;
+	string tmp2 = name;
+	transform(tmp2.begin(), tmp2.end(), tmp2.begin(), towlower);
+
+	for (it = drivers.begin(); it != drivers.end(); it++) {
+		string tmp1 = it->getName();
+		transform(tmp1.begin(), tmp1.end(), tmp1.begin(), towlower);
+		if (editDistance(tmp2, tmp1) <= 10 || exactCmp(tmp1, tmp2) > 0) {
+			ud.insert((*it));
+		}
+	}
+
+	sort(res.begin(), res.end(), [tmp2](const Driver& a, const Driver& b)
+	{
+		string an = a.getName();
+		transform(an.begin(), an.end(), an.begin(), towlower);
+		string bn = b.getName();
+		transform(bn.begin(), bn.end(), bn.begin(), towlower);
+		if(exactCmp(an,tmp2) != 0 && exactCmp(bn,tmp2) != 0)
+		return editDistance(tmp2, an) < editDistance(tmp2, bn);
+		return (exactCmp(an,tmp2) != 0);
+	});
+
+	copy(ud.begin(), ud.end(), back_inserter(res));
+
 	return res;
 }
 
 vector<Driver> Company::getExactDriver(string name) const {
 	vector<Driver> res;
 	vector<Driver>::const_iterator it;
+	string tmp2 = name;
+	transform(tmp2.begin(), tmp2.end(), tmp2.begin(), towlower);
 	for (it = drivers.begin(); it != drivers.end(); it++) {
 		string tmp1 = it->getName();
-		string tmp2 = name;
 		transform(tmp1.begin(), tmp1.end(), tmp1.begin(), towlower);
-		transform(tmp2.begin(), tmp2.end(), tmp2.begin(), towlower);
 		if (exactCmp(tmp1, tmp2)) {
 			res.push_back(*it);
 		}
@@ -566,7 +534,16 @@ vector<Driver> Company::getExactDriver(string name) const {
 
 vector<Driver> Company::getApproxDriver(string name) const {
 	vector<Driver> res;
-
+	vector<Driver>::const_iterator it;
+	string tmp2 = name;
+	transform(tmp2.begin(), tmp2.end(), tmp2.begin(), towlower);
+	for (it = drivers.begin(); it != drivers.end(); it++) {
+		string tmp1 = it->getName();
+		transform(tmp1.begin(), tmp1.end(), tmp1.begin(), towlower);
+		if (editDistance(tmp2, tmp1) <= 10) {
+			res.push_back((*it));
+		}
+	}
 	return res;
 }
 
@@ -593,7 +570,7 @@ bool Company::removeReBin(int id) {
 	for (; it != rebins.end(); it++) {
 		if (it->getId() == id) {
 			gv->setVertexColor(it->getVertex()->getInfo().getRelativeId(),
-					LIGHT_GRAY);
+			LIGHT_GRAY);
 			gv->rearrange();
 			rebins.erase(it);
 			return true;
@@ -667,7 +644,7 @@ double Company::getTotalGarbage(Colors::Color cor) {
 		for (; ite != (*it)->getContainers().end(); ite++) {
 			if ((*ite).getColor() == cor
 					&& ((*ite).getOcupiedCapacity() / (*ite).getUsableCapacity())
-					>= 0.7) {
+							>= 0.7) {
 				//cout << (*ite).getCor() << " " << ((*ite).getOcupada() / (*ite).getUtil()) << endl;
 				maxLixo += (*ite).getOcupiedCapacity();
 			}
@@ -684,24 +661,24 @@ void Company::dynamic() {
 	for (int i = 0; i < 5; i++) {
 		if (i == 0)
 			cout
-			<< "--------------------------------   Contetor Azul   -----------------------------------"
-			<< endl;
+					<< "--------------------------------   Contetor Azul   -----------------------------------"
+					<< endl;
 		else if (i == 1)
 			cout
-			<< "--------------------------------  Contetor Amarelo -----------------------------------"
-			<< endl;
+					<< "--------------------------------  Contetor Amarelo -----------------------------------"
+					<< endl;
 		else if (i == 2)
 			cout
-			<< "--------------------------------   Contetor Verde  -----------------------------------"
-			<< endl;
+					<< "--------------------------------   Contetor Verde  -----------------------------------"
+					<< endl;
 		else if (i == 3)
 			cout
-			<< "-------------------------------- Contetor Vermelho -----------------------------------"
-			<< endl;
+					<< "-------------------------------- Contetor Vermelho -----------------------------------"
+					<< endl;
 		else
 			cout
-			<< "-------------------------------- Contetor Generico -----------------------------------"
-			<< endl;
+					<< "-------------------------------- Contetor Generico -----------------------------------"
+					<< endl;
 
 		int n = ceil(getTotalGarbage(cores.at(i)));
 		vector<int> capacityDone;
@@ -817,7 +794,9 @@ vector<int> Company::getStreet(string name) {
 			transform(tmp1.begin(), tmp1.end(), tmp1.begin(), towlower);
 
 			if (tmp1 == name) {
-				gv->setEdgeColor(gmap.getVertexSet().at(i)->getAdj().at(j).getID(),"red");
+				gv->setEdgeColor(
+						gmap.getVertexSet().at(i)->getAdj().at(j).getID(),
+						"red");
 				auto a = gmap.getVertexSet().at(i)->getAdj().at(j);
 				auto s = a.getDest()->getInfo();
 				ids.push_back(s.getRelativeId());
@@ -841,21 +820,22 @@ vector<string> Company::findAproxRoad(string toSearch) {
 				j++) {
 			string tmp1 = gmap.getVertexSet().at(i)->getAdj().at(j).getName();
 			transform(tmp1.begin(), tmp1.end(), tmp1.begin(), towlower);
-		//	cout<<tmp1<< " "<<editDistance(tmp2,tmp1)<<" "<<exactCmp(tmp1,tmp2)<<endl;
-			if (tmp1 != "" && ((editDistance(tmp2,tmp1)<= 10) || exactCmp(tmp1,tmp2) > 0)){
+			//	cout<<tmp1<< " "<<editDistance(tmp2,tmp1)<<" "<<exactCmp(tmp1,tmp2)<<endl;
+			if (tmp1 != ""
+					&& ((editDistance(tmp2, tmp1) <= 10)
+							|| exactCmp(tmp1, tmp2) > 0)) {
 				ruas.insert(tmp1);
-			//	cout << tmp1 << " exact " <<exactCmp(tmp1, tmp2) <<	" aprox "<< editDistance(tmp2, tmp1)<<endl;
-				}
+				//	cout << tmp1 << " exact " <<exactCmp(tmp1, tmp2) <<	" aprox "<< editDistance(tmp2, tmp1)<<endl;
+			}
 		}
 	}
 
 	vector<string> ruas2(ruas.begin(), ruas.end());
 
-	sort(ruas2.begin(), ruas2.end(),
-			[tmp2](const string& a, const string& b)
-			{if(exactCmp(a,tmp2) != 0 && exactCmp(b,tmp2) != 0)
-				return editDistance(tmp2, a) < editDistance(tmp2, b);
-			else return (exactCmp(a,tmp2) != 0);});
+	sort(ruas2.begin(), ruas2.end(), [tmp2](const string& a, const string& b)
+	{	if(exactCmp(a,tmp2) != 0 && exactCmp(b,tmp2) != 0)
+		return editDistance(tmp2, a) < editDistance(tmp2, b);
+		else return (exactCmp(a,tmp2) != 0);});
 	int i = 1;
 	if (editDistance(tmp2, ruas2.at(0)) == 0)
 		cout << i << " " << ruas2.at(0) << endl;
@@ -980,7 +960,7 @@ double Company::limitedRunAux(int ids, int idd, queue<RecyclingBin*> &q,
 				q.push((*ite));
 				camiao.setOcupiedCapacity(
 						camiao.getOcupiedCapacity()
-						+ (*ite)->getGarbage(color));
+								+ (*ite)->getGarbage(color));
 				totalGarbage += (*ite)->getGarbage(color);
 				(*ite)->setCapacity(color, 0);
 				//cout << "New capacity " << (*ite)->getGarbage(color) << endl;
@@ -1080,7 +1060,7 @@ string Company::limitedRun(int ids, int idd) {
 			s << "Nao fui possivel recolher tudo" << endl;
 		else if (pinteresses.size() == 0 && garbage != totalGarbage)
 			s << "Nao fui possivel recolher tudo! Sobrou "
-			<< (totalGarbage - garbage) << endl;
+					<< (totalGarbage - garbage) << endl;
 
 	}
 	return "";
@@ -1115,8 +1095,6 @@ void Company::resetReBinsColors() {
 
 	for (; it != rebins.end(); it++) {
 		gv->setVertexColor(it->getVertex()->getInfo().getRelativeId(),
-				CYAN);
+		CYAN);
 	}
 }
-
-} /* namespace std */

@@ -32,7 +32,7 @@
 #include "Vertex.h"
 #include "Driver.h"
 
-namespace std {
+using namespace std;
 
 class Company {
 	//Mapa
@@ -360,7 +360,5 @@ public:
 	 */
 	bool recCenterExists(int id);
 };
-
-} /* namespace std */
 
 #endif /* SRC_COMPANY_H_ */

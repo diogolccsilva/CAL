@@ -231,6 +231,21 @@ void procurarCondutor(Company& emp) {
 			cout << "Nao implementado!" << endl;
 			getch();
 			break;
+		case '3':
+			system("cls");
+			cout << "Nome: ";
+			string nome;
+			getline(cin, nome);
+			vector<Driver> conds = emp.getDriver(nome);
+			if (conds.size() > 0) {
+				for (unsigned int i = 0; i < conds.size(); i++) {
+					cout << conds[i] << endl;
+				}
+			} else {
+				cout << "Condutor inexistente!" << endl;
+			}
+			getch();
+			break;
 		case '9':
 			return;
 		default:
