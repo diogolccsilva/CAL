@@ -264,7 +264,7 @@ vector<RecyclingBin*> Company::getIntPoints() {
 	for (unsigned int i = 0; i < rebins.size(); i++) {
 		if (rebins.at(i).check().size() != 0) {
 			gv->setVertexColor(
-					rebins.at(i).getVertex()->getInfo().getRelativeId(), CYAN);
+					rebins.at(i).getVertex()->getInfo().getRelativeId(), ORANGE);
 			temp.push_back(&rebins.at(i));
 		}
 	}
