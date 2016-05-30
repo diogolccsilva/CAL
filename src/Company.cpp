@@ -750,6 +750,7 @@ tuple<int, int> Company::getNecessaryTrucks(Colors::Color color) {
 
 vector<int> Company::getStreet(string name) {
 	vector<int> ids;
+	resetEdgeColors();
 	for (unsigned int i = 0; i < gmap.getVertexSet().size(); i++) {
 		for (unsigned int j = 0; j < gmap.getVertexSet().at(i)->getAdj().size();
 				j++) {
