@@ -7,7 +7,7 @@
 
 #include "RecyclingBin.h"
 
-using namespace std;
+namespace std {
 
 int RecyclingBin::cnt = 0;
 
@@ -96,3 +96,7 @@ vector<Container*> RecyclingBin::check(Colors::Color color) {
 	}
 	return temp;
 }
+
+}
+
+/* namespace std */

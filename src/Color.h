@@ -9,7 +9,7 @@
 #include <map>
 #include <string>
 
-using namespace std;
+namespace std {
 
 struct Colors {
 	/*! Color Enum */
@@ -32,5 +32,7 @@ struct Colors {
 	static map<Color, string> colors;
 
 };
+
+}
 
 #endif /* SRC_COLOR_H_ */

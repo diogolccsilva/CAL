@@ -8,7 +8,7 @@
 
 #include "Edge.h"
 
-using namespace std;
+namespace std {
 
 template<class T>
 class Vertex {
@@ -89,5 +89,7 @@ public:
 	friend class Graph<T>;
 
 };
+
+} /* namespace std */
 
 #endif /* SRC_VERTEX_H_ */

@@ -13,7 +13,7 @@
 #include "Info.h"
 #include "Vertex.h"
 
-using namespace std;
+namespace std {
 
 class RecyclingCenter {
 	Vertex<Info>* vertex;
@@ -55,5 +55,7 @@ public:
 		return os;
 	}
 };
+
+} /* namespace std */
 
 #endif /* SRC_RECYCLINGCENTER_H_ */

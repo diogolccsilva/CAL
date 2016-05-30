@@ -10,7 +10,7 @@ using namespace std;
 int Driver::cnt = 0;
 
 Driver::Driver(string name) :
-		name(name), id(++cnt), occupied(false) {
+		name(name), id(++cnt), ocupied(false) {
 	// TODO Auto-generated constructor stub
 
 }

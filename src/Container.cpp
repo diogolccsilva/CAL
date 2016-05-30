@@ -5,7 +5,7 @@
 
 #include "Container.h"
 
-using namespace std;
+namespace std {
 
 Container::Container(double capacity,Colors::Color color){
 	srand(time(NULL));
@@ -43,3 +43,4 @@ double Container::getUsableCapacity() const {
 void Container::setUsableCapacity(double cusable) {
 	cUsable = cusable;
 }
+} /* namespace std */
